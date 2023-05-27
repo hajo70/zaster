@@ -1,0 +1,23 @@
+# ignore Maven generated files
+**/target/
+
+# ignore jedit backup files
+*~
+
+# ignore eclipse specific files
+/bin/
+/.settings/
+/.project
+/.classpath
+
+# ignore IDEA specific files
+/out/
+/.idea/
+*.iml
+
+# ignore adhoc files
+**/adhoc/
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
