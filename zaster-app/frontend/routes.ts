@@ -2,7 +2,7 @@ import type {Route} from '@vaadin/router';
 import {appStore} from './stores/app-store.js';
 import './views/about/about-view';
 import './views/main-layout';
-import Role from "Frontend/generated/de/spicom/zaster/data/Role";
+import Role from "Frontend/generated/de/spricom/zaster/data/Role";
 
 export type ViewRoute = Route & {
   title?: string;

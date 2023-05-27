@@ -11,7 +11,7 @@ import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-column';
 import './currency-form';
 
-import Currency from "Frontend/generated/de/spicom/zaster/endpoints/model/Currency";
+import Currency from "Frontend/generated/de/spricom/zaster/endpoints/model/Currency";
 import {findAllCurrencies} from "Frontend/generated/CurrenciesEndpoint";
 import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store";
 

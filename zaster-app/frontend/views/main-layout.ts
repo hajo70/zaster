@@ -19,7 +19,7 @@ import { router } from '../index.js';
 import { hasAccess, views } from '../routes.js';
 import { appStore } from '../stores/app-store.js';
 import { Layout } from './view.js';
-import User from "Frontend/generated/de/spicom/zaster/data/entity/User";
+import User from "Frontend/generated/de/spricom/zaster/data/entity/User";
 
 interface RouteInfo {
   path: string;

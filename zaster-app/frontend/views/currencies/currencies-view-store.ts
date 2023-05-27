@@ -1,6 +1,6 @@
-import Currency from "Frontend/generated/de/spicom/zaster/endpoints/model/Currency";
+import Currency from "Frontend/generated/de/spricom/zaster/endpoints/model/Currency";
 import {makeAutoObservable, observable} from "mobx";
-import CurrencyModel from "Frontend/generated/de/spicom/zaster/endpoints/model/CurrencyModel";
+import CurrencyModel from "Frontend/generated/de/spricom/zaster/endpoints/model/CurrencyModel";
 
 class CurrenciesViewStore {
     filterText = '';

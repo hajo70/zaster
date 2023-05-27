@@ -5,7 +5,7 @@ import '@vaadin/button';
 import '@vaadin/combo-box';
 import '@vaadin/text-field';
 import {Binder, field} from '@hilla/form';
-import CurrencyModel from "Frontend/generated/de/spicom/zaster/endpoints/model/CurrencyModel";
+import CurrencyModel from "Frontend/generated/de/spricom/zaster/endpoints/model/CurrencyModel";
 import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store";
 
 @customElement('currency-form')

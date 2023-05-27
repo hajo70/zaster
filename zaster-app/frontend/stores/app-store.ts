@@ -1,8 +1,8 @@
 import {RouterLocation} from '@vaadin/router';
 import {makeAutoObservable} from 'mobx';
-import User from "Frontend/generated/de/spicom/zaster/data/entity/User";
+import User from "Frontend/generated/de/spricom/zaster/data/entity/User";
 import {UserEndpoint} from "Frontend/generated/endpoints";
-import Role from "Frontend/generated/de/spicom/zaster/data/Role";
+import Role from "Frontend/generated/de/spricom/zaster/data/Role";
 
 export class AppStore {
   applicationName = 'Zaster';
