@@ -1,0 +1,2 @@
+== zaster
+Manages finance and crypto
