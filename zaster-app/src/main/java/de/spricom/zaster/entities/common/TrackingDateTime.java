@@ -1,4 +1,4 @@
-package de.spricom.zaster.repository.common;
+package de.spricom.zaster.entities.common;
 
 import java.time.LocalDate;
 

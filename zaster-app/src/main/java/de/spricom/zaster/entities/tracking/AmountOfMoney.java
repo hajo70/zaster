@@ -1,4 +1,4 @@
-package de.spricom.zaster.repository.tracking;
+package de.spricom.zaster.entities.tracking;
 
 import java.math.BigDecimal;
 
