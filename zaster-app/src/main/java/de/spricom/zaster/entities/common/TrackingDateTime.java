@@ -1,16 +1,35 @@
 package de.spricom.zaster.entities.common;
 
-import java.time.LocalDate;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Embeddable
 public class TrackingDateTime {
 
     /**
      * Date-Part without timezone for sorting and filtering.
      */
-    private LocalDate date;
+    protected LocalDate date;
 
     /**
      * Zoned date-time according to https://www.w3.org/TR/xmlschema-2/#dateTime.
      */
-    private String zonedDateTime;
+    @Column(length = 64)
+    protected String zonedDateTime;
+
+    public TrackingDateTime() {
+    }
+
+    protected TrackingDateTime(ZonedDateTime ts) {
+        date = ts.toLocalDate();
+        zonedDateTime = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ts);
+    }
+
+    public static TrackingDateTime now() {
+        return new TrackingDateTime(ZonedDateTime.now());
+    }
 }

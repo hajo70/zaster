@@ -1,6 +1,7 @@
 package de.spricom.zaster.entities.currency;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
+import de.spricom.zaster.entities.managment.TenantEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,8 +12,11 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "CURRENCY")
-@AttributeOverride(name = "id", column = @Column(name = "CURRENCY_ID"))
 public class CurrencyEntity extends AbstractEntity {
+
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false, updatable = false)
+    private TenantEntity tenant;
 
     @Column(length = 8)
     private String currencyCode;
