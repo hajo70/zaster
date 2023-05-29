@@ -7,10 +7,14 @@ import de.spricom.zaster.entities.currency.ZasterCurrency;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.entities.tracking.BookingEntity;
+import de.spricom.zaster.entities.tracking.SnapshotEntity;
+import de.spricom.zaster.entities.tracking.TransactionEntity;
 import de.spricom.zaster.repository.currency.CurrencyRepository;
 import de.spricom.zaster.repository.management.TenantRepository;
 import de.spricom.zaster.repository.tracking.AccountRepository;
 import de.spricom.zaster.repository.tracking.BookingRepository;
+import de.spricom.zaster.repository.tracking.SnapshotRepository;
+import de.spricom.zaster.repository.tracking.TransactionRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,8 @@ import org.springframework.test.context.ActiveProfiles;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SpringBootTest
 @ActiveProfiles("initdb")
@@ -40,6 +46,12 @@ public class DatabaseSetupTest {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private SnapshotRepository snapshotRepository;
+
     private TenantEntity tenant;
 
     private Map<String, CurrencyEntity> currencies = new TreeMap<>();
@@ -50,13 +62,14 @@ public class DatabaseSetupTest {
         tenant = createTenant();
         var currency = createCurrency();
         var account = createAccount(currency);
-        createBooking(account, TrackingDateTime.now(), BigDecimal.valueOf(421234, 4));
-        createBooking(account, TrackingDateTime.now(), MAX_AMOUNT);
-        createBooking(account, TrackingDateTime.now(), SMALLEST_AMOUNT);
-        createBooking(account, TrackingDateTime.now(), MAX_AMOUNT.negate());
+        createSnapshot(account, TrackingDateTime.now(), BigDecimal.valueOf(421234, 4));
+        createSnapshot(account, TrackingDateTime.now(), MAX_AMOUNT);
+        createSnapshot(account, TrackingDateTime.now(), SMALLEST_AMOUNT);
+        createSnapshot(account, TrackingDateTime.now(), MAX_AMOUNT.negate());
         Assertions.assertThatCode(() ->
-                        createBooking(account, TrackingDateTime.now(), MAX_AMOUNT.add(SMALLEST_AMOUNT)))
+                        createSnapshot(account, TrackingDateTime.now(), MAX_AMOUNT.add(SMALLEST_AMOUNT)))
                 .isInstanceOf(DataIntegrityViolationException.class);
+        createTransaction();
     }
 
     private TenantEntity createTenant() {
@@ -86,8 +99,29 @@ public class DatabaseSetupTest {
         return account;
     }
 
-    private BookingEntity createBooking(AccountEntity account, TrackingDateTime ts, BigDecimal amount) {
+    private SnapshotEntity createSnapshot(AccountEntity account, TrackingDateTime ts, BigDecimal amount) {
+        var snapshot = new SnapshotEntity();
+        snapshot.setAccount(account);
+        snapshot.setTakenAt(ts);
+        snapshot.setBalance(amount);
+        snapshot = snapshotRepository.save(snapshot);
+        return snapshot;
+    }
+
+    private TransactionEntity createTransaction() {
+        var transaction = new TransactionEntity();
+        transaction.setDescription("Sample transaction");
+        transaction.setSubmittedAt(TrackingDateTime.now());
+        transaction = transactionRepository.save(transaction);
+        createBooking(transaction, accounts.get("Postbank Girokonto"), TrackingDateTime.now(), new BigDecimal(500.1));
+        createBooking(transaction, accounts.get("Postbank Girokonto"), TrackingDateTime.now(), new BigDecimal(499.98));
+        createBooking(transaction, accounts.get("Postbank Girokonto"), TrackingDateTime.now(), new BigDecimal(0.01));
+        return transaction;
+    }
+
+    private BookingEntity createBooking(TransactionEntity transaction, AccountEntity account, TrackingDateTime ts, BigDecimal amount) {
         var booking = new BookingEntity();
+        booking.setTransaction(transaction);
         booking.setAccount(account);
         booking.setBookedAt(ts);
         booking.setAmount(amount);

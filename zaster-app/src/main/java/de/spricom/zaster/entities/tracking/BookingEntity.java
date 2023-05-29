@@ -16,13 +16,17 @@ import java.math.BigDecimal;
 @Table(name = "BOOKING")
 public class BookingEntity extends AbstractEntity {
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private TransactionEntity transaction;
+
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private AccountEntity account;
 
     @Embedded
     @AttributeOverride(name = "date", column = @Column(name="BOOKED_AT_DATE"))
-    @AttributeOverride(name = "zonedTimeStamp", column = @Column(name="BOOKED_AT_TS"))
+    @AttributeOverride(name = "zonedDateTime", column = @Column(name="BOOKED_AT_TS"))
     private TrackingDateTime bookedAt;
 
     @Column(precision = 40, scale = 15)

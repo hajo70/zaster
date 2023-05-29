@@ -1,4 +1,36 @@
 package de.spricom.zaster.entities.tracking;
 
-public class TransactionEntity {
+import de.spricom.zaster.entities.common.AbstractEntity;
+import de.spricom.zaster.entities.common.Location;
+import de.spricom.zaster.entities.common.TrackingDateTime;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Set;
+
+@Getter
+@Setter
+@ToString
+@Entity
+@Table(name = "TRANSACTION")
+public class TransactionEntity extends AbstractEntity {
+
+    @Embedded
+    @AttributeOverride(name = "date", column = @Column(name="SUBMITTED_AT_DATE"))
+    @AttributeOverride(name = "zonedDateTime", column = @Column(name="SUBMITTED_AT_TS"))
+    private TrackingDateTime submittedAt;
+
+    @Embedded
+    private Location location;
+
+    private String description;
+
+    @Lob
+    @Column(length = 65536)
+    private String metadata;
+
+    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BookingEntity> bookings;
 }
