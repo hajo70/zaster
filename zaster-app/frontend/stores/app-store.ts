@@ -1,8 +1,8 @@
 import {RouterLocation} from '@vaadin/router';
 import {makeAutoObservable} from 'mobx';
-import User from "Frontend/generated/de/spricom/zaster/data/entity/User";
-import {UserEndpoint} from "Frontend/generated/endpoints";
-import Role from "Frontend/generated/de/spricom/zaster/data/Role";
+import ApplicationUserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/ApplicationUserEntity";
+import {ApplicationUserEndpoint} from "Frontend/generated/endpoints";
+import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
 
 export class AppStore {
   applicationName = 'Zaster';
@@ -12,7 +12,7 @@ export class AppStore {
 
   currentViewTitle = '';
 
-  user: User | undefined = undefined;
+  user: ApplicationUserEntity | undefined = undefined;
 
   constructor() {
     makeAutoObservable(this);
@@ -35,7 +35,7 @@ export class AppStore {
   }
 
   async fetchUserInfo() {
-    this.user = await UserEndpoint.getAuthenticatedUser();
+    this.user = await ApplicationUserEndpoint.getAuthenticatedUser();
   }
 
   clearUserInfo() {
@@ -46,8 +46,8 @@ export class AppStore {
     return !!this.user;
   }
 
-  isUserInRole(role: Role) {
-    return this.user?.roles?.includes(role);
+  isUserInRole(role: UserRole) {
+    return this.user?.userRoles?.includes(role);
   }
 }
 

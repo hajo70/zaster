@@ -13,4 +13,6 @@ import lombok.ToString;
 @Entity
 @Table(name = "TENANT")
 public class TenantEntity extends AbstractEntity {
+
+    private String name;
 }

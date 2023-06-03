@@ -19,7 +19,7 @@ import { router } from '../index.js';
 import { hasAccess, views } from '../routes.js';
 import { appStore } from '../stores/app-store.js';
 import { Layout } from './view.js';
-import User from "Frontend/generated/de/spricom/zaster/data/entity/User";
+import ApplicationUserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/ApplicationUserEntity";
 
 interface RouteInfo {
   path: string;
@@ -86,7 +86,7 @@ export class MainLayout extends Layout {
     );
   }
 
-  private getUserMenuItems(user: User): MenuBarItem[] {
+  private getUserMenuItems(user: ApplicationUserEntity): MenuBarItem[] {
     return [
       {
         component: this.createUserMenuItem(user),
@@ -95,7 +95,7 @@ export class MainLayout extends Layout {
     ];
   }
 
-  private createUserMenuItem(user: User) {
+  private createUserMenuItem(user: ApplicationUserEntity) {
     const item = document.createElement('div');
     item.style.display = 'flex';
     item.style.alignItems = 'center';
@@ -104,7 +104,6 @@ export class MainLayout extends Layout {
       html`
         <vaadin-avatar
           theme="xsmall"
-          img="${until(imageDataUrl(user.profilePicture))}"
           name="${user.name}"
           tabindex="-1"
         ></vaadin-avatar>

@@ -2,13 +2,13 @@ import type {Route} from '@vaadin/router';
 import {appStore} from './stores/app-store.js';
 import './views/about/about-view';
 import './views/main-layout';
-import Role from "Frontend/generated/de/spricom/zaster/data/Role";
+import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
 
 export type ViewRoute = Route & {
   title?: string;
   icon?: string;
   requiresLogin?: boolean;
-  rolesAllowed?: Role[];
+  rolesAllowed?: UserRole[];
   children?: ViewRoute[];
 };
 
