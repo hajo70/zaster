@@ -1,9 +1,11 @@
 package de.spricom.zaster.entities.tracking;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
-import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,14 +14,15 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "ACCOUNT")
-public class AccountEntity extends AbstractEntity {
+@Table(name = "ACCOUNT_GROUP")
+public class AccountGroupEntity extends AbstractEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false, updatable = false)
-    private AccountGroupEntity accountGroup;
+    private TenantEntity tenant;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private CurrencyEntity currency;
+    @ManyToOne
+    private AccountGroupEntity parent;
+
+    private String accountName;
 }
