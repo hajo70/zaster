@@ -2,6 +2,7 @@ package de.spricom.zaster.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import de.spricom.zaster.entities.managment.ApplicationUserEntity;
+import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.repository.management.ApplicationUserRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
@@ -28,4 +29,8 @@ public class AuthenticatedUser {
         authenticationContext.logout();
     }
 
+    public TenantEntity getCurrentTenant() {
+        return get().map(ApplicationUserEntity::getTenant)
+                .orElseThrow(() -> new IllegalStateException("Not logged in"));
+    }
 }

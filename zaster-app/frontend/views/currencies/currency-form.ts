@@ -5,12 +5,12 @@ import '@vaadin/button';
 import '@vaadin/combo-box';
 import '@vaadin/text-field';
 import {Binder, field} from '@hilla/form';
-import CurrencyModel from "Frontend/generated/de/spricom/zaster/endpoints/model/CurrencyModel";
 import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store";
+import CurrencyEntityModel from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntityModel";
 
 @customElement('currency-form')
 export class CurrencyForm extends View {
-    protected binder = new Binder(this, CurrencyModel);
+    protected binder = new Binder(this, CurrencyEntityModel);
 
     constructor() {
         super();
@@ -33,7 +33,7 @@ export class CurrencyForm extends View {
             ></vaadin-text-field>
             <vaadin-text-field
                     label="Währungsname"
-                    ${field(model.name)}
+                    ${field(model.currencyName)}
             ></vaadin-text-field>
 
             <div class="flex gap-s">

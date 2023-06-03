@@ -1,4 +1,4 @@
-package de.spricom.zaster.endpoints.helloworld;
+package de.spricom.zaster.endpoints;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;

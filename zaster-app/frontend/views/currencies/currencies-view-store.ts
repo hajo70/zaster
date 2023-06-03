@@ -1,10 +1,10 @@
-import Currency from "Frontend/generated/de/spricom/zaster/endpoints/model/Currency";
 import {makeAutoObservable, observable} from "mobx";
-import CurrencyModel from "Frontend/generated/de/spricom/zaster/endpoints/model/CurrencyModel";
+import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity";
+import CurrencyEntityModel from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntityModel";
 
 class CurrenciesViewStore {
     filterText = '';
-    selectedCurrency: Currency | null = null;
+    selectedCurrency: CurrencyEntity | null = null;
 
     constructor() {
         makeAutoObservable(
@@ -18,19 +18,19 @@ class CurrenciesViewStore {
         this.filterText = filterText;
     }
 
-    setSelectedCurrency(currency: Currency) {
+    setSelectedCurrency(currency: CurrencyEntity) {
         this.selectedCurrency = currency;
     }
 
     editNew() {
-        this.selectedCurrency = CurrencyModel.createEmptyValue();
+        this.selectedCurrency = CurrencyEntityModel.createEmptyValue();
     }
 
     cancelEdit() {
         this.selectedCurrency = null;
     }
 
-    async save(currency: Currency) {
+    async save(currency: CurrencyEntity) {
         this.cancelEdit();
     }
 

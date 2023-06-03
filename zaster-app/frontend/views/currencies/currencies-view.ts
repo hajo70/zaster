@@ -11,15 +11,15 @@ import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-column';
 import './currency-form';
 
-import Currency from "Frontend/generated/de/spricom/zaster/endpoints/model/Currency";
-import {findAllCurrencies} from "Frontend/generated/CurrenciesEndpoint";
 import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store";
+import {findAllCurrencies} from "Frontend/generated/CurrencyEndpoint";
+import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity";
 
 @customElement('currencies-view')
 export class CurrenciesView extends View {
 
     @state()
-    private currencies: Currency[] = [];
+    private currencies: CurrencyEntity[] = [];
 
     render() {
         return html`
