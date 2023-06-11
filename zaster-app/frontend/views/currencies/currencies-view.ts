@@ -1,7 +1,6 @@
 import {html} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {View} from '../../views/view.js';
-import {state} from "lit/decorators";
 
 import '@vaadin/button';
 import '@vaadin/checkbox';
@@ -12,14 +11,9 @@ import '@vaadin/grid/vaadin-grid-column';
 import './currency-form';
 
 import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store";
-import {findAllCurrencies} from "Frontend/generated/CurrencyEndpoint";
-import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity";
 
 @customElement('currencies-view')
 export class CurrenciesView extends View {
-
-    @state()
-    private currencies: CurrencyEntity[] = [];
 
     render() {
         return html`
@@ -37,7 +31,7 @@ export class CurrenciesView extends View {
             <div class="content flex gap-m h-full">
                 <vaadin-grid
                         class="grid h-full"
-                        .items=${this.currencies}
+                        .items=${currenciesViewStore.filteredCurrencies}
                         .selectedItems=${[currenciesViewStore.selectedCurrency]}
                         @active-item-changed=${this.handleGridSelection}>
                     <vaadin-grid-column path="currencyCode" auto-width></vaadin-grid-column>
@@ -84,6 +78,5 @@ export class CurrenciesView extends View {
                 this.classList.remove("editing");
             }
         });
-        this.currencies = await findAllCurrencies();
     }
 }
