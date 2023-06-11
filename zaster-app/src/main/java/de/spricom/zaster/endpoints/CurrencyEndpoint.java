@@ -20,16 +20,22 @@ public class CurrencyEndpoint {
     @Autowired
     private CurrencyService currencyService;
 
-    private CurrencyEntity createCurrency(String currencyCode, String currencyName) {
-        var currency = new CurrencyEntity();
-        currency.setTenant(authenticatedUser.getCurrentTenant());
-        currency.setCurrencyType(CurrencyType.FIAT);
-        currency.setCurrencyCode(currencyCode);
-        currency.setCurrencyName(currencyName);
+    public List<CurrencyEntity> findAllCurrencies() {
+        return currencyService.findAllCurrencies(authenticatedUser.getCurrentTenant());
+    }
+
+    public CurrencyEntity saveCurrency(CurrencyEntity currency) {
+        if (currency.getTenant() == null) {
+            currency.setTenant(authenticatedUser.getCurrentTenant());
+        }
+        if (currency.getCurrencyType() == null) {
+            currency.setCurrencyType(CurrencyType.FIAT);
+        }
+        currency.setCurrencyCode(currency.getCurrencyCode().toUpperCase());
         return currencyService.saveCurrency(currency);
     }
 
-    public List<CurrencyEntity> findAllCurrencies() {
-        return currencyService.findAllCurrencies(authenticatedUser.getCurrentTenant());
+    public void deleteCurrencyById(String currencyId) {
+        currencyService.deleteCurrencyById(currencyId);
     }
 }

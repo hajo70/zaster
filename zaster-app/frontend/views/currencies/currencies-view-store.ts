@@ -43,6 +43,7 @@ class CurrenciesViewStore {
 
     editNew() {
         this.selectedCurrency = CurrencyEntityModel.createEmptyValue();
+        this.selectedCurrency.currencyCode = this.filterText.toUpperCase();
     }
 
     cancelEdit() {
@@ -50,13 +51,58 @@ class CurrenciesViewStore {
     }
 
     async save(currency: CurrencyEntity) {
+        await this.saveCurrency(currency)
         this.cancelEdit();
     }
 
     async delete() {
         if (this.selectedCurrency) {
+            await this.deleteCurrency(this.selectedCurrency)
             this.cancelEdit();
         }
+    }
+
+    async saveCurrency(currency: CurrencyEntity) {
+        try {
+            const saved = await CurrencyEndpoint.saveCurrency(currency);
+            if (saved) {
+                this.saveLocal(saved);
+            } else {
+                console.log('Currency save failed');
+            }
+        } catch (ex) {
+            console.log('Currency save failed: ' + ex);
+        }
+    }
+
+    async deleteCurrency(currency: CurrencyEntity) {
+        if (!currency.id) return;
+
+        try {
+            await CurrencyEndpoint.deleteCurrencyById(currency.id);
+            this.deleteLocal(currency);
+        } catch (ex) {
+            console.log('Currency delete failed: ' + ex);
+        }
+    }
+
+    private saveLocal(saved: CurrencyEntity) {
+        const currencyExists = this.currencies.some((c) => c.id === saved.id);
+        if (currencyExists) {
+            this.currencies = this.currencies.map((existing) => {
+                if (existing.id === saved.id) {
+                    return saved;
+                } else {
+                    return existing;
+                }
+            });
+        } else {
+            this.currencies.push(saved);
+        }
+    }
+
+    private deleteLocal(currencyEntity: CurrencyEntity) {
+        this.currencies = this.currencies.filter((c) => c.id !== currencyEntity.id);
     }
 }
 

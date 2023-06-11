@@ -8,6 +8,7 @@ import '@vaadin/text-field';
 import '@vaadin/tabs';
 import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-column';
+import '@vaadin/grid/vaadin-grid-sort-column';
 import './currency-form';
 
 import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store";
@@ -34,8 +35,8 @@ export class CurrenciesView extends View {
                         .items=${currenciesViewStore.filteredCurrencies}
                         .selectedItems=${[currenciesViewStore.selectedCurrency]}
                         @active-item-changed=${this.handleGridSelection}>
-                    <vaadin-grid-column path="currencyCode" auto-width></vaadin-grid-column>
-                    <vaadin-grid-column path="currencyName" auto-width></vaadin-grid-column>
+                    <vaadin-grid-sort-column path="currencyCode" auto-width></vaadin-grid-sort-column>
+                    <vaadin-grid-sort-column path="currencyName" auto-width></vaadin-grid-sort-column>
                     <vaadin-grid-column path="currencyType" auto-width></vaadin-grid-column>
                 </vaadin-grid>
                 <currency-form
