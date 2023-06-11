@@ -1,5 +1,6 @@
 package de.spricom.zaster.endpoints;
 
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.currency.CurrencyType;
 import de.spricom.zaster.repository.CurrencyService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Endpoint
+@AnonymousAllowed
 public class CurrencyEndpoint {
 
     @Autowired

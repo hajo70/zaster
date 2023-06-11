@@ -41,7 +41,8 @@ export class CurrenciesView extends View {
                         .selectedItems=${[currenciesViewStore.selectedCurrency]}
                         @active-item-changed=${this.handleGridSelection}>
                     <vaadin-grid-column path="currencyCode" auto-width></vaadin-grid-column>
-                    <vaadin-grid-column path="name" auto-width></vaadin-grid-column>
+                    <vaadin-grid-column path="currencyName" auto-width></vaadin-grid-column>
+                    <vaadin-grid-column path="currencyType" auto-width></vaadin-grid-column>
                 </vaadin-grid>
                 <currency-form
                         class="flex flex-col gap-s"
