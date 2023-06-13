@@ -52,6 +52,17 @@ export const views: ViewRoute[] = [
     },
   },
   {
+    path: 'accounts',
+    component: 'accounts-view',
+    requiresLogin: false,
+    icon: 'file',
+    title: 'Konten-Übersicht',
+    action: async (_context, _command) => {
+      await import('./views/accounts/accounts-view');
+      return;
+    },
+  },
+  {
     path: 'hello',
     component: 'hello-world-view',
     requiresLogin: true,
