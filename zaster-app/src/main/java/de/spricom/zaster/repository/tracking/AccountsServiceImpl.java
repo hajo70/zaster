@@ -6,7 +6,10 @@ import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -16,8 +19,19 @@ public class AccountsServiceImpl implements de.spricom.zaster.repository.Account
 
     @Override
     public List<AccountGroupEntity> findAllRootAccountGroups(TenantEntity tenant) {
-        var groups = accountGroupRepository.findAll();
-        return groups;
+        var groups = accountGroupRepository.findAccountGroups(tenant.getId());
+        for (AccountGroupEntity group : groups) {
+            if (group.getParent() != null) {
+                if (group.getParent().getChildren() == null) {
+                    group.getParent().setChildren(
+                            new TreeSet<>(Comparator.comparing(AccountGroupEntity::getAccountName)));
+                }
+                group.getParent().getChildren().add(group);
+            }
+        }
+        return groups.stream()
+                .filter(group -> group.getParent() == null)
+                .collect(Collectors.toList());
     }
 
     @Override

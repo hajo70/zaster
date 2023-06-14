@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 class AccountsServiceTest {
 
@@ -51,6 +53,7 @@ class AccountsServiceTest {
         entity.setCurrencyType(CurrencyType.FIAT);
         return currencyService.saveCurrency(entity);
     }
+
     @Test
     void testAccountGroups() {
         var root1 = createAccountGroup(null, "Root 1");
@@ -62,6 +65,9 @@ class AccountsServiceTest {
         var leaf1eur = createAccount(leaf1, "EUR");
         var leaf1usd = createAccount(leaf1, "USD");
         var sub1eur = createAccount(sub1, "EUR");
+
+        var tree = accountsService.findAllRootAccountGroups(tenant);
+        assertThat(tree).hasSize(2).contains(root1, root2);
     }
 
     private AccountGroupEntity createAccountGroup(AccountGroupEntity parent, String accountName) {
