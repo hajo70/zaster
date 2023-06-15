@@ -14,8 +14,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Currency;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -68,6 +67,39 @@ class AccountsServiceTest {
 
         var tree = accountsService.findAllRootAccountGroups(tenant);
         assertThat(tree).hasSize(2).contains(root1, root2);
+        assertThat(render(tree)).isEqualTo("""
+                Root 1()
+                  Main()
+                    Sub 1(EUR)
+                    Sub 2()
+                      Leaf 1(EUR, USD)
+                Root 2()
+                """);
+    }
+
+    private String render(Collection<AccountGroupEntity> tree) {
+        StringBuilder sb = new StringBuilder(2048);
+        List<AccountGroupEntity> sorted = tree.stream()
+                .sorted(Comparator.comparing(AccountGroupEntity::getAccountName))
+                .toList();
+        render(sb, 0, sorted);
+        return sb.toString();
+    }
+
+    private void render(StringBuilder sb, int indent, Collection<AccountGroupEntity> tree) {
+        for (AccountGroupEntity group : tree) {
+            sb.append("  ".repeat(indent));
+            sb.append(group.getAccountName());
+            sb.append(group.getAccounts().stream()
+                    .map(AccountEntity::getCurrency)
+                    .map(CurrencyEntity::getCurrencyCode)
+                    .sorted()
+                    .collect(Collectors.joining(", ", "(", ")")));
+            sb.append("\n");
+            if (group.getChildren() != null && !group.getChildren().isEmpty()) {
+                render(sb, indent + 1, group.getChildren());
+            }
+        }
     }
 
     private AccountGroupEntity createAccountGroup(AccountGroupEntity parent, String accountName) {
