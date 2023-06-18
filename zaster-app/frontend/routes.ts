@@ -62,20 +62,6 @@ export const views: ViewRoute[] = [
       return;
     },
   },
-  {
-    path: 'hello',
-    component: 'hello-world-view',
-    requiresLogin: true,
-    icon: 'globe-solid',
-    title: 'Hello World',
-    action: async (_context, _command) => {
-      if (!hasAccess(_context.route)) {
-        return _command.redirect('login');
-      }
-      await import('./views/helloworld/hello-world-view');
-      return;
-    },
-  },
 ];
 export const routes: ViewRoute[] = [
   {
