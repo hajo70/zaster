@@ -59,7 +59,10 @@ public class ZasterDatabaseInitializer implements ApplicationRunner {
         createAccount(root, "Bankkonto", currencies.get("EUR"));
         createAccount(root, "Barkasse", currencies.get("EUR"));
         createAccount(root, "Einnahmen", currencies.get("EUR"));
-        createAccount(root, "Ausgaben", currencies.get("EUR"));
+        var group = createAccount(root, "Ausgaben", currencies.get("EUR"));
+        createAccount(group, currencies.get("USD"));
+        createAccount(group, "Krypto", currencies.get("EUR"));
+        createAccount(group, "Eis", currencies.get("EUR"));
     }
 
     private TenantEntity createTenant() {
@@ -99,15 +102,20 @@ public class ZasterDatabaseInitializer implements ApplicationRunner {
         return accountGroupRepository.save(group);
     }
 
-    private void createAccount(AccountGroupEntity parent, String name, CurrencyEntity currency) {
+    private AccountGroupEntity createAccount(AccountGroupEntity parent, String name, CurrencyEntity currency) {
         var group = new AccountGroupEntity();
         group.setTenant(parent.getTenant());
         group.setParent(parent);
         group.setAccountName(name);
         group = accountGroupRepository.save(group);
+        createAccount(group, currency);
+        return group;
+    }
+
+    private AccountEntity createAccount(AccountGroupEntity group, CurrencyEntity currency) {
         var account = new AccountEntity();
         account.setAccountGroup(group);
         account.setCurrency(currency);
-        accountRepository.save(account);
+        return accountRepository.save(account);
     }
 }

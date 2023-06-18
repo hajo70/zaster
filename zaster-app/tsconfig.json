@@ -23,6 +23,7 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "baseUrl": "frontend",
+    "allowImportingTsExtensions": true,
     "paths": {
       "@vaadin/flow-frontend": ["generated/jar-resources"],
       "@vaadin/flow-frontend/*": ["generated/jar-resources/*"],
