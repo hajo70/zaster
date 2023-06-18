@@ -1,5 +1,6 @@
 package de.spricom.zaster.entities.tracking;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.spricom.zaster.entities.common.AbstractEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import jakarta.persistence.*;
@@ -21,6 +22,7 @@ public class AccountGroupEntity extends AbstractEntity {
     @JoinColumn(nullable = false, updatable = false)
     private TenantEntity tenant;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private AccountGroupEntity parent;
@@ -30,6 +32,7 @@ public class AccountGroupEntity extends AbstractEntity {
 
     private String accountName;
 
+    @JsonIgnore
     @Transient
     private SortedSet<AccountGroupEntity> children;
 }

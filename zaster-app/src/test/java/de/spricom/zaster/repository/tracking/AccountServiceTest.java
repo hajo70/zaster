@@ -5,7 +5,7 @@ import de.spricom.zaster.entities.currency.CurrencyType;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.entities.tracking.AccountGroupEntity;
-import de.spricom.zaster.repository.AccountsService;
+import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.repository.management.TenantRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,10 +21,10 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class AccountsServiceTest {
+class AccountServiceTest {
 
     @Autowired
-    private AccountsService accountsService;
+    private AccountService accountService;
     @Autowired
     private CurrencyService currencyService;
     @Autowired
@@ -65,7 +65,7 @@ class AccountsServiceTest {
         var leaf1usd = createAccount(leaf1, "USD");
         var sub1eur = createAccount(sub1, "EUR");
 
-        var tree = accountsService.findAllRootAccountGroups(tenant);
+        var tree = accountService.findAllRootAccountGroups(tenant);
         assertThat(tree).hasSize(2).contains(root1, root2);
         assertThat(render(tree)).isEqualTo("""
                 Root 1()
@@ -107,13 +107,13 @@ class AccountsServiceTest {
         group.setTenant(tenant);
         group.setParent(parent);
         group.setAccountName(accountName);
-        return accountsService.saveAccountGroup(group);
+        return accountService.saveAccountGroup(group);
     }
 
     private AccountEntity createAccount(AccountGroupEntity group, String currencyCode) {
         var account = new AccountEntity();
         account.setAccountGroup(group);
         account.setCurrency(currencies.get(currencyCode));
-        return accountsService.saveAccount(account);
+        return accountService.saveAccount(account);
     }
 }

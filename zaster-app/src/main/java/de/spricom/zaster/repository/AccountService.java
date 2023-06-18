@@ -6,7 +6,7 @@ import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 
 import java.util.List;
 
-public interface AccountsService {
+public interface AccountService {
     List<AccountGroupEntity> findAllRootAccountGroups(TenantEntity tenant);
 
     AccountGroupEntity saveAccountGroup(AccountGroupEntity accountGroup);

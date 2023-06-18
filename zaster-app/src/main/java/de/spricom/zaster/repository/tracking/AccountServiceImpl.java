@@ -3,6 +3,7 @@ package de.spricom.zaster.repository.tracking;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.entities.tracking.AccountGroupEntity;
+import de.spricom.zaster.repository.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class AccountsServiceImpl implements de.spricom.zaster.repository.AccountsService {
+public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountGroupRepository accountGroupRepository;
 
