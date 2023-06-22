@@ -13,6 +13,9 @@ class AccountsViewStore {
         makeAutoObservable(
             this,
             {
+                boundDataProvider: false,
+                allAccountGroups: false,
+                rootAccountGroups: observable.deep,
                 selectedAccountGroup: observable.ref
             },
         {autoBind: true}
@@ -89,10 +92,18 @@ class AccountsViewStore {
     }
 
     get allAccountGroups() {
-        return this.rootAccountGroups?.flatMap(this.ancestors);
+        let groups = this.rootAccountGroups?.flatMap(this.ancestors);
+        console.log("groups total: " + groups?.length + ", roots: " + this.rootAccountGroups?.length);
+        return groups;
     }
 
     private ancestors(group: AccountGroup): AccountGroup[] {
+        if (!group) {
+            return [];
+        }
+        if (!group.children) {
+            return [group];
+        }
         return [group, ...group.children.flatMap(this.ancestors)];
     }
 

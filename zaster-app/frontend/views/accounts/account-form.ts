@@ -27,6 +27,15 @@ export class AccountForm extends View {
         const {model} = this.binder;
 
         return html`
+            <vaadin-combo-box
+                    label="Parent"
+                    item-label-path="accountName"
+                    item-value-path="id"
+                    .items="${accountsViewStore.allAccountGroups}"
+                    ${field(model.parentId)}
+                    clear-button-visible
+            ></vaadin-combo-box>
+            
             <vaadin-text-field
                     label="Konto-Name"
                     ${field(model.accountName)}

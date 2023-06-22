@@ -55,8 +55,7 @@ public class AccountEndpoint {
         entity.setAccountName(group.accountName());
         entity.setTenant(authenticatedUser.getCurrentTenant());
         if (StringUtils.isNotEmpty(group.parentId())) {
-            entity.setParent(new AccountGroupEntity());
-            entity.getParent().setId(group.parentId());
+            entity.setParent(accountService.getAccountGroup(group.parentId()));
         }
         return createAccountGroup(accountService.saveAccountGroup(entity));
     }

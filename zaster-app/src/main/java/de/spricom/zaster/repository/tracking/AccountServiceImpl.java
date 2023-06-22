@@ -41,6 +41,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AccountGroupEntity getAccountGroup(String accountGroupId) {
+        return accountGroupRepository.getReferenceById(accountGroupId);
+    }
+
+    @Override
     public AccountGroupEntity saveAccountGroup(AccountGroupEntity accountGroup) {
         log.info("saving account group: {}", accountGroup);
         return accountGroupRepository.save(accountGroup);

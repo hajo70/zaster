@@ -9,6 +9,8 @@ import java.util.List;
 public interface AccountService {
     List<AccountGroupEntity> findAllRootAccountGroups(TenantEntity tenant);
 
+    AccountGroupEntity getAccountGroup(String accountGroupId);
+
     AccountGroupEntity saveAccountGroup(AccountGroupEntity accountGroup);
 
     void deleteAccountGroup(String accountGroupId);
