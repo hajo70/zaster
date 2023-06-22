@@ -7,6 +7,7 @@ import AccountGroupModel from "Frontend/generated/de/spricom/zaster/endpoints/Ac
 class AccountsViewStore {
     rootAccountGroups: AccountGroup[] | undefined;
     selectedAccountGroup: AccountGroup | null = null;
+    selectedAccountGroupParent: AccountGroup | undefined;
     filterText = '';
 
     constructor() {
@@ -45,6 +46,7 @@ class AccountsViewStore {
 
     setSelectedAccountGroup(accountGroup: AccountGroup) {
         this.selectedAccountGroup = accountGroup;
+        this.selectedAccountGroupParent = this.parent(accountGroup);
     }
 
     editNew() {
@@ -85,7 +87,7 @@ class AccountsViewStore {
 
         try {
             await AccountEndpoint.deleteAccountGroupById(accountGroup.id);
-            this.deleteLocal(accountGroup);
+            this.deleteLocal(this.selectedAccountGroupParent, accountGroup);
         } catch (ex) {
             console.log('AccountGroup delete failed: ' + ex);
         }
@@ -116,6 +118,9 @@ class AccountsViewStore {
 
     private saveLocal(saved: AccountGroup) {
         const parent = this.parent(saved);
+        if (this.selectedAccountGroupParent !== parent) {
+            this.deleteLocal(this.selectedAccountGroupParent, saved);
+        }
         if (parent) {
             parent.children = this.replaceSaved(parent.children, saved);
         } else {
@@ -141,8 +146,7 @@ class AccountsViewStore {
         }
     }
 
-    private deleteLocal(deleted: AccountGroup) {
-        const parent = this.parent(deleted);
+    private deleteLocal(parent: AccountGroup | undefined, deleted: AccountGroup) {
         if (parent) {
             parent.children = this.removeDeleted(parent.children, deleted) || [];
         } else {
