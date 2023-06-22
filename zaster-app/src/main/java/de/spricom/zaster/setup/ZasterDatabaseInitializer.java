@@ -52,7 +52,7 @@ public class ZasterDatabaseInitializer implements ApplicationRunner {
         var tenant = new TenantEntity();
         tenant.setName("Local Installation");
         tenantRepository.save(tenant);
-        createUser(tenant, "applicationUser", "John Normal", UserRole.USER);
+        createUser(tenant, "user", "John Normal", UserRole.USER);
         createUser(tenant, "admin", "Emma Powerful", UserRole.USER, UserRole.ADMIN);
         var currencies = createCurrencies(tenant);
         var root = createRootAccountGroup(tenant, "Gesamt");
