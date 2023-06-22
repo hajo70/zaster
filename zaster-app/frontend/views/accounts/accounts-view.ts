@@ -15,15 +15,24 @@ import './account-form';
 import AccountGroup from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroup";
 import {columnBodyRenderer, GridColumnBodyLitRenderer} from "@vaadin/grid/lit";
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
-import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store.ts";
 
 @customElement('accounts-view')
 export class AccountsView extends View {
 
     protected override render() {
         return html`
+            <div class="toolbar flex gap-s">
+                <vaadin-text-field
+                        placeholder="Filter nach Name"
+                        .value=${accountsViewStore.filterText}
+                        @input=${this.updateFilter}
+                        clear-button-visible
+                ></vaadin-text-field>
+                <vaadin-button @click=${accountsViewStore.editNew}>
+                    Konto hinzufügen
+                </vaadin-button>
+            </div>
             <div class="content flex gap-m h-full">
-
                 <vaadin-grid 
                         .itemHasChildrenPath="${'children'}" 
                         .dataProvider="${accountsViewStore.dataProvider}"
@@ -53,7 +62,11 @@ export class AccountsView extends View {
             this.firstSelectionEvent = false;
             return;
         }
-        accountsViewStore.selectedAccountGroup = ev.detail.value;
+        accountsViewStore.setSelectedAccountGroup(ev.detail.value);
+    }
+
+    updateFilter(ev: { target: HTMLInputElement }) {
+        accountsViewStore.updateFilter(ev.target.value);
     }
 
     async connectedCallback() {

@@ -7,8 +7,10 @@ import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.security.AuthenticatedUser;
 import dev.hilla.Endpoint;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class AccountEndpoint {
                 entity.getId(),
                 entity.getVersion(),
                 entity.getAccountName(),
-                entity.getAccounts()
+                Optional.ofNullable(entity.getAccounts()).orElse(Collections.emptySet())
                         .stream()
                         .map(AccountEntity::getCurrency)
                         .map(CurrencyEntity::getCurrencyCode)
@@ -44,5 +46,22 @@ public class AccountEndpoint {
                         : entity.getChildren().stream()
                         .map(this::createAccountGroup)
                         .toList());
+    }
+
+    public AccountGroup saveAccountGroup(AccountGroup group) {
+        AccountGroupEntity entity = new AccountGroupEntity();
+        entity.setId(group.id());
+        entity.setVersion(group.version());
+        entity.setAccountName(group.accountName());
+        entity.setTenant(authenticatedUser.getCurrentTenant());
+        if (StringUtils.isNotEmpty(group.parentId())) {
+            entity.setParent(new AccountGroupEntity());
+            entity.getParent().setId(group.parentId());
+        }
+        return createAccountGroup(accountService.saveAccountGroup(entity));
+    }
+
+    public void deleteAccountGroupById(String accountGroupId) {
+        accountService.deleteAccountGroup(accountGroupId);
     }
 }
