@@ -36,7 +36,7 @@ export class AccountForm extends View {
                 <vaadin-button theme="primary" @click=${this.save}>
                     ${this.binder.value.id ? 'Speichern' : 'Erstellen'}
                 </vaadin-button>
-                <vaadin-button theme="error" @click=${accountsViewStore.delete}>
+                <vaadin-button theme="error" @click=${this.delete}>
                     Löschen
                 </vaadin-button>
                 <vaadin-button theme="tertiary" @click=${accountsViewStore.cancelEdit}>
@@ -49,6 +49,15 @@ export class AccountForm extends View {
     async save() {
         await this.binder.submitTo(accountsViewStore.save);
         this.binder.clear();
+        this.notifyUpdate();
+    }
+
+    async delete() {
+        await accountsViewStore.delete();
+        this.notifyUpdate();
+    }
+
+    private notifyUpdate() {
         this.dispatchEvent(new CustomEvent("accounts-changed"));
     }
 }

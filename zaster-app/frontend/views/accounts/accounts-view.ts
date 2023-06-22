@@ -39,7 +39,7 @@ export class AccountsView extends View {
             <div class="content flex gap-m h-full">
                 <vaadin-grid 
                         .itemHasChildrenPath="${'children'}" 
-                        .dataProvider="${accountsViewStore.dataProvider}"
+                        .dataProvider="${accountsViewStore.boundDataProvider}"
                         .selectedItems=${[accountsViewStore.selectedAccountGroup]}
                         @active-item-changed=${this.handleGridSelection}
                 >
