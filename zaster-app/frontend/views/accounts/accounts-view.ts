@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {customElement} from 'lit/decorators.js';
+import {customElement, query} from 'lit/decorators.js';
 import {View} from '../../views/view.js';
 
 import '@vaadin/button';
@@ -15,9 +15,13 @@ import './account-form';
 import AccountGroup from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroup";
 import {columnBodyRenderer, GridColumnBodyLitRenderer} from "@vaadin/grid/lit";
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
+import {Grid} from "@vaadin/grid";
 
 @customElement('accounts-view')
 export class AccountsView extends View {
+
+    @query("vaadin-grid")
+    grid!: Grid;
 
     protected override render() {
         return html`
@@ -46,6 +50,7 @@ export class AccountsView extends View {
                 <account-form
                         class="flex flex-col gap-s"
                         ?hidden=${!accountsViewStore.selectedAccountGroup}
+                        @accounts-changed=${this.updateGrid}
                 ></account-form>
             </div>
         `;
@@ -67,6 +72,10 @@ export class AccountsView extends View {
 
     updateFilter(ev: { target: HTMLInputElement }) {
         accountsViewStore.updateFilter(ev.target.value);
+    }
+
+    updateGrid() {
+        this.grid.clearCache();
     }
 
     async connectedCallback() {

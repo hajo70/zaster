@@ -5,7 +5,6 @@ import '@vaadin/button';
 import '@vaadin/combo-box';
 import '@vaadin/text-field';
 import {Binder, field} from '@hilla/form';
-import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store";
 import AccountGroupModel from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroupModel.ts";
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
 
@@ -50,5 +49,6 @@ export class AccountForm extends View {
     async save() {
         await this.binder.submitTo(accountsViewStore.save);
         this.binder.clear();
+        this.dispatchEvent(new CustomEvent("accounts-changed"));
     }
 }
