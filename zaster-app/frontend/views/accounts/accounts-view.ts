@@ -10,20 +10,35 @@ import '@vaadin/grid';
 import '@vaadin/grid/vaadin-grid-column';
 import '@vaadin/grid/vaadin-grid-tree-column';
 import '@vaadin/grid/vaadin-grid-sort-column';
-import {GridDataProviderCallback, GridDataProviderParams} from "@vaadin/grid";
+import './account-form';
+
 import AccountGroup from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroup";
-import {AccountEndpoint} from "Frontend/generated/endpoints";
 import {columnBodyRenderer, GridColumnBodyLitRenderer} from "@vaadin/grid/lit";
+import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
+import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store.ts";
 
 @customElement('accounts-view')
 export class AccountsView extends View {
 
     protected override render() {
         return html`
-            <vaadin-grid .itemHasChildrenPath="${'children'}" .dataProvider="${this.dataProvider}">
-                <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
-                <vaadin-grid-column header="Currencies" auto-width ${columnBodyRenderer(this.currenciesRenderer, [])}></vaadin-grid-column>
-            </vaadin-grid>
+            <div class="content flex gap-m h-full">
+
+                <vaadin-grid 
+                        .itemHasChildrenPath="${'children'}" 
+                        .dataProvider="${accountsViewStore.dataProvider}"
+                        .selectedItems=${[accountsViewStore.selectedAccountGroup]}
+                        @active-item-changed=${this.handleGridSelection}
+                >
+                    <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
+                    <vaadin-grid-column header="Currencies" auto-width
+                                        ${columnBodyRenderer(this.currenciesRenderer, [])}></vaadin-grid-column>
+                </vaadin-grid>
+                <account-form
+                        class="flex flex-col gap-s"
+                        ?hidden=${!accountsViewStore.selectedAccountGroup}
+                ></account-form>
+            </div>
         `;
     }
 
@@ -31,17 +46,14 @@ export class AccountsView extends View {
         <span>${currencyCodes.join(', ')}</span>
     `;
 
-    async dataProvider(
-        params: GridDataProviderParams<AccountGroup>,
-        callback: GridDataProviderCallback<AccountGroup>
-    ) {
-        if (params.parentItem) {
-            const parentItem: AccountGroup = params.parentItem;
-            callback(parentItem.children, parentItem.children.length);
-        } else {
-            const roots = await AccountEndpoint.findAllRootAccountGroups();
-            callback(roots, 1);
+    // vaadin-grid fires a null-event when initialized. Ignore it.
+    firstSelectionEvent = true;
+    handleGridSelection(ev: CustomEvent) {
+        if (this.firstSelectionEvent) {
+            this.firstSelectionEvent = false;
+            return;
         }
+        accountsViewStore.selectedAccountGroup = ev.detail.value;
     }
 
     async connectedCallback() {
