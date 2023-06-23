@@ -3,8 +3,11 @@ import {makeAutoObservable} from 'mobx';
 import ApplicationUserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/ApplicationUserEntity";
 import {ApplicationUserEndpoint} from "Frontend/generated/endpoints";
 import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
+import {TrackingStore} from "Frontend/stores/tracking-store.ts";
 
 export class AppStore {
+  trackingStore = new TrackingStore();
+
   applicationName = 'Zaster';
 
   // The location, relative to the base path, e.g. "hello" when viewing "/hello"
@@ -52,3 +55,4 @@ export class AppStore {
 }
 
 export const appStore = new AppStore();
+export const trackingStore = appStore.trackingStore;

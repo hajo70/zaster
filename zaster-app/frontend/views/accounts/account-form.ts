@@ -1,9 +1,12 @@
 import {html} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {View} from 'Frontend/views/view';
+
 import '@vaadin/button';
 import '@vaadin/combo-box';
 import '@vaadin/text-field';
+import '@vaadin/multi-select-combo-box';
+
 import {Binder, field} from '@hilla/form';
 import AccountGroupModel from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroupModel.ts";
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
@@ -41,6 +44,12 @@ export class AccountForm extends View {
                     ${field(model.accountName)}
             ></vaadin-text-field>
 
+            <vaadin-multi-select-combo-box
+                    label="Currencies"
+                    .items="${accountsViewStore.currencyCodes}"
+                    ${field(model.currencyCodes)}
+            ></vaadin-multi-select-combo-box>
+            
             <div class="flex gap-s">
                 <vaadin-button theme="primary" @click=${this.save}>
                     ${this.binder.value.id ? 'Speichern' : 'Erstellen'}

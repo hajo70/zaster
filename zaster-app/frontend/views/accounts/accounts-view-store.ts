@@ -3,6 +3,7 @@ import {makeAutoObservable, observable} from "mobx";
 import {AccountEndpoint} from "Frontend/generated/endpoints.ts";
 import {GridDataProviderCallback, GridDataProviderParams} from "@vaadin/grid";
 import AccountGroupModel from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroupModel.ts";
+import {trackingStore} from "Frontend/stores/app-store.ts";
 
 class AccountsViewStore {
     rootAccountGroups: AccountGroup[] | undefined;
@@ -156,6 +157,10 @@ class AccountsViewStore {
 
     private removeDeleted(list: AccountGroup[] | undefined, deleted: AccountGroup) {
         return list?.filter(ag => ag.id !== deleted.id);
+    }
+
+    get currencyCodes() {
+        return trackingStore.currencies.map(currency => currency.currencyCode);
     }
 }
 
