@@ -1,14 +1,14 @@
-import AccountGroup from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroup.ts";
 import {makeAutoObservable, observable} from "mobx";
-import {AccountEndpoint} from "Frontend/generated/endpoints.ts";
+import {AccountingEndpoint} from "Frontend/generated/endpoints.ts";
 import {GridDataProviderCallback, GridDataProviderParams} from "@vaadin/grid";
-import AccountGroupModel from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroupModel.ts";
-import {trackingStore} from "Frontend/stores/app-store.ts";
+import {accountingStore} from "Frontend/stores/app-store.ts";
+import AccountGroupDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountGroupDto.ts";
+import AccountGroupDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountGroupDtoModel.ts";
 
 class AccountsViewStore {
-    rootAccountGroups: AccountGroup[] | undefined;
-    selectedAccountGroup: AccountGroup | null = null;
-    selectedAccountGroupParent: AccountGroup | undefined;
+    rootAccountGroups: AccountGroupDto[] | undefined;
+    selectedAccountGroup: AccountGroupDto | null = null;
+    selectedAccountGroupParent: AccountGroupDto | undefined;
     filterText = '';
 
     constructor() {
@@ -25,15 +25,15 @@ class AccountsViewStore {
     }
 
     async dataProvider(
-        params: GridDataProviderParams<AccountGroup>,
-        callback: GridDataProviderCallback<AccountGroup>
+        params: GridDataProviderParams<AccountGroupDto>,
+        callback: GridDataProviderCallback<AccountGroupDto>
     ){
         if (params.parentItem) {
-            const parentItem: AccountGroup = params.parentItem;
-            callback(parentItem.children, parentItem.children.length);
+            const parentItem: AccountGroupDto = params.parentItem;
+            callback(parentItem.children || [], parentItem.children?.length);
         } else {
             if (!this.rootAccountGroups) {
-                this.rootAccountGroups = await AccountEndpoint.findAllRootAccountGroups();
+                this.rootAccountGroups = await AccountingEndpoint.findAllRootAccountGroups();
             }
             callback(this.rootAccountGroups, this.rootAccountGroups.length);
         }
@@ -45,20 +45,20 @@ class AccountsViewStore {
         this.filterText = filterText;
     }
 
-    setSelectedAccountGroup(accountGroup: AccountGroup) {
+    setSelectedAccountGroup(accountGroup: AccountGroupDto) {
         this.selectedAccountGroup = accountGroup;
         this.selectedAccountGroupParent = this.parent(accountGroup);
     }
 
     editNew() {
-        this.selectedAccountGroup = AccountGroupModel.createEmptyValue();
+        this.selectedAccountGroup = AccountGroupDtoModel.createEmptyValue();
     }
 
     cancelEdit() {
         this.selectedAccountGroup = null;
     }
 
-    async save(accountGroup: AccountGroup) {
+    async save(accountGroup: AccountGroupDto) {
         await this.saveAccountGroup(accountGroup);
         this.cancelEdit();
     }
@@ -70,27 +70,27 @@ class AccountsViewStore {
         }
     }
 
-    async saveAccountGroup(accountGroup: AccountGroup) {
+    async saveAccountGroup(accountGroup: AccountGroupDto) {
         try {
-            const saved = await AccountEndpoint.saveAccountGroup(accountGroup);
+            const saved = await AccountingEndpoint.saveAccountGroup(accountGroup);
             if (saved) {
                 this.saveLocal(saved);
             } else {
-                console.log('AccountGroup save failed');
+                console.log('AccountGroupDto save failed');
             }
         } catch (ex) {
-            console.log('AccountGroup save failed: ' + ex);
+            console.log('AccountGroupDto save failed: ' + ex);
         }
     }
 
-    async deleteAccountGroup(accountGroup: AccountGroup) {
+    async deleteAccountGroup(accountGroup: AccountGroupDto) {
         if (!accountGroup.id) return;
 
         try {
-            await AccountEndpoint.deleteAccountGroupById(accountGroup.id);
+            await AccountingEndpoint.deleteAccountGroupById(accountGroup.id.id);
             this.deleteLocal(this.selectedAccountGroupParent, accountGroup);
         } catch (ex) {
-            console.log('AccountGroup delete failed: ' + ex);
+            console.log('AccountGroupDto delete failed: ' + ex);
         }
     }
 
@@ -100,7 +100,7 @@ class AccountsViewStore {
         return groups;
     }
 
-    private ancestors(group: AccountGroup): AccountGroup[] {
+    private ancestors(group: AccountGroupDto): AccountGroupDto[] {
         if (!group) {
             return [];
         }
@@ -110,14 +110,14 @@ class AccountsViewStore {
         return [group, ...group.children.flatMap(this.ancestors)];
     }
 
-    private parent(group: AccountGroup): AccountGroup | undefined {
+    private parent(group: AccountGroupDto): AccountGroupDto | undefined {
         if (!group.parentId) {
             return undefined;
         }
-        return this.allAccountGroups?.find(ag => ag.id === group.parentId);
+        return this.allAccountGroups?.find(ag => ag.id.id === group.parentId);
     }
 
-    private saveLocal(saved: AccountGroup) {
+    private saveLocal(saved: AccountGroupDto) {
         const parent = this.parent(saved);
         if (this.selectedAccountGroupParent !== parent) {
             this.deleteLocal(this.selectedAccountGroupParent, saved);
@@ -129,11 +129,11 @@ class AccountsViewStore {
         }
     }
 
-    private replaceSaved(list: AccountGroup[] | undefined, saved: AccountGroup) {
+    private replaceSaved(list: AccountGroupDto[] | undefined, saved: AccountGroupDto) {
         if (!list) {
             return [saved];
         }
-        const accountGroupExists = list?.some((ag) => ag.id === saved.id);
+        const accountGroupExists = list?.some((ag) => ag.id.id === saved.id.id);
         if (accountGroupExists) {
             return list.map((existing) => {
                 if (existing.id === saved.id) {
@@ -147,7 +147,7 @@ class AccountsViewStore {
         }
     }
 
-    private deleteLocal(parent: AccountGroup | undefined, deleted: AccountGroup) {
+    private deleteLocal(parent: AccountGroupDto | undefined, deleted: AccountGroupDto) {
         if (parent) {
             parent.children = this.removeDeleted(parent.children, deleted) || [];
         } else {
@@ -155,12 +155,12 @@ class AccountsViewStore {
         }
     }
 
-    private removeDeleted(list: AccountGroup[] | undefined, deleted: AccountGroup) {
-        return list?.filter(ag => ag.id !== deleted.id);
+    private removeDeleted(list: AccountGroupDto[] | undefined, deleted: AccountGroupDto) {
+        return list?.filter(ag => ag.id.id !== deleted.id.id);
     }
 
     get currencyCodes() {
-        return trackingStore.currencies.map(currency => currency.currencyCode);
+        return accountingStore.currencies.map(currency => currency.currencyCode);
     }
 }
 

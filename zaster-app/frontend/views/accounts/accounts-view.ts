@@ -12,10 +12,11 @@ import '@vaadin/grid/vaadin-grid-tree-column';
 import '@vaadin/grid/vaadin-grid-sort-column';
 import './account-form';
 
-import AccountGroup from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroup";
 import {columnBodyRenderer, GridColumnBodyLitRenderer} from "@vaadin/grid/lit";
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
 import {Grid} from "@vaadin/grid";
+import AccountGroupDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountGroupDto.ts";
+import {accountingStore} from "Frontend/stores/app-store.ts";
 
 @customElement('accounts-view')
 export class AccountsView extends View {
@@ -56,8 +57,8 @@ export class AccountsView extends View {
         `;
     }
 
-    private currenciesRenderer: GridColumnBodyLitRenderer<AccountGroup> = ({currencyCodes}) => html`
-        <span>${currencyCodes.join(', ')}</span>
+    private currenciesRenderer: GridColumnBodyLitRenderer<AccountGroupDto> = ({accounts}) => html`
+        <span>${accounts?.map(account => accountingStore.getCurrency(account.currencyId).currencyCode).join(', ')}</span>
     `;
 
     // vaadin-grid fires a null-event when initialized. Ignore it.

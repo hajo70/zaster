@@ -1,7 +1,6 @@
 package de.spricom.zaster.entities.tracking;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
-import de.spricom.zaster.entities.common.Location;
 import de.spricom.zaster.entities.common.TrackingDateTime;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,9 +20,6 @@ public class TransactionEntity extends AbstractEntity {
     @AttributeOverride(name = "date", column = @Column(name="SUBMITTED_AT_DATE"))
     @AttributeOverride(name = "zonedDateTime", column = @Column(name="SUBMITTED_AT_TS"))
     private TrackingDateTime submittedAt;
-
-    @Embedded
-    private Location location;
 
     private String description;
 

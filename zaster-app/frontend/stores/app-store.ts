@@ -4,8 +4,10 @@ import ApplicationUserEntity from "Frontend/generated/de/spricom/zaster/entities
 import {ApplicationUserEndpoint} from "Frontend/generated/endpoints";
 import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
 import {TrackingStore} from "Frontend/stores/tracking-store.ts";
+import {AccountingStore} from "Frontend/stores/accounting-store.ts";
 
 export class AppStore {
+  accountingStore = new AccountingStore();
   trackingStore = new TrackingStore();
 
   applicationName = 'Zaster';
@@ -56,3 +58,4 @@ export class AppStore {
 
 export const appStore = new AppStore();
 export const trackingStore = appStore.trackingStore;
+export const accountingStore = appStore.accountingStore;

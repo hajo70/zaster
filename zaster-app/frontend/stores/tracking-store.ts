@@ -1,16 +1,17 @@
-import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity.ts";
 import {makeAutoObservable, observable} from "mobx";
-import {CurrencyEndpoint} from "Frontend/generated/endpoints.ts";
+import {TrackingEndpoint} from "Frontend/generated/endpoints.ts";
+import {Transaction} from "Frontend/model/tracking/Transaction.ts";
+import {accountingStore} from "Frontend/stores/app-store.ts";
 
 export class TrackingStore {
-    currencies: CurrencyEntity[] = [];
+    transactions: Transaction[] = [];
 
     constructor() {
         makeAutoObservable(
             this,
             {
                 initFromServer: false,
-                currencies: observable.shallow
+                transactions: observable.shallow
             },
             { autoBind: true }
         );
@@ -19,6 +20,7 @@ export class TrackingStore {
     }
 
     async initFromServer() {
-        this.currencies = await CurrencyEndpoint.findAllCurrencies();
+        const transactions = await TrackingEndpoint.getTransactions();
+        this.transactions = transactions.map(tx => new Transaction(tx, accountingStore.getAccount));
     }
 }

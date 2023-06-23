@@ -8,12 +8,12 @@ import '@vaadin/text-field';
 import '@vaadin/multi-select-combo-box';
 
 import {Binder, field} from '@hilla/form';
-import AccountGroupModel from "Frontend/generated/de/spricom/zaster/endpoints/AccountGroupModel.ts";
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
+import AccountGroupDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountGroupDtoModel.ts";
 
 @customElement('account-form')
 export class AccountForm extends View {
-    protected binder = new Binder(this, AccountGroupModel);
+    protected binder = new Binder(this, AccountGroupDtoModel);
 
     constructor() {
         super();
@@ -33,7 +33,7 @@ export class AccountForm extends View {
             <vaadin-combo-box
                     label="Parent"
                     item-label-path="accountName"
-                    item-value-path="id"
+                    item-value-path="id.id"
                     .items="${accountsViewStore.allAccountGroups}"
                     ${field(model.parentId)}
                     clear-button-visible
@@ -47,7 +47,6 @@ export class AccountForm extends View {
             <vaadin-multi-select-combo-box
                     label="Currencies"
                     .items="${accountsViewStore.currencyCodes}"
-                    ${field(model.currencyCodes)}
             ></vaadin-multi-select-combo-box>
             
             <div class="flex gap-s">
