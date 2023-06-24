@@ -17,11 +17,10 @@ export class AccountingStore {
             },
             { autoBind: true }
         );
-
-        this.initFromServer();
     }
 
     async initFromServer() {
+        console.log("loading accounting data...");
         const data = await AccountingEndpoint.getAccountingData();
 
         runInAction(() => {

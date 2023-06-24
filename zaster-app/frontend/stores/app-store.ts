@@ -1,5 +1,5 @@
 import {RouterLocation} from '@vaadin/router';
-import {makeAutoObservable} from 'mobx';
+import {autorun, makeAutoObservable} from 'mobx';
 import ApplicationUserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/ApplicationUserEntity";
 import {ApplicationUserEndpoint} from "Frontend/generated/endpoints";
 import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
@@ -21,6 +21,12 @@ export class AppStore {
 
   constructor() {
     makeAutoObservable(this);
+
+    autorun(() => {
+      if (this.loggedIn) {
+        this.accountingStore.initFromServer();
+      }
+    })
   }
 
   setLocation(location: RouterLocation) {

@@ -11,6 +11,7 @@ import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.security.AuthenticatedUser;
 import dev.hilla.Endpoint;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Endpoint
 @AnonymousAllowed
+@Log4j2
 public class AccountingEndpoint {
 
     @Autowired
@@ -31,6 +33,7 @@ public class AccountingEndpoint {
     private CurrencyService currencyService;
 
     public AccountingDataDto getAccountingData() {
+        log.info("Loading accounting data...");
         TenantEntity tenant = authenticatedUser.getCurrentTenant();
         return new AccountingDataDto(
             currencyService.findAllCurrencies(tenant),
