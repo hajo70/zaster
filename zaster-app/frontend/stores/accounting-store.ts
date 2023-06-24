@@ -1,5 +1,5 @@
 import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity.ts";
-import {makeAutoObservable, observable, runInAction} from "mobx";
+import {makeObservable, observable, runInAction} from "mobx";
 import {AccountingEndpoint} from "Frontend/generated/endpoints.ts";
 import {AccountGroup} from "Frontend/model/tracking/AccountGroup.ts";
 
@@ -8,15 +8,12 @@ export class AccountingStore {
     rootAccountGroups: AccountGroup[] = [];
 
     constructor() {
-        makeAutoObservable(
+        makeObservable(
             this,
             {
-                initFromServer: false,
-                currencies: observable.shallow,
-                rootAccountGroups: false
-            },
-            { autoBind: true }
-        );
+                currencies: observable.shallow
+            }
+        )
     }
 
     async initFromServer() {
