@@ -3,6 +3,7 @@ import {appStore} from './stores/app-store.js';
 import './views/about/about-view';
 import './views/main-layout';
 import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
+import './views/samples/dynamic-grid-view';
 
 export type ViewRoute = Route & {
   title?: string;
@@ -72,6 +73,13 @@ export const views: ViewRoute[] = [
       await import('./views/transactions/transactions-view');
       return;
     },
+  },
+  {
+    path: 'samples/dynamic-grid-view',
+    component: 'dynamic-grid-view',
+    requiresLogin: true,
+    icon: 'file',
+    title: 'Sample: Dynamic Grid',
   },
 ];
 export const routes: ViewRoute[] = [
