@@ -32,11 +32,11 @@ export class DynamicGridView extends View {
                 <vaadin-grid class="grid h-full"
                              .items=${this.data}
                 >
-                    ${this.columns.columns.map(column =>
+                    ${repeat(this.binder.model.columns, (columnBinder) =>
                             html`
-                                <vaadin-grid-column header=${column.name}
+                                <vaadin-grid-column header=${columnBinder.value?.name}
                                                     auto-width
-                                                    ${columnBodyRenderer(this.cellRenderer, [])}
+                                                    ${columnBodyRenderer(this.cellRenderer(columnBinder.value?.name), [])}
                                 ></vaadin-grid-column>
                             `)}
                 </vaadin-grid>
@@ -63,19 +63,22 @@ export class DynamicGridView extends View {
                     <vaadin-button
                             @click=${this.updateGrid}
                     >
-                        <vaadin-icon icon="lumo:downlaod"></vaadin-icon>
+                        <vaadin-icon icon="lumo:download"></vaadin-icon>
                     </vaadin-button>
                 </div>
             </div>
         `;
     }
 
-    private cellRenderer: GridColumnBodyLitRenderer<AccountGroupDto> = (row) => html`
-        <span>${row}</span>
-    `;
+    private cellRenderer(columnName: string|undefined): GridColumnBodyLitRenderer<AccountGroupDto> {
+        return (row, model) => html`
+            <span>${row}/${model.index} (${columnName})</span>
+        `;
+    }
 
     private updateGrid() {
         this.binder.submitTo(this.updateColumns);
+        this.data = [...this.data, this.data.length];
     }
 
     async updateColumns(columnGroup: ColumnGroupDto) {
