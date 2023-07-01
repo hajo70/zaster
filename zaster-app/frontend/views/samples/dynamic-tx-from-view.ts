@@ -19,48 +19,44 @@ export class DynamicTxFromView extends View {
     @state()
     private deleted: TransactionDto[] = [];
 
-    private nextId = 1;
-
     protected override render() {
         return html`
-              <div>
-                    <h2>Transaktionen</h2>
-                  ${this.transactions.map(tx =>
-                  html`
-                      <div ?hidden=${this.deleted.some(deleted => deleted == tx)}>
-                          <span>${tx.id.id}</span>
-                          <tx-form .transaction=${tx}></tx-form>
-                          <vaadin-icon icon="lumo:cross"
-                                       @click=${() => this.removeTx(tx)}
-                          ></vaadin-icon>
-                      </div>
-                  `)}
+            <div>
+                <h2>Transaktionen</h2>
+                ${this.transactions.map(tx =>
+                        html`
+                            <div ?hidden=${this.deleted.some(deleted => deleted == tx)}>
+                                <tx-form .transaction=${tx}></tx-form>
+                                <vaadin-icon icon="lumo:cross"
+                                             @click=${() => this.removeTx(tx)}
+                                ></vaadin-icon>
+                            </div>
+                        `)}
 
-                  <div class="flex gap-s">
-                      <vaadin-button @click=${this.addTx}>
-                          Add
-                      </vaadin-button>
-                  </div>
-              </div>
+                <div class="flex gap-s">
+                    <vaadin-button @click=${this.addTx}>
+                        Add
+                    </vaadin-button>
+                </div>
+            </div>
         `;
     }
 
-   private removeTx(tx: TransactionDto) {
+    private removeTx(tx: TransactionDto) {
         this.deleted = [...this.deleted, tx];
-   }
+    }
 
-   private addTx() {
+    private addTx() {
         this.transactions = [...this.transactions, this.createTx()];
-   }
+    }
 
    private createTx() {
        const newTx = TransactionDtoModel.createEmptyValue();
-       newTx.id.id = `${this.nextId}`;
-       this.nextId++;
+       newTx.submittedAt = new Date().toISOString().substring(0, 16);
        return newTx;
    }
 
-   connectedCallback() {
+    connectedCallback() {
         super.connectedCallback();
         this.classList.add(
             'box-border',
