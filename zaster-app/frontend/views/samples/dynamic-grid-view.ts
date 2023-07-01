@@ -36,7 +36,7 @@ export class DynamicGridView extends View {
                             html`
                                 <vaadin-grid-column header=${columnBinder.value?.name}
                                                     auto-width
-                                                    ${columnBodyRenderer(this.cellRenderer(columnBinder.value?.name), [])}
+                                                    ${columnBodyRenderer(this.cellRenderer(() => columnBinder.value?.name || ''), [])}
                                 ></vaadin-grid-column>
                             `)}
                 </vaadin-grid>
@@ -70,9 +70,9 @@ export class DynamicGridView extends View {
         `;
     }
 
-    private cellRenderer(columnName: string|undefined): GridColumnBodyLitRenderer<AccountGroupDto> {
+    private cellRenderer(columnName: () => string): GridColumnBodyLitRenderer<AccountGroupDto> {
         return (row, model) => html`
-            <span>${row}/${model.index} (${columnName})</span>
+            <span>${row}/${model.index} (${columnName()})</span>
         `;
     }
 
