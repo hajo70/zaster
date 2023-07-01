@@ -4,6 +4,7 @@ import './views/about/about-view';
 import './views/main-layout';
 import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
 import './views/samples/dynamic-grid-view';
+import './views/samples/dynamic-tx-from-view';
 
 export type ViewRoute = Route & {
   title?: string;
@@ -81,7 +82,15 @@ export const views: ViewRoute[] = [
     icon: 'file',
     title: 'Sample: Dynamic Grid',
   },
+  {
+    path: 'samples/dynamic-tx-form-view',
+    component: 'dynamic-tx-form-view',
+    requiresLogin: true,
+    icon: 'file',
+    title: 'Sample: Dynamic transactions form',
+  },
 ];
+
 export const routes: ViewRoute[] = [
   {
     path: 'login',

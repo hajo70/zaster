@@ -1,0 +1,76 @@
+import {View} from "Frontend/views/view.ts";
+import {customElement, state} from "lit/decorators.js";
+import {html} from "lit";
+
+import '@vaadin/grid';
+import '@vaadin/grid/vaadin-grid-column';
+import '@vaadin/text-field';
+import '@vaadin/icon';
+import './tx-form';
+import TransactionDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDto.ts";
+import TransactionDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDtoModel.ts";
+
+@customElement("dynamic-tx-form-view")
+export class DynamicTxFromView extends View {
+
+    @state()
+    private transactions: TransactionDto[] = [];
+
+    @state()
+    private deleted: TransactionDto[] = [];
+
+    private nextId = 1;
+
+    protected override render() {
+        return html`
+              <div>
+                    <h2>Transaktionen</h2>
+                  ${this.transactions.map(tx =>
+                  html`
+                      <div ?hidden=${this.deleted.some(deleted => deleted == tx)}>
+                          <span>${tx.id.id}</span>
+                          <tx-form .transaction=${tx}></tx-form>
+                          <vaadin-icon icon="lumo:cross"
+                                       @click=${() => this.removeTx(tx)}
+                          ></vaadin-icon>
+                      </div>
+                  `)}
+
+                  <div class="flex gap-s">
+                      <vaadin-button @click=${this.addTx}>
+                          Add
+                      </vaadin-button>
+                  </div>
+              </div>
+        `;
+    }
+
+   private removeTx(tx: TransactionDto) {
+        this.deleted = [...this.deleted, tx];
+   }
+
+   private addTx() {
+        this.transactions = [...this.transactions, this.createTx()];
+   }
+
+   private createTx() {
+       const newTx = TransactionDtoModel.createEmptyValue();
+       newTx.id.id = `${this.nextId}`;
+       this.nextId++;
+       return newTx;
+   }
+
+   connectedCallback() {
+        super.connectedCallback();
+        this.classList.add(
+            'box-border',
+            'flex',
+            'flex-col',
+            'p-m',
+            'gap-s',
+            'w-full',
+            'h-full'
+        );
+        this.addTx();
+    }
+}
