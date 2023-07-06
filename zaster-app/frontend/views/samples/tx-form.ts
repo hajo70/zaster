@@ -30,6 +30,7 @@ export class TxForm extends View {
             ></vaadin-date-time-picker>
             <vaadin-text-field
                     label="Beschreibung"
+                    style="--vaadin-field-default-width: 24em"
                     ${field(model.description)}
             ></vaadin-text-field>
         `;
