@@ -15,8 +15,6 @@ export class TrackingStore {
             },
             { autoBind: true }
         );
-
-        this.initFromServer();
     }
 
     async initFromServer() {

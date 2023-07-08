@@ -25,6 +25,7 @@ export class AppStore {
     autorun(() => {
       if (this.loggedIn) {
         this.accountingStore.initFromServer();
+        this.trackingStore.initFromServer();
       }
     })
   }

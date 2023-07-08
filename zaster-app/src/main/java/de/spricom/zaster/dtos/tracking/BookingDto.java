@@ -3,12 +3,15 @@ package de.spricom.zaster.dtos.tracking;
 import de.spricom.zaster.dtos.common.IdDto;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDate;
 
 public record BookingDto(
         IdDto id,
         String accountId,
-        Instant bookedAt,
-        BigDecimal amount
+        LocalDate bookedAtDate,
+        BigDecimal amount,
+        String accountGroupId,
+        String accountGroupName,
+        String currencyId
 ) {
     }
