@@ -7,12 +7,6 @@
     <artifactId>zaster-app</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <java.version>17</java.version>
-        <hilla.version>2.1.1</hilla.version>
-        <selenium.version>4.8.3</selenium.version>
-    </properties>
-
     <parent>
         <groupId>de.spricom.zaster</groupId>
         <artifactId>zaster-parent</artifactId>
