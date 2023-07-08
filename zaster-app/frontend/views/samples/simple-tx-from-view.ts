@@ -1,29 +1,26 @@
-import {html} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
-import {View} from 'Frontend/views/view';
+import {View} from "Frontend/views/view.ts";
+import {customElement, state} from "lit/decorators.js";
+import {html} from "lit";
 
-import '@vaadin/button';
+import '@vaadin/grid';
+import '@vaadin/grid/vaadin-grid-column';
 import '@vaadin/text-field';
-import '@vaadin/date-time-picker';
-
-import {Binder, field} from '@hilla/form';
+import '@vaadin/icon';
+import './tx-form';
 import TransactionDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDtoModel.ts";
-import TransactionDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDto.ts";
-import {repeat} from "lit/directives/repeat.js";
-import BookingDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
 import BookingDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDtoModel.ts";
+import {Binder, field} from "@hilla/form";
+import {repeat} from 'lit/directives/repeat.js';
 import {BinderNode} from "@hilla/form/BinderNode.js";
+import BookingDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
 
-@customElement('tx-form')
-export class TxForm extends View {
+@customElement("simple-tx-form-view")
+export class SimpleTxFromView extends View {
 
-    @property()
-    transaction = TransactionDtoModel.createEmptyValue();
+    @state()
+    private transaction = TransactionDtoModel.createEmptyValue();
 
-    protected binder = new Binder(this, TransactionDtoModel, {
-        onChange: this.handleChange,
-        onSubmit: this.save
-    });
+    private binder = new Binder(this, TransactionDtoModel);
 
     protected override render() {
         const {model} = this.binder;
@@ -44,15 +41,12 @@ export class TxForm extends View {
                 <span>${this.binder.value.bookings.length}:</span>
                 ${repeat(this.binder.model.bookings, this.renderBooking)}
                 <vaadin-button
-                        @click=${() => {
-                            this.binder.for(this.binder.model.bookings).appendItem();
-                            this.requestUpdate();
-                        }
-                        }
+                        @click=${() => this.binder.for(this.binder.model.bookings)
+            .appendItem(BookingDtoModel.createEmptyValue())}
                 >
                     <vaadin-icon icon="lumo:plus"></vaadin-icon>
                 </vaadin-button>
-            </div>
+            </div>            
         `;
     }
 
@@ -66,17 +60,17 @@ export class TxForm extends View {
         `;
     }
 
-    handleChange(value: any) {
-        console.log("changed: " + JSON.stringify(value));
-    }
-
-    async save(tx: TransactionDto) {
-        console.log("save: " + JSON.stringify(tx));
-    }
-
     connectedCallback() {
         super.connectedCallback();
-        console.log("binder.read...");
+        this.classList.add(
+            'box-border',
+            'flex',
+            'flex-col',
+            'p-m',
+            'gap-s',
+            'w-full',
+            'h-full'
+        );
         this.binder.read(this.transaction);
     }
 }

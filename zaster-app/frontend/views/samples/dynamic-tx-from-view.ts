@@ -9,6 +9,7 @@ import '@vaadin/icon';
 import './tx-form';
 import TransactionDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDto.ts";
 import TransactionDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDtoModel.ts";
+import BookingDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDtoModel.ts";
 
 @customElement("dynamic-tx-form-view")
 export class DynamicTxFromView extends View {
@@ -53,7 +54,20 @@ export class DynamicTxFromView extends View {
    private createTx() {
        const newTx = TransactionDtoModel.createEmptyValue();
        newTx.submittedAt = new Date().toISOString().substring(0, 16);
+       newTx.bookings = [
+           this.createBooking(),
+           this.createBooking()
+       ];
        return newTx;
+   }
+
+   private nextId = 1;
+
+   private createBooking() {
+        const newBooking = BookingDtoModel.createEmptyValue();
+        this.nextId++;
+        newBooking.id.id = this.nextId as string;
+        return newBooking;
    }
 
     connectedCallback() {
