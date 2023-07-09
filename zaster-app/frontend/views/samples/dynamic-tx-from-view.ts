@@ -66,7 +66,7 @@ export class DynamicTxFromView extends View {
    private createBooking() {
         const newBooking = BookingDtoModel.createEmptyValue();
         this.nextId++;
-        newBooking.id.id = this.nextId as string;
+        newBooking.id.id = `${this.nextId}`;
         return newBooking;
    }
 

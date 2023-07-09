@@ -77,6 +77,17 @@ export const views: ViewRoute[] = [
     },
   },
   {
+    path: 'importers',
+    component: 'import-view',
+    requiresLogin: true,
+    icon: 'file',
+    title: 'Import',
+    action: async (_context, _command) => {
+      await import('./views/importers/import-view');
+      return;
+    },
+  },
+  {
     path: 'samples/dynamic-grid-view',
     component: 'dynamic-grid-view',
     requiresLogin: true,
