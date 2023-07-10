@@ -1,6 +1,5 @@
 package de.spricom.zaster.endpoints;
 
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.spricom.zaster.dtos.tracking.AccountDto;
 import de.spricom.zaster.dtos.tracking.AccountGroupDto;
 import de.spricom.zaster.dtos.tracking.AccountingDataDto;
@@ -11,26 +10,23 @@ import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.security.AuthenticatedUser;
 import dev.hilla.Endpoint;
+import jakarta.annotation.security.PermitAll;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
 
 @Endpoint
-@AnonymousAllowed
+@PermitAll
 @Log4j2
+@AllArgsConstructor
 public class AccountingEndpoint {
 
-    @Autowired
-    private AuthenticatedUser authenticatedUser;
-
-    @Autowired
-    private AccountService accountService;
-
-    @Autowired
-    private CurrencyService currencyService;
+    private final AuthenticatedUser authenticatedUser;
+    private final AccountService accountService;
+    private final CurrencyService currencyService;
 
     public AccountingDataDto getAccountingData() {
         log.info("Loading accounting data...");

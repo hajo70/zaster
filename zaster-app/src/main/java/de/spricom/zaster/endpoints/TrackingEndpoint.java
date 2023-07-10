@@ -1,14 +1,16 @@
 package de.spricom.zaster.endpoints;
 
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.spricom.zaster.dtos.tracking.TransactionDto;
 import dev.hilla.Endpoint;
+import jakarta.annotation.security.PermitAll;
+import lombok.AllArgsConstructor;
 
 import java.util.Collections;
 import java.util.List;
 
 @Endpoint
-@AnonymousAllowed
+@PermitAll
+@AllArgsConstructor
 public class TrackingEndpoint {
 
     public List<TransactionDto> getTransactions() {

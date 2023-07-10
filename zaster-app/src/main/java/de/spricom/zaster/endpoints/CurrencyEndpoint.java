@@ -1,24 +1,22 @@
 package de.spricom.zaster.endpoints;
 
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.currency.CurrencyType;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.security.AuthenticatedUser;
 import dev.hilla.Endpoint;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.security.PermitAll;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
 @Endpoint
-@AnonymousAllowed
+@PermitAll
+@AllArgsConstructor
 public class CurrencyEndpoint {
 
-    @Autowired
-    private AuthenticatedUser authenticatedUser;
-
-    @Autowired
-    private CurrencyService currencyService;
+    private final AuthenticatedUser authenticatedUser;
+    private final CurrencyService currencyService;
 
     public List<CurrencyEntity> findAllCurrencies() {
         return currencyService.findAllCurrencies(authenticatedUser.getCurrentTenant());
