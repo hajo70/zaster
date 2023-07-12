@@ -86,12 +86,14 @@
     "@vaadin/vertical-layout": "24.1.2",
     "@vaadin/virtual-list": "24.1.2",
     "construct-style-sheets-polyfill": "3.1.0",
+    "js-cookie": "^3.0.5",
     "lit": "2.7.4",
     "mobx": "^6.3.5"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "5.0.2",
     "@rollup/pluginutils": "5.0.2",
+    "@types/js-cookie": "^3.0.3",
     "@vitejs/plugin-react": "4.0.0",
     "async": "3.2.2",
     "glob": "7.2.3",
@@ -193,7 +195,8 @@
     "@hilla/generator-typescript-plugin-backbone": "$@hilla/generator-typescript-plugin-backbone",
     "@hilla/generator-typescript-cli": "$@hilla/generator-typescript-cli",
     "@vaadin/a11y-base": "$@vaadin/a11y-base",
-    "@vaadin/side-nav": "$@vaadin/side-nav"
+    "@vaadin/side-nav": "$@vaadin/side-nav",
+    "js-cookie": "$js-cookie"
   },
   "vaadin": {
     "dependencies": {
@@ -299,6 +302,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "4aab442fbab8df669d6f533fdbad25baf4bc3a557363f42bf9d0fdff19ffbc0c"
+    "hash": "83af2ff89d1de132331d7cc484d8a3b596fcebcae3550bd5a062cacc3fc33fae"
   }
 }
