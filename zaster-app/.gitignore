@@ -7,3 +7,6 @@ vite.generated.ts
 
 # Contains secrets that shouldn’t go into the repository
 config/secrets/
+
+# Local configuration
+src/test/resources/application-initme.yaml
