@@ -1,5 +1,8 @@
 package de.spricom.zaster.importers;
 
+import de.spricom.zaster.entities.managment.ApplicationUserEntity;
+import de.spricom.zaster.security.AuthenticatedUser;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,14 +16,17 @@ import java.nio.charset.StandardCharsets;
 
 @RestController
 @Log4j2
+@AllArgsConstructor
 public class ImportController {
 
+    private final AuthenticatedUser authenticatedUser;
 
     @PostMapping("/api/upload-handler")
     void upload(@RequestParam("file") MultipartFile file) throws IOException {
-        log.info("upload called");
+        log.info("upload called by {}",
+                authenticatedUser.get().map(ApplicationUserEntity::getName).orElse("no one"));
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-            br.lines().forEach(System.out::println);
+            br.lines().limit(20).forEach(System.out::println);
         }
     }
 }

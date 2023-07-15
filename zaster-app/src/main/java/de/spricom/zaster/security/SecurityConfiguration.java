@@ -33,9 +33,10 @@ public class SecurityConfiguration extends VaadinWebSecurity {
     protected void configure(HttpSecurity http) throws Exception {
         // Icons from the line-awesome addon
         http.authorizeHttpRequests(reg ->
-                reg.requestMatchers("/images/*.png", "/line-awesome/**.svg", "/api/**").permitAll());
+                reg.requestMatchers("/images/*.png", "/line-awesome/**.svg").permitAll())
+                .authorizeHttpRequests(reg ->
+                        reg.requestMatchers("/api/**").hasRole("ADMIN"));
 
-        http.csrf().ignoringRequestMatchers("/api/**");
         super.configure(http);
 
         http.sessionManagement(mgmt -> mgmt.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

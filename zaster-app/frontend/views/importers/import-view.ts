@@ -31,7 +31,7 @@ export class ImportView extends View {
                         .items="${this.importers}"
                 ></vaadin-combo-box>
                 <vaadin-upload
-                        target="/connect/ImportEndpoint/upload"
+                        target="/api/upload-handler"
                         headers='{ "X-XSRF-TOKEN": "${this.cookies['XSRF-TOKEN']}" }'>
                 </vaadin-upload>
             </div>
