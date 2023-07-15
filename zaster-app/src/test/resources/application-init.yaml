@@ -1,0 +1,51 @@
+zaster:
+  init:
+    tenants:
+      me:
+          name: My personal Zaster
+          locale: en_US
+          timezone: GMT
+          users:
+            user:
+              name: John Normal
+              role: USER
+            admin:
+              name: Emma Powerful
+              role: ADMIN
+          iso-currencies:
+            - USD
+            - EUR
+          currencies:
+            BTC:
+              name: Bitcoin
+              type: CRYPTO
+            XRP:
+              name: Ripple
+              type: CRYPTO
+            XAU:
+              name: Gold
+              type: METAL
+          accounts:
+            accounts:
+              name: My bank accounts
+              accounts:
+                bank:
+                  name: My bank
+                cash:
+                  name: Cash
+            expends:
+              name: My expends
+              accounts:
+                rent:
+                  name: My flat
+                food:
+                  name: Food
+          imports:
+            bank:
+              importer: My bank CSV importer
+              files:
+                - /home/user/bank1.csv
+                - /home/user/bank2.csv
+
+      sample:
+          name: Duck Corporation
