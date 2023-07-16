@@ -35,6 +35,7 @@ public class ManagementServiceImpl implements ManagementService {
 
     @Override
     public void deleteTenant(String tenantId) {
+        // TODO: delete all dependencies
         tenantRepository.deleteById(tenantId);
     }
 
