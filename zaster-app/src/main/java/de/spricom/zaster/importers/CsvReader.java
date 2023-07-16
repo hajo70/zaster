@@ -1,8 +1,8 @@
 package de.spricom.zaster.importers;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.BufferedReader;
@@ -10,24 +10,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Getter
-@Setter
+@AllArgsConstructor
 public class CsvReader {
-    private String delimitator = ";";
-    private Charset encoding = StandardCharsets.UTF_8;
+    private final String delimiter;
+    private final Charset charset;
 
     public List<CsvRow> scan(InputStream is) throws IOException {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, charset))) {
             return br.lines().map(this::toRow).toList();
         }
     }
 
     private CsvRow toRow(String row) {
         return new CsvRow(
-            row.split(delimitator),
+            row.split(delimiter),
             md5Hash(row)
         );
     }

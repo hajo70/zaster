@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -28,7 +29,7 @@ class CsvReaderTest {
     private List<CsvRow> scan(File file) throws IOException {
         var bytes = Files.readAllBytes(file.toPath());
         System.out.println("MD5: " + DigestUtils.md5Hex(bytes));
-        CsvReader csvReader = new CsvReader();
+        CsvReader csvReader = new CsvReader(";", StandardCharsets.UTF_8);
         try (InputStream is = new ByteArrayInputStream(bytes)) {
             return csvReader.scan(is);
         }
