@@ -5,6 +5,7 @@ import de.spricom.zaster.entities.currency.CurrencyType;
 import de.spricom.zaster.entities.managment.ApplicationUserEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.managment.UserRole;
+import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.repository.ManagementService;
@@ -41,9 +42,8 @@ public class ZasterInitTool {
     void checkProperties() {
         assertThat(props).isNotNull();
         assertThat(props.getTenants()).isNotEmpty();
-        props.getTenants().forEach((key, tenant) -> {
-            assertThat(tenant.getUsers()).as(key).isNotEmpty();
-        });
+        props.getTenants().forEach((key, tenant) ->
+                assertThat(tenant.getUsers()).as(key).isNotEmpty());
     }
 
     @Test
@@ -68,6 +68,7 @@ public class ZasterInitTool {
         }
         initIsoCurrencies(tenant.getIsoCurrencies());
         tenant.getCurrencies().forEach(this::initCurrency);
+        tenant.getAccounts().forEach((key, value) -> initAccount(null, value));
     }
 
     private ApplicationUserEntity asUserEntity(String username, ZasterInitProperties.User user) {
@@ -98,5 +99,16 @@ public class ZasterInitTool {
         entity.setCurrencyCode(currencyCode);
         entity.setCurrencyName(currency.getName());
         currencyService.saveCurrency(entity);
+    }
+
+    private void initAccount(AccountGroupEntity parent, ZasterInitProperties.Account account) {
+        var group = new AccountGroupEntity();
+        group.setTenant(currentTenant);
+        group.setParent(parent);
+        group.setAccountName(account.getName());
+        var savedGroup = accountService.saveAccountGroup(group);
+        if (account.getAccounts() != null) {
+            account.getAccounts().forEach((key, value) -> initAccount(savedGroup, value));
+        }
     }
 }
