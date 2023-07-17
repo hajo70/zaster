@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -31,5 +32,13 @@ public class TrackingDateTime {
 
     public static TrackingDateTime now() {
         return new TrackingDateTime(ZonedDateTime.now());
+    }
+
+    public static TrackingDateTime of(LocalDate date) {
+        return new TrackingDateTime(date.atStartOfDay(ZoneId.systemDefault()).plusHours(12));
+    }
+
+    public String toString() {
+        return zonedDateTime;
     }
 }

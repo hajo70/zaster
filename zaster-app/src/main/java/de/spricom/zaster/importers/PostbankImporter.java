@@ -1,5 +1,7 @@
 package de.spricom.zaster.importers;
 
+import de.spricom.zaster.entities.common.TrackingDateTime;
+import de.spricom.zaster.entities.tracking.SnapshotEntity;
 import de.spricom.zaster.repository.BookingService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -56,6 +58,8 @@ public class PostbankImporter implements CsvImporter {
             var booking = toRecord(row);
             System.out.println(booking);
         }
+
+        System.out.println(getSnapshot(rows.get(rows.size() -1)));
     }
 
     private BookingService.BookingRecord toRecord(CsvRow row) {
@@ -99,15 +103,26 @@ public class PostbankImporter implements CsvImporter {
         return Collections.unmodifiableMap(details);
     }
 
+    private SnapshotEntity getSnapshot(CsvRow snapshotRow) {
+        var snapshot = new SnapshotEntity();
+        check(snapshotRow, "A", "Kontostand");
+        snapshot.setTakenAt(TrackingDateTime.of(parseDate(snapshotRow.column("B"))));
+        snapshot.setBalance(parseMoney(snapshotRow.column("E")));
+        return snapshot;
+    }
+
     private void checkHeader(CsvRow header) {
-        int index = 0;
-        for (String column : header.columns()) {
-            if (!HEADER_COLUMNS[index].equals(column)) {
-                throw new IllegalArgumentException("Unexpected header column " +
-                        (char) ('A' + index) + ": " + column +
-                        ", expected: " + HEADER_COLUMNS[index]);
-            }
-            index++;
+        for (int i = 0; i < header.columns().length; i++) {
+            check(header, CsvRow.index(i), HEADER_COLUMNS[i]);
+        }
+    }
+
+    private void check(CsvRow row, String index, String expectedHeader) {
+        String actualHeader = row.column(index);
+        if (!expectedHeader.equals(actualHeader)) {
+            throw new IllegalArgumentException("Unexpected header column " +
+                    index + ": " + actualHeader +
+                    ", expected: " + expectedHeader);
         }
     }
 

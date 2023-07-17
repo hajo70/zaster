@@ -14,4 +14,8 @@ public record CsvRow(
     String column(String indexChar) {
         return column(indexChar.charAt(0) - 'A');
     }
+
+    static String index(int i) {
+        return "" + (char)('A' + i);
+    }
 }
