@@ -6,15 +6,18 @@ import de.spricom.zaster.entities.managment.ApplicationUserEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.managment.UserRole;
 import de.spricom.zaster.entities.tracking.AccountGroupEntity;
+import de.spricom.zaster.importers.ImportService;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.repository.ManagementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.io.File;
 import java.util.Currency;
 import java.util.EnumSet;
 import java.util.List;
@@ -35,6 +38,8 @@ public class ZasterInitTool {
     private CurrencyService currencyService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private ImportService importService;
 
     private TenantEntity currentTenant;
 
@@ -71,6 +76,13 @@ public class ZasterInitTool {
         initIsoCurrencies(tenant.getIsoCurrencies());
         tenant.getCurrencies().forEach(this::initCurrency);
         tenant.getAccounts().forEach((key, value) -> initAccount(null, value));
+        tenant.getImports().forEach(this::importFiles);
+    }
+
+    private void importFiles(String key, ZasterInitProperties.Import importTask) {
+        for (File file : importTask.getFiles()) {
+            importService.importFile(new FileSystemResource(file), importTask.getImporter());
+        }
     }
 
     private ApplicationUserEntity asUserEntity(String username, ZasterInitProperties.User user) {
@@ -108,6 +120,7 @@ public class ZasterInitTool {
         group.setTenant(currentTenant);
         group.setParent(parent);
         group.setAccountName(account.getName());
+        group.setAccountCode(account.getCode());
         var savedGroup = accountService.saveAccountGroup(group);
         if (account.getAccounts() != null) {
             account.getAccounts().forEach((key, value) -> initAccount(savedGroup, value));

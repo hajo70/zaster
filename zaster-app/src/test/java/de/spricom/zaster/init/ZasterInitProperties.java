@@ -49,6 +49,7 @@ public class ZasterInitProperties {
     @Data
     static class Account {
         private String name;
+        private String code;
         private Map<String, Account> accounts;
     }
 

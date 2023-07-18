@@ -1,6 +1,7 @@
 package de.spricom.zaster.importers;
 
 import de.spricom.zaster.entities.common.TrackingDateTime;
+import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 import de.spricom.zaster.entities.tracking.SnapshotEntity;
 import de.spricom.zaster.repository.BookingService;
 import lombok.AllArgsConstructor;
@@ -49,12 +50,21 @@ public class PostbankImporter implements CsvImporter {
 
     @Override
     public void process(List<CsvRow> rows) {
+        checkHeader(rows.get(1), new String[] {
+                "Konto", // A
+                "Filial-/Kontonummer", // B
+                "IBAN", // C
+                "Währung", // D
+        });
+
+        AccountGroupEntity account = getAccount(rows.get(2));
+
         var header = rows.get(7);
-        checkHeader(header);
+        checkHeader(header, HEADER_COLUMNS);
 
         for (CsvRow row : rows.subList(8, rows.size() - 1)) {
             var booking = toRecord(row);
-            System.out.println(booking);
+            // System.out.println(booking);
         }
 
         System.out.println(getSnapshot(rows.get(rows.size() -1)));
@@ -109,9 +119,13 @@ public class PostbankImporter implements CsvImporter {
         return snapshot;
     }
 
-    private void checkHeader(CsvRow header) {
+    private AccountGroupEntity getAccount(CsvRow accountRow) {
+        return null;
+    }
+
+    private void checkHeader(CsvRow header, String[] columns) {
         for (int i = 0; i < header.columns().length; i++) {
-            check(header, CsvRow.index(i), HEADER_COLUMNS[i]);
+            check(header, CsvRow.index(i), columns[i]);
         }
     }
 

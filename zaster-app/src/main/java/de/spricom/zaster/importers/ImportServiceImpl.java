@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,15 +14,18 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Log4j2
-public class ImportServiceImpl {
+public class ImportServiceImpl implements ImportService {
 
     private final AuthenticatedUser authenticatedUser;
 
     private final CsvImporter[] csvImporters;
 
+    @Override
+    @Transactional
     public void importFile(Resource resource, String importerName) {
         CsvImporter importer = getImporter(importerName);
         List<CsvRow> rows = scan(resource, importer);
+        importer.process(rows);
     }
 
     private List<CsvRow> scan(Resource resource, CsvImporter importer) {
