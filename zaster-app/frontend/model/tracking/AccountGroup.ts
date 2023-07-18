@@ -26,7 +26,7 @@ export class AccountGroup {
     }
 
     findAccount(id: string): Account | undefined {
-        let account = this.accounts.find(a => id === a.data.id.id);
+        let account = this.accounts.find(a => id === a.data.id.uuid);
         if (account) {
             return account;
         }

@@ -1,0 +1,36 @@
+server:
+  port: ${PORT:8080}
+  servlet.session.tracking-modes: cookie
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/zaster
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+  mustache:
+    check-template-location: false
+
+logging:
+  level:
+    org.atmosphere: warn
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+    org.springframework.security: debug
+
+vaadin:
+  # Launch the default browser when starting the application in development mode
+  launch-browser: true
+  # To improve the performance during development.
+  # For more information https://vaadin.com/docs/flow/spring/tutorial-spring-configuration.html#special-configuration-parameters
+  whitelisted-packages:
+    - com.vaadin
+    - org.vaadin
+    - dev.hilla
+    - de.spicom.zaster

@@ -49,8 +49,6 @@ public class PostbankImporter implements CsvImporter {
 
     @Override
     public void process(List<CsvRow> rows) {
-
-
         var header = rows.get(7);
         checkHeader(header);
 

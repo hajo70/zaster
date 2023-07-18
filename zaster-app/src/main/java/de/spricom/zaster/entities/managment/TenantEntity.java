@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.ZoneId;
+import java.util.Locale;
+
 @Getter
 @Setter
 @ToString
@@ -15,4 +18,7 @@ import lombok.ToString;
 public class TenantEntity extends AbstractEntity {
 
     private String name;
+    private Locale locale;
+    private ZoneId timezone;
+
 }

@@ -54,6 +54,8 @@ public class ZasterInitTool {
     private void initTenant(ZasterInitProperties.Tenant tenant) {
         var tenantEntity = new TenantEntity();
         tenantEntity.setName(tenant.getName());
+        tenantEntity.setLocale(tenant.getLocale());
+        tenantEntity.setTimezone(tenant.getTimezone());
         var users = tenant.getUsers().entrySet().stream()
                 .map(entry -> this.asUserEntity(entry.getKey(), entry.getValue()))
                 .toList();

@@ -8,6 +8,6 @@ export class Transaction {
 
     constructor(data: TransactionDto, accountLookup: (id: string) => Account) {
         this.data = data;
-        this.bookings = data.bookings.map(booking => new Booking(this, booking, accountLookup(booking.id.id)));
+        this.bookings = data.bookings.map(booking => new Booking(this, booking, accountLookup(booking.id.uuid)));
     }
 }

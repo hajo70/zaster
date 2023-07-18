@@ -32,6 +32,13 @@ public class AccountGroupEntity extends AbstractEntity {
 
     private String accountName;
 
+    private String accountCode;
+
+    @JsonIgnore
+    @Lob
+    @Column(length = 65536)
+    private String metadata;
+
     @JsonIgnore
     @Transient
     private SortedSet<AccountGroupEntity> children;

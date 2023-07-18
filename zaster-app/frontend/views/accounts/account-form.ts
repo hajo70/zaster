@@ -33,7 +33,7 @@ export class AccountForm extends View {
             <vaadin-combo-box
                     label="Parent"
                     item-label-path="accountName"
-                    item-value-path="id.id"
+                    item-value-path="id.uuid"
                     .items="${accountsViewStore.allAccountGroups}"
                     ${field(model.parentId)}
                     clear-button-visible

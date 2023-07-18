@@ -12,7 +12,7 @@ public final class DtoUtils {
     }
 
     public static void setId(AbstractEntity entity, IdDto id) {
-        entity.setId(id.id());
+        entity.setId(id.uuid());
         entity.setVersion(id.version());
     }
 }

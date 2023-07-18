@@ -87,7 +87,7 @@ class AccountsViewStore {
         if (!accountGroup.id) return;
 
         try {
-            await AccountingEndpoint.deleteAccountGroupById(accountGroup.id.id);
+            await AccountingEndpoint.deleteAccountGroupById(accountGroup.id.uuid);
             this.deleteLocal(this.selectedAccountGroupParent, accountGroup);
         } catch (ex) {
             console.log('AccountGroupDto delete failed: ' + ex);
@@ -114,7 +114,7 @@ class AccountsViewStore {
         if (!group.parentId) {
             return undefined;
         }
-        return this.allAccountGroups?.find(ag => ag.id.id === group.parentId);
+        return this.allAccountGroups?.find(ag => ag.id.uuid === group.parentId);
     }
 
     private saveLocal(saved: AccountGroupDto) {
@@ -133,7 +133,7 @@ class AccountsViewStore {
         if (!list) {
             return [saved];
         }
-        const accountGroupExists = list?.some((ag) => ag.id.id === saved.id.id);
+        const accountGroupExists = list?.some((ag) => ag.id.uuid === saved.id.uuid);
         if (accountGroupExists) {
             return list.map((existing) => {
                 if (existing.id === saved.id) {
@@ -156,7 +156,7 @@ class AccountsViewStore {
     }
 
     private removeDeleted(list: AccountGroupDto[] | undefined, deleted: AccountGroupDto) {
-        return list?.filter(ag => ag.id.id !== deleted.id.id);
+        return list?.filter(ag => ag.id.uuid !== deleted.id.uuid);
     }
 
     get currencyCodes() {
