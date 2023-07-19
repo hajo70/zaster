@@ -1,5 +1,7 @@
-package de.spricom.zaster.importers;
+package de.spricom.zaster.importing;
 
+import de.spricom.zaster.importing.csv.CsvReader;
+import de.spricom.zaster.importing.csv.CsvRow;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.Test;
 

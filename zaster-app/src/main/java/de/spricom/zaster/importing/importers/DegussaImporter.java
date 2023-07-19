@@ -1,5 +1,7 @@
-package de.spricom.zaster.importers;
+package de.spricom.zaster.importing.importers;
 
+import de.spricom.zaster.importing.csv.CsvImporter;
+import de.spricom.zaster.importing.csv.CsvRow;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

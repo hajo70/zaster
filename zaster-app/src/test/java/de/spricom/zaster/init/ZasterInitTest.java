@@ -11,7 +11,7 @@ import java.util.Locale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@ActiveProfiles("init")
+@ActiveProfiles({"init", "test"})
 public class ZasterInitTest {
 
     @Autowired

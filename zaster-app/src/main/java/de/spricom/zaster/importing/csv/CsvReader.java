@@ -1,4 +1,4 @@
-package de.spricom.zaster.importers;
+package de.spricom.zaster.importing.csv;
 
 
 import lombok.AllArgsConstructor;

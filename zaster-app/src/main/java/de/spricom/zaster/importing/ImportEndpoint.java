@@ -1,4 +1,4 @@
-package de.spricom.zaster.importers;
+package de.spricom.zaster.importing;
 
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
@@ -6,9 +6,7 @@ import jakarta.annotation.security.PermitAll;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Endpoint
 @PermitAll
@@ -16,9 +14,9 @@ import java.util.stream.Collectors;
 @Log4j2
 public class ImportEndpoint {
 
-    private final CsvImporter[] csvImporters;
+    private final ImportHandlingService importHandlingService;
 
     public @Nonnull List<@Nonnull String> getImporterNames() {
-        return Arrays.stream(csvImporters).map(CsvImporter::getName).collect(Collectors.toList());
+        return importHandlingService.getImporterNames();
     }
 }

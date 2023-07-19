@@ -1,4 +1,4 @@
-package de.spricom.zaster.importers;
+package de.spricom.zaster.importing.csv;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

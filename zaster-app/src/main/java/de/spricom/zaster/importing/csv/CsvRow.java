@@ -1,21 +1,21 @@
-package de.spricom.zaster.importers;
+package de.spricom.zaster.importing.csv;
 
 public record CsvRow(
         String[] columns,
         String md5
 ) {
-    String column(int index) {
+    public String column(int index) {
         if (index > columns.length) {
             return null;
         }
         return columns[index];
     }
 
-    String column(String indexChar) {
+    public String column(String indexChar) {
         return column(indexChar.charAt(0) - 'A');
     }
 
-    static String index(int i) {
+    public static String index(int i) {
         return "" + (char)('A' + i);
     }
 }

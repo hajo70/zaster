@@ -23,9 +23,14 @@ public class TransactionEntity extends AbstractEntity {
 
     private String description;
 
+    private String md5;
+
     @Lob
     @Column(length = 65536)
     private String metadata;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ImportEntity imported;
 
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BookingEntity> bookings;

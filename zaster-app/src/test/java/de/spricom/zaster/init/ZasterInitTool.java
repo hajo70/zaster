@@ -6,7 +6,7 @@ import de.spricom.zaster.entities.managment.ApplicationUserEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.managment.UserRole;
 import de.spricom.zaster.entities.tracking.AccountGroupEntity;
-import de.spricom.zaster.importers.ImportService;
+import de.spricom.zaster.importing.ImportHandlingService;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.repository.ManagementService;
@@ -39,7 +39,7 @@ public class ZasterInitTool {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private ImportService importService;
+    private ImportHandlingService importHandlingService;
 
     private TenantEntity currentTenant;
 
@@ -81,7 +81,7 @@ public class ZasterInitTool {
 
     private void importFiles(String key, ZasterInitProperties.Import importTask) {
         for (File file : importTask.getFiles()) {
-            importService.importFile(new FileSystemResource(file), importTask.getImporter());
+            importHandlingService.importFile(new FileSystemResource(file), importTask.getImporter());
         }
     }
 

@@ -1,5 +1,8 @@
-package de.spricom.zaster.importers;
+package de.spricom.zaster.importing;
 
+import de.spricom.zaster.importing.csv.CsvImporter;
+import de.spricom.zaster.importing.csv.CsvReader;
+import de.spricom.zaster.importing.csv.CsvRow;
 import de.spricom.zaster.security.AuthenticatedUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -9,16 +12,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @Log4j2
-public class ImportServiceImpl implements ImportService {
+public class ImportHandlingServiceImpl implements ImportHandlingService {
 
     private final AuthenticatedUser authenticatedUser;
 
     private final CsvImporter[] csvImporters;
+
+    @Override
+    public List<String> getImporterNames() {
+        return Arrays.stream(csvImporters).map(CsvImporter::getName).collect(Collectors.toList());
+    }
 
     @Override
     @Transactional

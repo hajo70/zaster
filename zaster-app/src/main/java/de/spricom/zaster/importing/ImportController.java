@@ -1,4 +1,4 @@
-package de.spricom.zaster.importers;
+package de.spricom.zaster.importing;
 
 import de.spricom.zaster.entities.managment.ApplicationUserEntity;
 import de.spricom.zaster.security.AuthenticatedUser;
