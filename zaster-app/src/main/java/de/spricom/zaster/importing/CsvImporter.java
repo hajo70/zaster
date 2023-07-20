@@ -1,4 +1,7 @@
-package de.spricom.zaster.importing.csv;
+package de.spricom.zaster.importing;
+
+import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.importing.csv.CsvRow;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -8,7 +11,7 @@ public interface CsvImporter {
 
     String getName();
 
-    void process(List<CsvRow> rows);
+    void process(TenantEntity tenant, List<CsvRow> rows);
 
     default Charset getCharset() {
         return StandardCharsets.UTF_8;

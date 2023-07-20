@@ -1,9 +1,12 @@
 package de.spricom.zaster.importing;
 
-import de.spricom.zaster.importing.csv.CsvImporter;
+import de.spricom.zaster.entities.common.TrackingDateTime;
+import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.tracking.FileSourceEntity;
+import de.spricom.zaster.entities.tracking.ImportEntity;
 import de.spricom.zaster.importing.csv.CsvReader;
 import de.spricom.zaster.importing.csv.CsvRow;
-import de.spricom.zaster.security.AuthenticatedUser;
+import de.spricom.zaster.repository.ImportService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,8 +25,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class ImportHandlingServiceImpl implements ImportHandlingService {
 
-    private final AuthenticatedUser authenticatedUser;
-
+    private final ImportService importService;
     private final CsvImporter[] csvImporters;
 
     @Override
@@ -32,10 +35,29 @@ public class ImportHandlingServiceImpl implements ImportHandlingService {
 
     @Override
     @Transactional
-    public void importFile(Resource resource, String importerName) {
+    public void importFile(TenantEntity tenant, String importerName, Resource resource) {
+        String fileMd5 = md5Hash(resource);
+        Optional<FileSourceEntity> source = importService.findByMd5(tenant, fileMd5);
+        if (source.isPresent()) {
+            throw new AlreadyImportedException(source.get().getFilename(),
+                    source.get().getImported().getImportedAt().toLocalDateTime());
+        }
         CsvImporter importer = getImporter(importerName);
         List<CsvRow> rows = scan(resource, importer);
-        importer.process(rows);
+        importer.process(tenant, rows);
+        importService.create(createFileSource(tenant, resource, importer, fileMd5));
+    }
+
+    private FileSourceEntity createFileSource(TenantEntity tenant, Resource resource, CsvImporter importer, String md5) {
+        var imported = new ImportEntity();
+        imported.setTenant(tenant);
+        imported.setImportedAt(TrackingDateTime.now());
+        imported.setImporterName(importer.getName());
+        var fileSource = new FileSourceEntity();
+        fileSource.setImported(imported);
+        fileSource.setFilename(resource.getFilename());
+        fileSource.setMd5(md5);
+        return fileSource;
     }
 
     private List<CsvRow> scan(Resource resource, CsvImporter importer) {

@@ -81,7 +81,7 @@ public class ZasterInitTool {
 
     private void importFiles(String key, ZasterInitProperties.Import importTask) {
         for (File file : importTask.getFiles()) {
-            importHandlingService.importFile(new FileSystemResource(file), importTask.getImporter());
+            importHandlingService.importFile(currentTenant, importTask.getImporter(), new FileSystemResource(file));
         }
     }
 

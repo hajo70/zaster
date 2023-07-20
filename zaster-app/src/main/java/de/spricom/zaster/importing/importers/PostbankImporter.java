@@ -1,9 +1,10 @@
 package de.spricom.zaster.importing.importers;
 
 import de.spricom.zaster.entities.common.TrackingDateTime;
+import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 import de.spricom.zaster.entities.tracking.SnapshotEntity;
-import de.spricom.zaster.importing.csv.CsvImporter;
+import de.spricom.zaster.importing.CsvImporter;
 import de.spricom.zaster.importing.csv.CsvRow;
 import de.spricom.zaster.repository.BookingService;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,7 @@ public class PostbankImporter implements CsvImporter {
     }
 
     @Override
-    public void process(List<CsvRow> rows) {
+    public void process(TenantEntity tenant, List<CsvRow> rows) {
         checkHeader(rows.get(1), new String[] {
                 "Konto", // A
                 "Filial-/Kontonummer", // B

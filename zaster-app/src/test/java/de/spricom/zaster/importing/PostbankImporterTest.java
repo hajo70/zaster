@@ -28,7 +28,7 @@ class PostbankImporterTest {
     @Test
     void testProcess() throws IOException {
         var csv = scan(new File("/Users/hajo/Desktop/Konto/Postbank/Kontoumsaetze_210_5140645_00_20230709_134540.csv"));
-        importer.process(csv);
+        importer.process(null, csv);
     }
 
     private List<CsvRow> scan(File file) throws IOException {
