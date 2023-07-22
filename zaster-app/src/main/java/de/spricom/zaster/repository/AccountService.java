@@ -1,5 +1,6 @@
 package de.spricom.zaster.repository;
 
+import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.entities.tracking.AccountGroupEntity;
@@ -18,4 +19,6 @@ public interface AccountService {
     AccountEntity saveAccount(AccountEntity account);
 
     void deleteAccount(String accountId);
+
+    AccountEntity getOrCreateAccount(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency);
 }

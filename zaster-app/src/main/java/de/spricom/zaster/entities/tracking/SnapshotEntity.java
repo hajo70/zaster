@@ -27,4 +27,7 @@ public class SnapshotEntity extends AbstractEntity {
 
     @Column(precision = 40, scale = 15)
     private BigDecimal balance;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ImportEntity imported;
 }

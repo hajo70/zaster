@@ -1,6 +1,6 @@
 package de.spricom.zaster.importing;
 
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.tracking.ImportEntity;
 import de.spricom.zaster.importing.csv.CsvRow;
 
 import java.nio.charset.Charset;
@@ -11,7 +11,7 @@ public interface CsvImporter {
 
     String getName();
 
-    void process(TenantEntity tenant, List<CsvRow> rows);
+    Stats process(ImportEntity imported, List<CsvRow> rows);
 
     default Charset getCharset() {
         return StandardCharsets.UTF_8;
@@ -19,5 +19,11 @@ public interface CsvImporter {
 
     default String getDelimiter() {
         return ";";
+    }
+
+    record Stats(
+            int totalCount,
+            int importedCount
+    ) {
     }
 }

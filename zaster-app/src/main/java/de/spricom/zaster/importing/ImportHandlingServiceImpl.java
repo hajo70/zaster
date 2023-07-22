@@ -35,7 +35,7 @@ public class ImportHandlingServiceImpl implements ImportHandlingService {
 
     @Override
     @Transactional
-    public void importFile(TenantEntity tenant, String importerName, Resource resource) {
+    public Stats importFile(TenantEntity tenant, String importerName, Resource resource) {
         String fileMd5 = md5Hash(resource);
         Optional<FileSourceEntity> source = importService.findByMd5(tenant, fileMd5);
         if (source.isPresent()) {
@@ -44,8 +44,9 @@ public class ImportHandlingServiceImpl implements ImportHandlingService {
         }
         CsvImporter importer = getImporter(importerName);
         List<CsvRow> rows = scan(resource, importer);
-        importer.process(tenant, rows);
-        importService.create(createFileSource(tenant, resource, importer, fileMd5));
+        FileSourceEntity fileSource = importService.create(createFileSource(tenant, resource, importer, fileMd5));
+        CsvImporter.Stats stats = importer.process(fileSource.getImported(), rows);
+        return new Stats(stats.totalCount(), stats.importedCount(), resource.getFilename());
     }
 
     private FileSourceEntity createFileSource(TenantEntity tenant, Resource resource, CsvImporter importer, String md5) {

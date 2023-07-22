@@ -1,6 +1,6 @@
 package de.spricom.zaster.importing.importers;
 
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.tracking.ImportEntity;
 import de.spricom.zaster.importing.CsvImporter;
 import de.spricom.zaster.importing.csv.CsvRow;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class DegussaImporter implements CsvImporter {
     }
 
     @Override
-    public void process(TenantEntity tenant, List<CsvRow> rows) {
-
+    public Stats process(ImportEntity imported, List<CsvRow> rows) {
+        return null;
     }
 }

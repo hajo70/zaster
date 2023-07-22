@@ -26,7 +26,7 @@ class ManagementServiceTest {
         var user = new ApplicationUserEntity();
         user.setUserRoles(EnumSet.of(UserRole.USER, UserRole.ADMIN));
         user.setName("Max Testuser");
-        user.setUsername("testuser");
+        user.setUsername("mgmttestuser");
         user.setHashedPassword("abcdef");
         user.setTenant(tenant);
 

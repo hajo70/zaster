@@ -11,4 +11,6 @@ public interface CurrencyService {
     CurrencyEntity saveCurrency(CurrencyEntity currency);
 
     void deleteCurrencyById(String currencyId);
+
+    CurrencyEntity getOrCreateCurrencyByCode(TenantEntity tenant, String currencyCode);
 }

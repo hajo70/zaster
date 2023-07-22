@@ -9,4 +9,6 @@ import java.util.List;
 public interface CurrencyRepository extends JpaRepository<CurrencyEntity, String>, JpaSpecificationExecutor<CurrencyEntity> {
 
     List<CurrencyEntity> findAllByTenantId(String tenantId);
+
+    CurrencyEntity findByTenantIdAndCurrencyCode(String tenantId, String currencyCode);
 }

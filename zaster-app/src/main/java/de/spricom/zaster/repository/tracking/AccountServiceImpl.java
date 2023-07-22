@@ -1,5 +1,6 @@
 package de.spricom.zaster.repository.tracking;
 
+import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.entities.tracking.AccountGroupEntity;
@@ -67,5 +68,27 @@ public class AccountServiceImpl implements AccountService {
     public void deleteAccount(String accountId) {
         log.info("deleting account: {}", accountId);
         accountRepository.deleteById(accountId);
+    }
+
+    @Override
+    public AccountEntity getOrCreateAccount(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency) {
+        var group = accountGroupRepository.findByTenantIdAndAccountCode(tenant.getId(), accountCode);
+        AccountEntity account = null;
+        if (group == null) {
+            group = new AccountGroupEntity();
+            group.setTenant(tenant);
+            group.setAccountCode(accountCode);
+            group.setAccountName(accountName);
+            group = accountGroupRepository.save(group);
+        } else {
+            account = accountRepository.findByAccountGroupIdAndCurrencyId(group.getId(), currency.getId());
+        }
+        if (account == null) {
+            account = new AccountEntity();
+            account.setAccountGroup(group);
+            account.setCurrency(currency);
+            account = accountRepository.save(account);
+        }
+        return account;
     }
 }

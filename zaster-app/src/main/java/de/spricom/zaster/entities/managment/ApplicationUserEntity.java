@@ -22,6 +22,7 @@ public class ApplicationUserEntity extends AbstractEntity {
     private TenantEntity tenant;
 
     @Nonnull
+    @Column(unique = true)
     private String username;
     @Nonnull
     private String name;

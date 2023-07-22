@@ -7,5 +7,12 @@ import java.util.List;
 
 public interface ImportHandlingService {
     List<String> getImporterNames();
-    void importFile(TenantEntity tenant, String importerName, Resource resource);
+    Stats importFile(TenantEntity tenant, String importerName, Resource resource);
+
+    record Stats(
+            int totalCount,
+            int importedCount,
+            String filename
+    ) {
+    }
 }

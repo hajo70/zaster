@@ -101,7 +101,7 @@ public class ZasterInitTool {
             currency.setTenant(currentTenant);
             currency.setCurrencyType(CurrencyType.FIAT);
             currency.setCurrencyCode(isoCurrency.getCurrencyCode());
-            currency.setCurrencyName(isoCurrency.getDisplayName());
+            currency.setCurrencyName(isoCurrency.getDisplayName(currentTenant.getLocale()));
             currencyService.saveCurrency(currency);
         }
     }

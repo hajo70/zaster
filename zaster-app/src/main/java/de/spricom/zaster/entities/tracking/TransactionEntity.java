@@ -21,6 +21,7 @@ public class TransactionEntity extends AbstractEntity {
     @AttributeOverride(name = "zonedDateTime", column = @Column(name="SUBMITTED_AT_TS"))
     private TrackingDateTime submittedAt;
 
+    @Column(length = 4096)
     private String description;
 
     private String md5;
