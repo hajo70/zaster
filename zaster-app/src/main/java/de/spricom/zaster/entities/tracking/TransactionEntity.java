@@ -21,13 +21,14 @@ public class TransactionEntity extends AbstractEntity {
     @AttributeOverride(name = "zonedDateTime", column = @Column(name="SUBMITTED_AT_TS"))
     private TrackingDateTime submittedAt;
 
-    @Column(length = 4096)
+    @Column(length = 4095)
     private String description;
 
+    @Column(length = 63)
     private String md5;
 
     @Lob
-    @Column(length = 65536)
+    @Column(length = 65535)
     private String metadata;
 
     @ManyToOne(fetch = FetchType.LAZY)
