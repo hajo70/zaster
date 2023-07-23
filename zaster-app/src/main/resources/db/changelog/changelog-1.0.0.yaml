@@ -1,18 +1,18 @@
 databaseChangeLog:
   - changeSet:
-      id:  1
-      author:  your.name
+      id: 1
+      author: your.name
       changes:
         - createTable:
-            tableName:  person
+            tableName: person
             columns:
               - column:
-                  name:  id
-                  type:  int
-                  autoIncrement:  true
+                  name: id
+                  type: int
+                  autoIncrement: true
                   constraints:
-                    primaryKey:  true
-                    nullable:  false
+                    primaryKey: true
+                    nullable: false
               - column:
-                  name:  name
-                  type:  varchar(50)
+                  name: name
+                  type: varchar(50)
