@@ -8,10 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.sql.DataSource;
 import java.io.PrintStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -103,6 +100,7 @@ public class SchemaToLiquibaseYamlTool {
                 while (rs.next()) {
                     ForeignKey foreignKey = new ForeignKey(tables, rs);
                     foreignKey.column.foreignKey = foreignKey;
+                    foreignKey.references.referenceCount--;
                 }
             }
         }
@@ -116,6 +114,7 @@ public class SchemaToLiquibaseYamlTool {
         out.println("      id: 1");
         out.println("      author: SchemaToLiquibaseYamlTool");
         out.println("      changes:");
+        tables.sort(Comparator.comparing(table -> table.referenceCount));
         for (Table table : tables) {
             table.export(out);
         }
@@ -221,6 +220,7 @@ public class SchemaToLiquibaseYamlTool {
         final String name;
         final List<Column> columns = new ArrayList<>();
         final Map<String, List<Index>> indices = new HashMap<>();
+        int referenceCount;
 
         Table(ResultSet rs) throws SQLException {
             name = rs.getString("TABLE_NAME");
