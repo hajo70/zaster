@@ -15,22 +15,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 // @SpringBootTest
 // @ActiveProfiles("test")
 public class SchemaToLiquibaseYamlTool {
 
+    private static final File FILE = new File("src/main/resources/db/changelog/changelog-1.0.0.yaml");
+
     @Autowired
     private DataSource dataSource;
 
-    private List<Table> tables = new ArrayList<>();
+    private final List<Table> tables = new ArrayList<>();
 
     @Test
     void dumpSchema() throws SQLException {
@@ -97,7 +100,7 @@ public class SchemaToLiquibaseYamlTool {
             try (ResultSet rs = metaData.getIndexInfo(null, "PUBLIC", table.name, false, false)) {
                 while (rs.next()) {
                     Index index = new Index(table, rs);
-                    table.indices.computeIfAbsent(index.name, name -> new ArrayList()).add(index);
+                    table.indices.computeIfAbsent(index.name, name -> new ArrayList<>()).add(index);
                 }
                 for (List<Index> indices : table.indices.values()) {
                     if (indices.size() == 1) {
@@ -132,7 +135,7 @@ public class SchemaToLiquibaseYamlTool {
     }
 
     @Test
-    void exportEntities() {
+    void exportEntities() throws FileNotFoundException {
         tables.add(new Table(TenantEntity.class));
         tables.add(new Table(ApplicationUserEntity.class));
         tables.add(new Table(ImportEntity.class));
@@ -145,6 +148,9 @@ public class SchemaToLiquibaseYamlTool {
         tables.add(new Table(BookingEntity.class));
 
         exportYaml(System.out);
+        try (PrintStream ps = new PrintStream(new FileOutputStream(FILE))) {
+            exportYaml(ps);
+        }
     }
 
     private void exportYaml(PrintStream out) {
@@ -190,16 +196,17 @@ public class SchemaToLiquibaseYamlTool {
 
     static class Column {
         final Table table;
+        final Field field;
         final String name;
         final String type;
         final boolean nullable;
-
         final boolean primaryKey;
         boolean unique = false;
         ForeignKey foreignKey;
 
         Column(Table table, ResultSet rs) throws SQLException {
             this.table = table;
+            this.field = null;
             name = rs.getString("COLUMN_NAME");
             type = switch (rs.getString("TYPE_NAME")) {
                 case "NUMERIC" ->
@@ -218,6 +225,7 @@ public class SchemaToLiquibaseYamlTool {
 
         Column(Table table, Field field) {
             this.table = table;
+            this.field = field;
             jakarta.persistence.Column columnAnnotation = field.getAnnotation(jakarta.persistence.Column.class);
             if (AbstractEntity.class.isAssignableFrom(field.getType())) {
                 this.primaryKey = false;
@@ -243,9 +251,13 @@ public class SchemaToLiquibaseYamlTool {
                         ? columnAnnotation.name()
                         : camelTo_(field.getName());
                 this.type = switch (field.getType().getSimpleName()) {
-                    case "String" -> String.format("java.sql.Types.NVARCHAR(%d)", fieldLength(field));
+                    case "String" -> field.isAnnotationPresent(Lob.class)
+                            ? String.format("java.sql.Types.LONGNVARCHAR(%d)", fieldLength(field))
+                            : String.format("java.sql.Types.NVARCHAR(%d)", fieldLength(field));
                     case "Long" -> "java.sql.Types.BIGINT";
+                    case "Integer" -> "java.sql.Types.INTEGER";
                     case "BigDecimal" -> "java.sql.Types.DECIMAL(40, 15)";
+                    case "LocalDate" -> "java.sql.Types.DATE";
                     case "Instant" -> "java.sql.Types.TIMESTAMP_WITH_TIMEZONE";
                     case "Locale" -> "java.sql.Types.NVARCHAR(63)";
                     case "ZoneId" -> "java.sql.Types.NVARCHAR(63)";
@@ -255,6 +267,15 @@ public class SchemaToLiquibaseYamlTool {
                 this.primaryKey = "ID".equals(this.name);
                 this.nullable = isNullable(field);
             }
+        }
+
+        public Column(Table table, Column column, jakarta.persistence.Column override) {
+            this.table = table;
+            this.field = column.field;
+            name = override != null && !override.name().isEmpty() ? override.name() : column.name;
+            type = column.type;
+            primaryKey = column.primaryKey;
+            nullable = column.nullable;
         }
 
         private static int fieldLength(Field field) {
@@ -281,9 +302,8 @@ public class SchemaToLiquibaseYamlTool {
         }
 
         private static boolean isNullable(Field field) {
-            return field.isAnnotationPresent(jakarta.persistence.Column.class)
-                    ? field.getAnnotation(jakarta.persistence.Column.class).nullable()
-                    : true;
+            return !field.isAnnotationPresent(jakarta.persistence.Column.class)
+                    || field.getAnnotation(jakarta.persistence.Column.class).nullable();
         }
 
         void export(PrintStream out) {
@@ -294,7 +314,7 @@ public class SchemaToLiquibaseYamlTool {
                 out.println("                  constraints:");
                 if (primaryKey) {
                     out.println("                    primaryKey: true");
-                    out.println("                    primaryKeyNAME: PK_" + table.name);
+                    out.println("                    primaryKeyName: PK_" + table.name);
                 } else {
                     if (unique) {
                         out.println("                    unique: true");
@@ -335,7 +355,7 @@ public class SchemaToLiquibaseYamlTool {
 
         Table(Class<?> entityClass) {
             jakarta.persistence.Table tableAnnotation = entityClass.getAnnotation(jakarta.persistence.Table.class);
-            name = tableAnnotation.name();
+            name = tableAnnotation != null ? tableAnnotation.name() : entityClass.getSimpleName();
             for (Field field : entityClass.getSuperclass().getDeclaredFields()) {
                 if (isColumn(field)) {
                     columns.add(new Column(this, field));
@@ -344,18 +364,23 @@ public class SchemaToLiquibaseYamlTool {
             for (Field field : entityClass.getDeclaredFields()) {
                 if (isColumn(field)) {
                     columns.add(new Column(this, field));
+                } else if (field.isAnnotationPresent(Embedded.class)) {
+                    Table embedded = new Table(field.getType());
+                    Map<String, jakarta.persistence.Column> overrides =
+                            Arrays.stream(field.getAnnotationsByType(AttributeOverride.class))
+                                    .collect(Collectors.toMap(AttributeOverride::name, AttributeOverride::column));
+                    for (Column column : embedded.columns) {
+                        columns.add(new Column(this, column, overrides.get(column.field.getName())));
+                    }
                 }
             }
         }
 
         private static boolean isColumn(Field field) {
-            if (field.isAnnotationPresent(Transient.class)
-                    || field.isAnnotationPresent(Embedded.class)
-                    || field.isAnnotationPresent(Enumerated.class) && field.isAnnotationPresent(ElementCollection.class)
-                    || field.isAnnotationPresent(OneToMany.class)) {
-                return false;
-            }
-            return true;
+            return !field.isAnnotationPresent(Transient.class)
+                    && !field.isAnnotationPresent(Embedded.class)
+                    && (!field.isAnnotationPresent(Enumerated.class) || !field.isAnnotationPresent(ElementCollection.class))
+                    && !field.isAnnotationPresent(OneToMany.class);
         }
 
         void export(PrintStream out) {
