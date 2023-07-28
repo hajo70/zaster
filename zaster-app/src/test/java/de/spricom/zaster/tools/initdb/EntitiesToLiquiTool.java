@@ -105,6 +105,12 @@ public class EntitiesToLiquiTool {
             column.setColumnType(LiquiColumn.ID_TYPE);
             column.setNullable(false);
             collectionTable.add(column);
+            var foreignKey = new LiquiForeignKey();
+            foreignKey.setColumn(column);
+            foreignKey.setReferences(table);
+            foreignKey.setOnDeleteCascade(true);
+            foreignKey.setForeignKeyName("FK_" + collectionTable.getTableName());
+            column.setForeignKey(foreignKey);
         }
         var column = new LiquiColumn();
         column.setColumnName(columName(field));

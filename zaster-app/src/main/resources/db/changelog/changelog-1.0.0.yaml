@@ -38,6 +38,10 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_APPLICATION_USER_ROLE
+                    referencedTableName: APPLICATION_USER
+                    referencedColumnNames: ID
+                    deleteCascade: true
               - column:
                   name: USER_ROLES
                   type: java.sql.Types.NVARCHAR(63)

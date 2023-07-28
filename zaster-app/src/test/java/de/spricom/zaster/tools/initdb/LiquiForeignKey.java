@@ -9,12 +9,10 @@ public class LiquiForeignKey {
     private LiquiColumn column;
     private LiquiTable references;
     private boolean onDeleteCascade;
+    private String foreignKeyName;
 
     void export(PrintStream out) {
-        out.println("                    foreignKeyName: "
-                + "FK_" + column.getTable().getTableName()
-                + "_" + column.getColumnName()
-                + "_" + references.getTableName());
+        out.println("                    foreignKeyName: " + getForeignKeyName());
         out.println("                    referencedTableName: " + references.getTableName());
         out.println("                    referencedColumnNames: ID");
         if (onDeleteCascade) {
@@ -22,4 +20,11 @@ public class LiquiForeignKey {
         }
     }
 
+    public String getForeignKeyName() {
+        return foreignKeyName != null
+                ? foreignKeyName
+                : "FK_" + column.getTable().getTableName()
+                + "_" + column.getColumnName()
+                + "_" + references.getTableName();
+    }
 }
