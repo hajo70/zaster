@@ -1,5 +1,7 @@
 package de.spricom.zaster.tools.initdb;
 
+import lombok.AllArgsConstructor;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -7,10 +9,12 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 public final class LiquiSchema {
     public static final File CHANGELOG_100 = new File("src/main/resources/db/changelog/changelog-1.0.0.yaml");
 
     private final List<LiquiTable> tables = new ArrayList<>();
+    private final String author;
 
     public void add(LiquiTable table) {
         table.setSchema(this);
@@ -21,7 +25,7 @@ public final class LiquiSchema {
         out.println("databaseChangeLog:");
         out.println("  - changeSet:");
         out.println("      id: 1");
-        out.println("      author: SchemaToLiquibaseYamlTool");
+        out.println("      author: " + author);
         out.println("      changes:");
         for (LiquiTable table : tables) {
             table.export(out);

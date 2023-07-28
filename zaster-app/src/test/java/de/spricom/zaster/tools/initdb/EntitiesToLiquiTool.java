@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class EntitiesToLiquiTool {
 
-    private final LiquiSchema schema = new LiquiSchema();
+    private final LiquiSchema schema = new LiquiSchema(this.getClass().getSimpleName());
 
     @Test
     void listEntities() {
