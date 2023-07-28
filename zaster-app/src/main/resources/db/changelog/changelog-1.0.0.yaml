@@ -31,6 +31,19 @@ databaseChangeLog:
                   name: TIMEZONE
                   type: java.sql.Types.NVARCHAR(63)
         - createTable:
+            tableName: APPLICATION_USER_ROLE
+            columns:
+              - column:
+                  name: USER_ID
+                  type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_ROLES
+                  type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    nullable: false
+        - createTable:
             tableName: APPLICATION_USER
             columns:
               - column:
