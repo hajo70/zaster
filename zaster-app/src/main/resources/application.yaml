@@ -4,9 +4,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/zaster
+    url: jdbc:h2:~/h2db/zaster;AUTO_SERVER=TRUE
     username: sa
-    password:
+    password: secret
   jpa:
     hibernate:
       ddl-auto: validate
