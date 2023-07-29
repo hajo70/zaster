@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
@@ -33,9 +34,13 @@ public class SecurityConfiguration extends VaadinWebSecurity {
     protected void configure(HttpSecurity http) throws Exception {
         // Icons from the line-awesome addon
         http.authorizeHttpRequests(reg ->
-                reg.requestMatchers("/images/*.png", "/line-awesome/**.svg").permitAll())
+                reg.requestMatchers(
+                        new AntPathRequestMatcher("/images/*.png"),
+                        new AntPathRequestMatcher("/line-awesome/**.svg")
+                ).permitAll())
                 .authorizeHttpRequests(reg ->
-                        reg.requestMatchers("/api/**").hasRole("ADMIN"));
+                        reg.requestMatchers(new AntPathRequestMatcher("/api/**"))
+                                .hasRole("ADMIN"));
 
         super.configure(http);
 
