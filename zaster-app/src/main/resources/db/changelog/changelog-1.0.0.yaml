@@ -31,23 +31,6 @@ databaseChangeLog:
                   name: TIMEZONE
                   type: java.sql.Types.NVARCHAR(63)
         - createTable:
-            tableName: APPLICATION_USER_ROLE
-            columns:
-              - column:
-                  name: USER_ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-                    foreignKeyName: FK_APPLICATION_USER_ROLE
-                    referencedTableName: APPLICATION_USER
-                    referencedColumnNames: ID
-                    deleteCascade: true
-              - column:
-                  name: USER_ROLES
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-        - createTable:
             tableName: APPLICATION_USER
             columns:
               - column:
@@ -70,15 +53,38 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_APPLICATION_USER_TENANT_ID_TENANT
+                    referencedTableName: TENANT
+                    referencedColumnNames: ID
               - column:
                   name: USERNAME
                   type: java.sql.Types.NVARCHAR(255)
+                  constraints:
+                    unique: true
+                    uniqueConstraintName: UQ_APPLICATION_USER_USERNAME
               - column:
                   name: NAME
                   type: java.sql.Types.NVARCHAR(255)
               - column:
                   name: HASHED_PASSWORD
                   type: java.sql.Types.NVARCHAR(255)
+        - createTable:
+            tableName: APPLICATION_USER_ROLE
+            columns:
+              - column:
+                  name: USER_ID
+                  type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_APPLICATION_USER_ROLE
+                    referencedTableName: APPLICATION_USER
+                    referencedColumnNames: ID
+                    deleteCascade: true
+              - column:
+                  name: USER_ROLES
+                  type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    nullable: false
         - createTable:
             tableName: IMPORT
             columns:
@@ -102,6 +108,9 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_IMPORT_TENANT_ID_TENANT
+                    referencedTableName: TENANT
+                    referencedColumnNames: ID
               - column:
                   name: IMPORTED_AT_DATE
                   type: java.sql.Types.DATE
@@ -134,6 +143,9 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_FILE_SOURCE_IMPORTED_ID_IMPORT
+                    referencedTableName: IMPORT
+                    referencedColumnNames: ID
               - column:
                   name: FILENAME
                   type: java.sql.Types.NVARCHAR(255)
@@ -169,6 +181,9 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_CURRENCY_TENANT_ID_TENANT
+                    referencedTableName: TENANT
+                    referencedColumnNames: ID
               - column:
                   name: CURRENCY_CODE
                   type: java.sql.Types.NVARCHAR(8)
@@ -204,9 +219,16 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_ACCOUNT_GROUP_TENANT_ID_TENANT
+                    referencedTableName: TENANT
+                    referencedColumnNames: ID
               - column:
                   name: PARENT_ID
                   type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    foreignKeyName: FK_ACCOUNT_GROUP_PARENT_ID_ACCOUNT_GROUP
+                    referencedTableName: ACCOUNT_GROUP
+                    referencedColumnNames: ID
               - column:
                   name: ACCOUNT_NAME
                   type: java.sql.Types.NVARCHAR(255)
@@ -239,11 +261,17 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_ACCOUNT_ACCOUNT_GROUP_ID_ACCOUNT_GROUP
+                    referencedTableName: ACCOUNT_GROUP
+                    referencedColumnNames: ID
               - column:
                   name: CURRENCY_ID
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_ACCOUNT_CURRENCY_ID_CURRENCY
+                    referencedTableName: CURRENCY
+                    referencedColumnNames: ID
         - createTable:
             tableName: SNAPSHOT
             columns:
@@ -267,6 +295,9 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_SNAPSHOT_ACCOUNT_ID_ACCOUNT
+                    referencedTableName: ACCOUNT
+                    referencedColumnNames: ID
               - column:
                   name: TAKEN_AT_DATE
                   type: java.sql.Types.DATE
@@ -279,6 +310,10 @@ databaseChangeLog:
               - column:
                   name: IMPORTED_ID
                   type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    foreignKeyName: FK_SNAPSHOT_IMPORTED_ID_IMPORT
+                    referencedTableName: IMPORT
+                    referencedColumnNames: ID
         - createTable:
             tableName: TRANSACTION
             columns:
@@ -315,6 +350,10 @@ databaseChangeLog:
               - column:
                   name: IMPORTED_ID
                   type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    foreignKeyName: FK_TRANSACTION_IMPORTED_ID_IMPORT
+                    referencedTableName: IMPORT
+                    referencedColumnNames: ID
         - createTable:
             tableName: BOOKING
             columns:
@@ -338,11 +377,17 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_BOOKING_TRANSACTION_ID_TRANSACTION
+                    referencedTableName: TRANSACTION
+                    referencedColumnNames: ID
               - column:
                   name: ACCOUNT_ID
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_BOOKING_ACCOUNT_ID_ACCOUNT
+                    referencedTableName: ACCOUNT
+                    referencedColumnNames: ID
               - column:
                   name: BOOKED_AT_DATE
                   type: java.sql.Types.DATE

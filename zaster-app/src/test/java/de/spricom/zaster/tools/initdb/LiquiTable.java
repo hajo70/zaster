@@ -12,6 +12,7 @@ public class LiquiTable {
     private LiquiSchema schema;
     private String tableName;
     private final List<LiquiColumn> columns = new ArrayList<>();
+    private final List<LiquiTable> collectionTables = new ArrayList<>();
 
     private Class<?> entity;
 
@@ -26,6 +27,9 @@ public class LiquiTable {
         out.println("            columns:");
         for (LiquiColumn column : columns) {
             column.export(out);
+        }
+        for (LiquiTable collectionTable : collectionTables) {
+            collectionTable.export(out);
         }
     }
 }

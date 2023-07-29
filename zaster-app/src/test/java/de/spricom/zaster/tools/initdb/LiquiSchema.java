@@ -1,6 +1,6 @@
 package de.spricom.zaster.tools.initdb;
 
-import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
+@Data
 public final class LiquiSchema {
     public static final File CHANGELOG_100 = new File("src/main/resources/db/changelog/changelog-1.0.0.yaml");
 

@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EntitiesToLiquiTool {
@@ -45,9 +46,23 @@ public class EntitiesToLiquiTool {
         schema.add(asLiquiTable(SnapshotEntity.class));
         schema.add(asLiquiTable(TransactionEntity.class));
         schema.add(asLiquiTable(BookingEntity.class));
+        updateForeignKeys();
 
         schema.dump();
         schema.exportYaml(LiquiSchema.CHANGELOG_100);
+    }
+
+    private void updateForeignKeys() {
+        Map<Class<?>, LiquiTable> tables =
+                schema.getTables().stream()
+                        .collect(Collectors.toMap(LiquiTable::getEntity, Function.identity()));
+        for (LiquiTable table : schema.getTables()) {
+            for (LiquiColumn column : table.getColumns()) {
+                if (column.getForeignKey() != null && column.getForeignKey().getReferences() == null) {
+                    column.getForeignKey().setReferences(tables.get(column.getField().getType()));
+                }
+            }
+        }
     }
 
     private LiquiTable asLiquiTable(Class<? extends AbstractEntity> entity) {
@@ -66,13 +81,14 @@ public class EntitiesToLiquiTool {
 
     private void addColumns(LiquiTable table, Class<?> entity) {
         for (Field field : entity.getDeclaredFields()) {
-            if (isColumn(field)) {
-                table.add(asLiquiColumn(field));
-            } else if (field.isAnnotationPresent(Embedded.class)) {
+            if (field.isAnnotationPresent(Embedded.class)) {
                 addEmbeddedColumns(table, field);
             } else if (field.isAnnotationPresent(Enumerated.class)
                     && field.isAnnotationPresent(ElementCollection.class)) {
                 addCollectionTable(table, field);
+            } else if (!field.isAnnotationPresent(Transient.class)
+                    && !field.isAnnotationPresent(OneToMany.class)) {
+                table.add(asLiquiColumn(field));
             }
         }
     }
@@ -91,7 +107,6 @@ public class EntitiesToLiquiTool {
             table.add(column);
         }
     }
-
 
     private void addCollectionTable(LiquiTable table, Field field) {
         CollectionTable col = field.getAnnotation(CollectionTable.class);
@@ -117,15 +132,7 @@ public class EntitiesToLiquiTool {
         column.setColumnType(enumType(field));
         column.setNullable(false);
         collectionTable.add(column);
-        schema.add(collectionTable);
-    }
-
-
-    private boolean isColumn(Field field) {
-        return !field.isAnnotationPresent(Transient.class)
-                && !field.isAnnotationPresent(Embedded.class)
-                && (!field.isAnnotationPresent(Enumerated.class) || !field.isAnnotationPresent(ElementCollection.class))
-                && !field.isAnnotationPresent(OneToMany.class);
+        table.getCollectionTables().add(collectionTable);
     }
 
     private LiquiColumn asLiquiColumn(Field field) {
@@ -140,6 +147,7 @@ public class EntitiesToLiquiTool {
             column.setColumnType(columnType(field));
             column.setNullable(isNullable(field));
         }
+        column.setUnique(isUnique(field));
         return column;
     }
 
@@ -162,6 +170,14 @@ public class EntitiesToLiquiTool {
         column.setColumnType(LiquiColumn.ID_TYPE);
         JoinColumn joinColumn = column.getField().getAnnotation(JoinColumn.class);
         column.setNullable(joinColumn == null || joinColumn.nullable());
+        var foreignKey = new LiquiForeignKey();
+        foreignKey.setColumn(column);
+        if (column.getField().isAnnotationPresent(OneToMany.class)) {
+            foreignKey.setOnDeleteCascade(column.getField().getAnnotation(OneToMany.class).orphanRemoval());
+        } else if (column.getField().isAnnotationPresent(OneToOne.class)) {
+            foreignKey.setOnDeleteCascade(column.getField().getAnnotation(OneToOne.class).orphanRemoval());
+        }
+        column.setForeignKey(foreignKey);
     }
 
     private String columName(Field field) {
@@ -218,15 +234,19 @@ public class EntitiesToLiquiTool {
     private int fieldLength(Field field, int defaultLength) {
         if (field.isAnnotationPresent(Id.class)) {
             return 63;
-        } else if (field.isAnnotationPresent(jakarta.persistence.Column.class)) {
-            return field.getAnnotation(jakarta.persistence.Column.class).length();
+        } else if (field.isAnnotationPresent(Column.class)) {
+            return field.getAnnotation(Column.class).length();
         }
         return defaultLength;
     }
 
-    private static boolean isNullable(Field field) {
-        return !field.isAnnotationPresent(jakarta.persistence.Column.class)
-                || field.getAnnotation(jakarta.persistence.Column.class).nullable();
+    private boolean isNullable(Field field) {
+        return !field.isAnnotationPresent(Column.class)
+                || field.getAnnotation(Column.class).nullable();
     }
 
+    private boolean isUnique(Field field) {
+        return field.isAnnotationPresent(Column.class)
+                && field.getAnnotation(Column.class).unique();
+    }
 }

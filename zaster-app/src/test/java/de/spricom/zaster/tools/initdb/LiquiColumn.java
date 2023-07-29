@@ -31,6 +31,8 @@ public class LiquiColumn {
             } else {
                 if (unique) {
                     out.println("                    unique: true");
+                    out.println("                    uniqueConstraintName: UQ_"
+                            + table.getTableName() + "_" + columnName);
                 }
                 if (!nullable) {
                     out.println("                    nullable: false");
