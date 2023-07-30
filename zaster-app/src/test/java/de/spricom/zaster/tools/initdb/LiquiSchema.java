@@ -21,6 +21,13 @@ public final class LiquiSchema {
         tables.add(table);
     }
 
+    public LiquiTable getTable(String tableName) {
+        return tables.stream()
+                .filter(t -> tableName.equals(t.getTableName()))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("There is no " + tableName + " table."));
+    }
+
     public void exportYaml(PrintStream out) {
         out.println("databaseChangeLog:");
         out.println("  - changeSet:");
