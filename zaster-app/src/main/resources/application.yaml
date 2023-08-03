@@ -6,12 +6,18 @@ spring:
   datasource:
     url: jdbc:h2:~/h2db/zaster;AUTO_SERVER=TRUE
     username: sa
-    password: secret
+    password:
   jpa:
     hibernate:
       ddl-auto: validate
   mustache:
     check-template-location: false
+  h2:
+    console:
+      path: /h2-console
+      settings.trace: false
+      settings.web-allow-others: false
+      enabled: true
 
 logging:
   level:
