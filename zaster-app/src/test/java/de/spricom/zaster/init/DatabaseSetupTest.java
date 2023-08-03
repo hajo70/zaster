@@ -1,4 +1,4 @@
-package de.spricom.zaster;
+package de.spricom.zaster.init;
 
 import de.spricom.zaster.entities.common.TrackingDateTime;
 import de.spricom.zaster.entities.currency.CurrencyEntity;
@@ -9,10 +9,13 @@ import de.spricom.zaster.entities.tracking.*;
 import de.spricom.zaster.repository.currency.CurrencyRepository;
 import de.spricom.zaster.repository.management.TenantRepository;
 import de.spricom.zaster.repository.tracking.*;
+import de.spricom.zaster.util.RemoteInMemConfig;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -21,7 +24,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @SpringBootTest
-@ActiveProfiles("initdb")
+@ActiveProfiles("testdb")
+@Import(RemoteInMemConfig.class)
 public class DatabaseSetupTest {
     private static final BigDecimal MAX_AMOUNT = new BigDecimal("9".repeat(25) + "." + "9".repeat(15));
     private static final BigDecimal SMALLEST_AMOUNT = new BigDecimal("0." + "0".repeat(14) + "1");
@@ -49,8 +53,13 @@ public class DatabaseSetupTest {
 
     private TenantEntity tenant;
 
-    private Map<String, CurrencyEntity> currencies = new TreeMap<>();
-    private Map<String, AccountEntity> accounts = new TreeMap<>();
+    private final Map<String, CurrencyEntity> currencies = new TreeMap<>();
+    private final Map<String, AccountEntity> accounts = new TreeMap<>();
+
+    @AfterEach
+    void shutDown() {
+        System.out.println("shutting down...");
+    }
 
     @Test
     void testDatabaseSchema() {
@@ -112,9 +121,9 @@ public class DatabaseSetupTest {
         transaction.setSubmittedAt(TrackingDateTime.now());
         transaction = transactionRepository.save(transaction);
         AccountEntity account = accounts.values().stream().findAny().get();
-        createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal(500.1));
-        createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal(499.98));
-        createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal(0.01));
+        createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("500.1"));
+        createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("499.98"));
+        createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("0.01"));
         return transaction;
     }
 

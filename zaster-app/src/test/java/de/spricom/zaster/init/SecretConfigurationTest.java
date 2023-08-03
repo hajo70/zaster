@@ -1,4 +1,4 @@
-package de.spricom.zaster;
+package de.spricom.zaster.init;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import java.security.SecureRandom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SecretConfigurationTest {
-    private File secreteFile = new File("config/secrets/application.properties");
+    private final File secreteFile = new File("config/secrets/application.properties");
 
     @Test
     void ensureSecret() throws IOException {
