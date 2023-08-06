@@ -1,34 +1,37 @@
 package de.spricom.zaster.entities.common;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 @Embeddable
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TrackingDateTime {
 
     /**
      * Date-Part without timezone for sorting and filtering.
      */
-    protected LocalDate date;
+    private LocalDate date;
 
-    /**
-     * Zoned date-time according to https://www.w3.org/TR/xmlschema-2/#dateTime.
-     */
-    @Column(length = 64)
-    protected String zonedDateTime;
+    private LocalTime time;
 
-    public TrackingDateTime() {
-    }
+    private ZoneOffset offset;
 
-    protected TrackingDateTime(ZonedDateTime ts) {
-        date = ts.toLocalDate();
-        zonedDateTime = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ts);
+    private ZoneId zone;
+
+    public TrackingDateTime(ZonedDateTime ts) {
+        this(ts.toLocalDate(),
+                ts.toLocalTime(),
+                ts.getOffset(),
+                ts.getZone());
     }
 
     public static TrackingDateTime now() {
@@ -36,22 +39,50 @@ public class TrackingDateTime {
     }
 
     public static TrackingDateTime of(LocalDate date) {
-        return new TrackingDateTime(date.atStartOfDay(ZoneId.systemDefault()).plusHours(12));
+        return new TrackingDateTime(date, null, null, null);
     }
 
     public LocalDate toLocalDate() {
         return date;
     }
 
-    public ZonedDateTime toZonedDateTime() {
-        return ZonedDateTime.from(DateTimeFormatter.ISO_ZONED_DATE_TIME.parse(zonedDateTime));
+    public LocalDateTime toLocalDateTime() {
+        return date.atTime(time == null ? LocalTime.NOON : time);
     }
 
-    public LocalDateTime toLocalDateTime() {
-        return toZonedDateTime().toLocalDateTime();
+    public OffsetDateTime toOffsetDateTime() {
+        if (offset == null) {
+            return toZonedDateTime().toOffsetDateTime();
+        }
+        return toLocalDateTime().atOffset(offset);
+    }
+
+    public ZonedDateTime toZonedDateTime() {
+        if (zone == null && offset == null) {
+            return toLocalDateTime().atZone(ZoneId.systemDefault());
+        }
+        if (zone == null) {
+            return toOffsetDateTime().toZonedDateTime();
+        }
+        if (offset != null) {
+            return  toOffsetDateTime().atZoneSameInstant(zone);
+        }
+        return toLocalDateTime().atZone(zone);
     }
 
     public String toString() {
-        return zonedDateTime;
+        if (date == null) {
+            return "null";
+        }
+        if (time == null) {
+            return DateTimeFormatter.ISO_TIME.format(date);
+        }
+        if (offset == null && zone == null) {
+            return DateTimeFormatter.ISO_DATE_TIME.format(toLocalDateTime());
+        }
+        if (zone != null) {
+            return DateTimeFormatter.ISO_ZONED_DATE_TIME.format(toZonedDateTime());
+        }
+        return DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(toOffsetDateTime());
     }
 }

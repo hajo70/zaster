@@ -14,8 +14,8 @@ import java.util.Set;
 @Setter
 @ToString
 @Entity
-@Table(name = "APPLICATION_USER")
-public class ApplicationUserEntity extends AbstractEntity {
+@Table(name = "USERZ")
+public class UserEntity extends AbstractEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, updatable = false)
@@ -31,7 +31,7 @@ public class ApplicationUserEntity extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "APPLICATION_USER_ROLE",
+    @CollectionTable(name = "USER_ROLE",
             joinColumns = @JoinColumn(name = "USER_ID"))
     @Nonnull
     private Set<UserRole> userRoles;

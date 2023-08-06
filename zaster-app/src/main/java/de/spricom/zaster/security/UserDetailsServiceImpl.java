@@ -1,7 +1,7 @@
 package de.spricom.zaster.security;
 
-import de.spricom.zaster.entities.managment.ApplicationUserEntity;
-import de.spricom.zaster.repository.management.ApplicationUserRepository;
+import de.spricom.zaster.entities.managment.UserEntity;
+import de.spricom.zaster.repository.management.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final ApplicationUserRepository applicationUserRepository;
+    private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(ApplicationUserRepository applicationUserRepository) {
-        this.applicationUserRepository = applicationUserRepository;
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ApplicationUserEntity applicationUser = applicationUserRepository.findByUsername(username);
+        UserEntity applicationUser = userRepository.findByUsername(username);
         if (applicationUser == null) {
             throw new UsernameNotFoundException("No applicationUser present with username: " + username);
         } else {
@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
-    private static List<GrantedAuthority> getAuthorities(ApplicationUserEntity applicationUser) {
+    private static List<GrantedAuthority> getAuthorities(UserEntity applicationUser) {
         return applicationUser.getUserRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
 

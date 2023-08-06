@@ -1,7 +1,7 @@
 package de.spricom.zaster.repository;
 
 import de.spricom.zaster.entities.common.TrackingDateTime;
-import de.spricom.zaster.entities.tracking.AccountEntity;
+import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.ImportEntity;
 import de.spricom.zaster.entities.tracking.TransactionEntity;
 
@@ -11,8 +11,8 @@ import java.util.Map;
 public interface BookingService {
     TransactionEntity createTransaction(TransactionEntity tx);
 
-    boolean addTransaction(ImportEntity imported, AccountEntity account, BookingRecord bookingRecord);
-    boolean addSnapshot(ImportEntity imported, AccountEntity account, SnapshotRecord snapshotRecord);
+    boolean addTransaction(ImportEntity imported, AccountCurrencyEntity account, BookingRecord bookingRecord);
+    boolean addSnapshot(ImportEntity imported, AccountCurrencyEntity account, SnapshotRecord snapshotRecord);
 
     record BookingRecord(
         TrackingDateTime submittedAt,

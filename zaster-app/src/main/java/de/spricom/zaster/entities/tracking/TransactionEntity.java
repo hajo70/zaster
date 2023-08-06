@@ -17,8 +17,6 @@ import java.util.Set;
 public class TransactionEntity extends AbstractEntity {
 
     @Embedded
-    @AttributeOverride(name = "date", column = @Column(name="SUBMITTED_AT_DATE"))
-    @AttributeOverride(name = "zonedDateTime", column = @Column(name="SUBMITTED_AT_TS"))
     private TrackingDateTime submittedAt;
 
     @Column(length = 4095)

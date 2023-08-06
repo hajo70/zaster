@@ -2,23 +2,23 @@ package de.spricom.zaster.repository;
 
 import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
-import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 
 import java.util.List;
 
 public interface AccountService {
-    List<AccountGroupEntity> findAllRootAccountGroups(TenantEntity tenant);
+    List<AccountEntity> findAllRootAccountGroups(TenantEntity tenant);
 
-    AccountGroupEntity getAccountGroup(String accountGroupId);
+    AccountEntity getAccountGroup(String accountGroupId);
 
-    AccountGroupEntity saveAccountGroup(AccountGroupEntity accountGroup);
+    AccountEntity saveAccountGroup(AccountEntity accountGroup);
 
     void deleteAccountGroup(String accountGroupId);
 
-    AccountEntity saveAccount(AccountEntity account);
+    AccountCurrencyEntity saveAccount(AccountCurrencyEntity account);
 
     void deleteAccount(String accountId);
 
-    AccountEntity getOrCreateAccount(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency);
+    AccountCurrencyEntity getOrCreateAccount(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency);
 }

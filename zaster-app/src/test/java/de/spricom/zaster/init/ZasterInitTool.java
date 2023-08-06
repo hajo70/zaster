@@ -2,10 +2,10 @@ package de.spricom.zaster.init;
 
 import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.currency.CurrencyType;
-import de.spricom.zaster.entities.managment.ApplicationUserEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.managment.UserEntity;
 import de.spricom.zaster.entities.managment.UserRole;
-import de.spricom.zaster.entities.tracking.AccountGroupEntity;
+import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.importing.ImportHandlingService;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
@@ -85,8 +85,8 @@ public class ZasterInitTool {
         }
     }
 
-    private ApplicationUserEntity asUserEntity(String username, ZasterInitProperties.User user) {
-        var entity = new ApplicationUserEntity();
+    private UserEntity asUserEntity(String username, ZasterInitProperties.User user) {
+        var entity = new UserEntity();
         entity.setUsername(username);
         entity.setName(user.getName());
         entity.setHashedPassword(passwordEncoder.encode(username));
@@ -115,8 +115,8 @@ public class ZasterInitTool {
         currencyService.saveCurrency(entity);
     }
 
-    private void initAccount(AccountGroupEntity parent, ZasterInitProperties.Account account) {
-        var group = new AccountGroupEntity();
+    private void initAccount(AccountEntity parent, ZasterInitProperties.Account account) {
+        var group = new AccountEntity();
         group.setTenant(currentTenant);
         group.setParent(parent);
         group.setAccountName(account.getName());

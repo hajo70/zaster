@@ -3,8 +3,8 @@ package de.spricom.zaster.repository.tracking;
 import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.currency.CurrencyType;
 import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
-import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.repository.management.TenantRepository;
@@ -79,21 +79,21 @@ class AccountServiceTest {
                 """);
     }
 
-    private String render(Collection<AccountGroupEntity> tree) {
+    private String render(Collection<AccountEntity> tree) {
         StringBuilder sb = new StringBuilder(2048);
-        List<AccountGroupEntity> sorted = tree.stream()
-                .sorted(Comparator.comparing(AccountGroupEntity::getAccountName))
+        List<AccountEntity> sorted = tree.stream()
+                .sorted(Comparator.comparing(AccountEntity::getAccountName))
                 .toList();
         render(sb, 0, sorted);
         return sb.toString();
     }
 
-    private void render(StringBuilder sb, int indent, Collection<AccountGroupEntity> tree) {
-        for (AccountGroupEntity group : tree) {
+    private void render(StringBuilder sb, int indent, Collection<AccountEntity> tree) {
+        for (AccountEntity group : tree) {
             sb.append("  ".repeat(indent));
             sb.append(group.getAccountName());
-            sb.append(group.getAccounts().stream()
-                    .map(AccountEntity::getCurrency)
+            sb.append(group.getCurrencies().stream()
+                    .map(AccountCurrencyEntity::getCurrency)
                     .map(CurrencyEntity::getCurrencyCode)
                     .sorted()
                     .collect(Collectors.joining(", ", "(", ")")));
@@ -104,17 +104,17 @@ class AccountServiceTest {
         }
     }
 
-    private AccountGroupEntity createAccountGroup(AccountGroupEntity parent, String accountName) {
-        var group = new AccountGroupEntity();
+    private AccountEntity createAccountGroup(AccountEntity parent, String accountName) {
+        var group = new AccountEntity();
         group.setTenant(tenant);
         group.setParent(parent);
         group.setAccountName(accountName);
         return accountService.saveAccountGroup(group);
     }
 
-    private AccountEntity createAccount(AccountGroupEntity group, String currencyCode) {
-        var account = new AccountEntity();
-        account.setAccountGroup(group);
+    private AccountCurrencyEntity createAccount(AccountEntity group, String currencyCode) {
+        var account = new AccountCurrencyEntity();
+        account.setAccount(group);
         account.setCurrency(currencies.get(currencyCode));
         return accountService.saveAccount(account);
     }

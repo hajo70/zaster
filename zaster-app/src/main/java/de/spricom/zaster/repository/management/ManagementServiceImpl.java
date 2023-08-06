@@ -1,8 +1,8 @@
 package de.spricom.zaster.repository.management;
 
-import de.spricom.zaster.entities.managment.ApplicationUserEntity;
-import de.spricom.zaster.entities.managment.ApplicationUserEntity_;
 import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.managment.UserEntity;
+import de.spricom.zaster.entities.managment.UserEntity_;
 import de.spricom.zaster.repository.ManagementService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,11 +18,11 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ManagementServiceImpl implements ManagementService {
 
-    private final ApplicationUserRepository userRepository;
+    private final UserRepository userRepository;
     private final TenantRepository tenantRepository;
 
     @Override
-    public ApplicationUserEntity createTenant(ApplicationUserEntity user) {
+    public UserEntity createTenant(UserEntity user) {
         var tenant = tenantRepository.save(user.getTenant());
         user.setTenant(tenant);
         return saveUser(user);
@@ -40,23 +40,23 @@ public class ManagementServiceImpl implements ManagementService {
     }
 
     @Override
-    public Optional<ApplicationUserEntity> getUser(String id) {
+    public Optional<UserEntity> getUser(String id) {
         return userRepository.findById(id);
     }
 
     @Override
-    public Optional<ApplicationUserEntity> findByUsername(String username) {
+    public Optional<UserEntity> findByUsername(String username) {
         return Optional.ofNullable(userRepository.findByUsername(username));
     }
 
     @Override
     public boolean existsUsername(String username) {
-        return userRepository.exists((Specification<ApplicationUserEntity>) (root, query, builder)
-                -> builder.equal(root.get(ApplicationUserEntity_.username), username));
+        return userRepository.exists((Specification<UserEntity>) (root, query, builder)
+                -> builder.equal(root.get(UserEntity_.username), username));
     }
 
     @Override
-    public ApplicationUserEntity saveUser(ApplicationUserEntity entity) {
+    public UserEntity saveUser(UserEntity entity) {
         return userRepository.save(entity);
     }
 
@@ -66,12 +66,12 @@ public class ManagementServiceImpl implements ManagementService {
     }
 
     @Override
-    public Page<ApplicationUserEntity> listUser(Pageable pageable) {
+    public Page<UserEntity> listUser(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
     @Override
-    public Page<ApplicationUserEntity> listUser(Pageable pageable, Specification<ApplicationUserEntity> filter) {
+    public Page<UserEntity> listUser(Pageable pageable, Specification<UserEntity> filter) {
         return userRepository.findAll(filter, pageable);
     }
 }

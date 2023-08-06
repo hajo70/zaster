@@ -3,7 +3,7 @@ package de.spricom.zaster.importing.importers;
 import de.spricom.zaster.entities.common.TrackingDateTime;
 import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
-import de.spricom.zaster.entities.tracking.AccountEntity;
+import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.ImportEntity;
 import de.spricom.zaster.importing.CsvImporter;
 import de.spricom.zaster.importing.csv.CsvRow;
@@ -65,7 +65,7 @@ public class PostbankImporter implements CsvImporter {
                 "Währung", // D
         });
 
-        AccountEntity account = getAccount(imported.getTenant(), rows.get(2));
+        AccountCurrencyEntity account = getAccount(imported.getTenant(), rows.get(2));
 
         var header = rows.get(7);
         checkHeader(header, HEADER_COLUMNS);
@@ -132,7 +132,7 @@ public class PostbankImporter implements CsvImporter {
         parseMoney(snapshotRow.column("E")));
     }
 
-    private AccountEntity getAccount(TenantEntity tenant, CsvRow accountRow) {
+    private AccountCurrencyEntity getAccount(TenantEntity tenant, CsvRow accountRow) {
         String accountName = accountRow.column("A");
         String iban = accountRow.column("C");
         String currencyCode = accountRow.column("D");

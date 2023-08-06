@@ -1,6 +1,6 @@
 package de.spricom.zaster.importing;
 
-import de.spricom.zaster.entities.managment.ApplicationUserEntity;
+import de.spricom.zaster.entities.managment.UserEntity;
 import de.spricom.zaster.security.AuthenticatedUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,7 +24,7 @@ public class ImportController {
     @PostMapping("/api/upload-handler")
     void upload(@RequestParam("file") MultipartFile file) throws IOException {
         log.info("upload called by {}",
-                authenticatedUser.get().map(ApplicationUserEntity::getName).orElse("no one"));
+                authenticatedUser.get().map(UserEntity::getName).orElse("no one"));
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             br.lines().limit(20).forEach(System.out::println);
         }

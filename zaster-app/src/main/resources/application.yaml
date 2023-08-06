@@ -10,14 +10,16 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-  mustache:
-    check-template-location: false
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
   h2:
     console:
       path: /h2-console
       settings.trace: false
       settings.web-allow-others: false
       enabled: true
+  mustache:
+    check-template-location: false
 
 logging:
   level:

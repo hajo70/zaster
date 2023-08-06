@@ -1,7 +1,7 @@
 package de.spricom.zaster.repository.management;
 
-import de.spricom.zaster.entities.managment.ApplicationUserEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.managment.UserEntity;
 import de.spricom.zaster.entities.managment.UserRole;
 import de.spricom.zaster.repository.ManagementService;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class ManagementServiceTest {
         var tenant = new TenantEntity();
         tenant.setName("My fancy tenant");
 
-        var user = new ApplicationUserEntity();
+        var user = new UserEntity();
         user.setUserRoles(EnumSet.of(UserRole.USER, UserRole.ADMIN));
         user.setName("Max Testuser");
         user.setUsername("mgmttestuser");

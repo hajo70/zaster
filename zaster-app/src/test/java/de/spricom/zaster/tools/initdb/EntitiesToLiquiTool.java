@@ -2,8 +2,8 @@ package de.spricom.zaster.tools.initdb;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
 import de.spricom.zaster.entities.currency.CurrencyEntity;
-import de.spricom.zaster.entities.managment.ApplicationUserEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.managment.UserEntity;
 import de.spricom.zaster.entities.tracking.*;
 import jakarta.persistence.*;
 import org.dessertj.partitioning.ClazzPredicates;
@@ -37,12 +37,12 @@ public class EntitiesToLiquiTool {
     @Test
     void exportEntities() throws FileNotFoundException {
         schema.add(asLiquiTable(TenantEntity.class));
-        schema.add(asLiquiTable(ApplicationUserEntity.class));
+        schema.add(asLiquiTable(UserEntity.class));
         schema.add(asLiquiTable(ImportEntity.class));
         schema.add(asLiquiTable(FileSourceEntity.class));
         schema.add(asLiquiTable(CurrencyEntity.class));
-        schema.add(asLiquiTable(AccountGroupEntity.class));
         schema.add(asLiquiTable(AccountEntity.class));
+        schema.add(asLiquiTable(AccountCurrencyEntity.class));
         schema.add(asLiquiTable(SnapshotEntity.class));
         schema.add(asLiquiTable(TransactionEntity.class));
         schema.add(asLiquiTable(BookingEntity.class));
@@ -103,6 +103,8 @@ public class EntitiesToLiquiTool {
             Column override = overrides.get(column.getField().getName());
             if (override != null && !override.name().isEmpty()) {
                 column.setColumnName(override.name());
+            } else {
+                column.setColumnName(camelTo_(field.getName()) + "_" + column.getColumnName());
             }
             table.add(column);
         }
@@ -212,7 +214,9 @@ public class EntitiesToLiquiTool {
             case "Integer" -> "java.sql.Types.INTEGER";
             case "BigDecimal" -> "java.sql.Types.DECIMAL(40, 15)";
             case "LocalDate" -> "java.sql.Types.DATE";
+            case "LocalTime" -> "java.sql.Types.TIME";
             case "Instant" -> "java.sql.Types.TIMESTAMP_WITH_TIMEZONE";
+            case "ZoneOffset" -> "java.sql.Types.NVARCHAR(6)";
             case "Locale", "ZoneId" -> "java.sql.Types.NVARCHAR(63)";
             default -> throw new IllegalArgumentException("Not supported: " + field.getType());
         };

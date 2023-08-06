@@ -18,11 +18,9 @@ public class SnapshotEntity extends AbstractEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
-    private AccountEntity account;
+    private AccountCurrencyEntity account;
 
     @Embedded
-    @AttributeOverride(name = "date", column = @Column(name="TAKEN_AT_DATE"))
-    @AttributeOverride(name = "zonedDateTime", column = @Column(name="TAKEN_AT_TS"))
     private TrackingDateTime takenAt;
 
     @Column(precision = 40, scale = 15)

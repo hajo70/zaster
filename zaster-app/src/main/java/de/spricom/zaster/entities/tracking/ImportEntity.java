@@ -20,8 +20,6 @@ public class ImportEntity extends AbstractEntity {
     private TenantEntity tenant;
 
     @Embedded
-    @AttributeOverride(name = "date", column = @Column(name="IMPORTED_AT_DATE"))
-    @AttributeOverride(name = "zonedDateTime", column = @Column(name="IMPORTED_AT_TS"))
     private TrackingDateTime importedAt;
 
     private String importerName;

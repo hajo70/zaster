@@ -4,8 +4,8 @@ import de.spricom.zaster.dtos.tracking.AccountDto;
 import de.spricom.zaster.dtos.tracking.AccountGroupDto;
 import de.spricom.zaster.dtos.tracking.AccountingDataDto;
 import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
-import de.spricom.zaster.entities.tracking.AccountGroupEntity;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.security.AuthenticatedUser;
@@ -43,15 +43,15 @@ public class AccountingEndpoint {
                 .toList();
     }
 
-    private AccountGroupDto createAccountGroup(AccountGroupEntity entity) {
+    private AccountGroupDto createAccountGroup(AccountEntity entity) {
         return new AccountGroupDto(DtoUtils.id(entity),
                 entity.getAccountName(),
-                entity.getAccounts() == null || entity.getAccounts().isEmpty()
+                entity.getCurrencies() == null || entity.getCurrencies().isEmpty()
                         ? null
-                        : entity.getAccounts().stream()
+                        : entity.getCurrencies().stream()
                         .map(this::createAccount)
                         .toList(),
-        Optional.ofNullable(entity.getParent()).map(AccountGroupEntity::getId).orElse(null),
+        Optional.ofNullable(entity.getParent()).map(AccountEntity::getId).orElse(null),
                 entity.getChildren() == null || entity.getChildren().isEmpty()
                         ? null
                         : entity.getChildren().stream()
@@ -59,12 +59,12 @@ public class AccountingEndpoint {
                         .toList());
     }
 
-    private AccountDto createAccount(AccountEntity entity) {
+    private AccountDto createAccount(AccountCurrencyEntity entity) {
         return new AccountDto(DtoUtils.id(entity), entity.getCurrency().getId());
     }
 
     public AccountGroupDto saveAccountGroup(AccountGroupDto group) {
-        AccountGroupEntity entity = new AccountGroupEntity();
+        AccountEntity entity = new AccountEntity();
         DtoUtils.setId(entity, group.id());
         entity.setAccountName(group.accountName());
         entity.setTenant(authenticatedUser.getCurrentTenant());

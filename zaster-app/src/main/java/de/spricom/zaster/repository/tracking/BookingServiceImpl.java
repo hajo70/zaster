@@ -37,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public boolean addTransaction(ImportEntity imported, AccountEntity account, BookingRecord bookingRecord) {
+    public boolean addTransaction(ImportEntity imported, AccountCurrencyEntity account, BookingRecord bookingRecord) {
         if (transactionRepository.existsByTenantAndMd5(account.getId(), bookingRecord.md5())) {
             return false;
         }
@@ -55,14 +55,14 @@ public class BookingServiceImpl implements BookingService {
         }
         tx = transactionRepository.save(tx);
         addBooking(tx, account, bookingRecord.bookedAt(), bookingRecord.amount());
-        AccountEntity partnerAccount = accountService.getOrCreateAccount(imported.getTenant(),
+        AccountCurrencyEntity partnerAccount = accountService.getOrCreateAccount(imported.getTenant(),
                 bookingRecord.partnerCode(), bookingRecord.partnerName(), account.getCurrency());
         addBooking(tx, partnerAccount, bookingRecord.bookedAt(), bookingRecord.amount().negate());
         return true;
     }
 
     @Override
-    public boolean addSnapshot(ImportEntity imported, AccountEntity account, SnapshotRecord snapshotRecord) {
+    public boolean addSnapshot(ImportEntity imported, AccountCurrencyEntity account, SnapshotRecord snapshotRecord) {
         var snapshot = new SnapshotEntity();
         snapshot.setImported(imported);
         snapshot.setAccount(account);
@@ -72,10 +72,10 @@ public class BookingServiceImpl implements BookingService {
         return true;
     }
 
-    private void addBooking(TransactionEntity tx, AccountEntity account, TrackingDateTime bookedAt, BigDecimal amount) {
+    private void addBooking(TransactionEntity tx, AccountCurrencyEntity account, TrackingDateTime bookedAt, BigDecimal amount) {
         var booking = new BookingEntity();
         booking.setTransaction(tx);
-        booking.setAccount(account);
+        booking.setAccountCurrency(account);
         booking.setBookedAt(bookedAt);
         booking.setAmount(amount);
         bookingRepository.save(booking);

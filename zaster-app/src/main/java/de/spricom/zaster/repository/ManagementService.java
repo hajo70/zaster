@@ -1,7 +1,7 @@
 package de.spricom.zaster.repository;
 
-import de.spricom.zaster.entities.managment.ApplicationUserEntity;
 import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.managment.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,23 +9,23 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.Optional;
 
 public interface ManagementService {
-    ApplicationUserEntity createTenant(ApplicationUserEntity user);
+    UserEntity createTenant(UserEntity user);
 
     TenantEntity updateTenant(TenantEntity tenant);
 
     void deleteTenant(String tenantId);
 
-    Optional<ApplicationUserEntity> getUser(String id);
+    Optional<UserEntity> getUser(String id);
 
-    Optional<ApplicationUserEntity> findByUsername(String username);
+    Optional<UserEntity> findByUsername(String username);
 
     boolean existsUsername(String username);
 
-    ApplicationUserEntity saveUser(ApplicationUserEntity entity);
+    UserEntity saveUser(UserEntity entity);
 
     void deleteUser(String id);
 
-    Page<ApplicationUserEntity> listUser(Pageable pageable);
+    Page<UserEntity> listUser(Pageable pageable);
 
-    Page<ApplicationUserEntity> listUser(Pageable pageable, Specification<ApplicationUserEntity> filter);
+    Page<UserEntity> listUser(Pageable pageable, Specification<UserEntity> filter);
 }

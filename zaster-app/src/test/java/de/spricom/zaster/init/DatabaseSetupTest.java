@@ -37,10 +37,10 @@ public class DatabaseSetupTest {
     private CurrencyRepository currencyRepository;
 
     @Autowired
-    private AccountGroupRepository accountGroupRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountCurrencyRepository accountCurrencyRepository;
 
     @Autowired
     private BookingRepository bookingRepository;
@@ -54,7 +54,7 @@ public class DatabaseSetupTest {
     private TenantEntity tenant;
 
     private final Map<String, CurrencyEntity> currencies = new TreeMap<>();
-    private final Map<String, AccountEntity> accounts = new TreeMap<>();
+    private final Map<String, AccountCurrencyEntity> accounts = new TreeMap<>();
 
     @AfterEach
     void shutDown() {
@@ -93,20 +93,20 @@ public class DatabaseSetupTest {
         return currency;
     }
 
-    private AccountEntity createAccount(CurrencyEntity currency) {
-        var accountGroup = new AccountGroupEntity();
+    private AccountCurrencyEntity createAccount(CurrencyEntity currency) {
+        var accountGroup = new AccountEntity();
         accountGroup.setTenant(tenant);
         accountGroup.setAccountName("My bank account");
-        accountGroup = accountGroupRepository.save(accountGroup);
-        var account = new AccountEntity();
-        account.setAccountGroup(accountGroup);
+        accountGroup = accountRepository.save(accountGroup);
+        var account = new AccountCurrencyEntity();
+        account.setAccount(accountGroup);
         account.setCurrency(currency);
-        account = accountRepository.save(account);
-        accounts.put(account.getAccountGroup().getAccountName(), account);
+        account = accountCurrencyRepository.save(account);
+        accounts.put(account.getAccount().getAccountName(), account);
         return account;
     }
 
-    private SnapshotEntity createSnapshot(AccountEntity account, TrackingDateTime ts, BigDecimal amount) {
+    private SnapshotEntity createSnapshot(AccountCurrencyEntity account, TrackingDateTime ts, BigDecimal amount) {
         var snapshot = new SnapshotEntity();
         snapshot.setAccount(account);
         snapshot.setTakenAt(ts);
@@ -120,17 +120,17 @@ public class DatabaseSetupTest {
         transaction.setDescription("Sample transaction");
         transaction.setSubmittedAt(TrackingDateTime.now());
         transaction = transactionRepository.save(transaction);
-        AccountEntity account = accounts.values().stream().findAny().get();
+        AccountCurrencyEntity account = accounts.values().stream().findAny().get();
         createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("500.1"));
         createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("499.98"));
         createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("0.01"));
         return transaction;
     }
 
-    private BookingEntity createBooking(TransactionEntity transaction, AccountEntity account, TrackingDateTime ts, BigDecimal amount) {
+    private BookingEntity createBooking(TransactionEntity transaction, AccountCurrencyEntity account, TrackingDateTime ts, BigDecimal amount) {
         var booking = new BookingEntity();
         booking.setTransaction(transaction);
-        booking.setAccount(account);
+        booking.setAccountCurrency(account);
         booking.setBookedAt(ts);
         booking.setAmount(amount);
         booking = bookingRepository.save(booking);
