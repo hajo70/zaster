@@ -1,15 +1,14 @@
+import {AccountCurrency} from "Frontend/model/tracking/AccountCurrency.ts";
+import {Transfer} from "Frontend/model/tracking/Transfer.ts";
 import BookingDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
-import {Account} from "Frontend/model/tracking/Account.ts";
-import {Transaction} from "Frontend/model/tracking/Transaction.ts";
 
 export class Booking {
     data: BookingDto;
-    tx: Transaction;
-    account: Account;
+    transfers: Transfer[];
 
-    constructor(tx: Transaction, data: BookingDto, account: Account) {
-        this.tx = tx;
+    constructor(data: BookingDto, accountLookup: (id: string) => AccountCurrency) {
         this.data = data;
-        this.account = account;
+        this.transfers = data.transfers.map(booking =>
+            new Transfer(this, booking, accountLookup(booking.id.uuid)));
     }
 }

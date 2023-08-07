@@ -25,59 +25,66 @@ public class BookingServiceImpl implements BookingService {
     private final ObjectMapper mapper;
 
     @Override
-    public BookingEntity createTransaction(BookingEntity tx) {
-        var txSaved = bookingRepository.save(tx);
-        HashSet<TransferEntity> bookingsSaved = new HashSet<>(tx.getTransfers().size());
-        for (TransferEntity booking : tx.getTransfers()) {
-            booking.setBooking(txSaved);
-            bookingsSaved.add(transferRepository.save(booking));
+    public BookingEntity createBooking(BookingEntity booking) {
+        var bookingSaved = bookingRepository.save(booking);
+        HashSet<TransferEntity> transfersSaved = new HashSet<>(booking.getTransfers().size());
+        for (TransferEntity transfer : booking.getTransfers()) {
+            transfer.setBooking(bookingSaved);
+            transfersSaved.add(transferRepository.save(transfer));
         }
-        txSaved.setTransfers(bookingsSaved);
-        return txSaved;
+        bookingSaved.setTransfers(transfersSaved);
+        return bookingSaved;
     }
 
     @Override
-    public boolean addTransaction(ImportEntity imported, AccountCurrencyEntity account, BookingRecord bookingRecord) {
-        if (bookingRepository.existsByTenantAndMd5(account.getId(), bookingRecord.md5())) {
+    public boolean addBooking(ImportEntity imported,
+                              AccountCurrencyEntity accountCurrency,
+                              BookingRecord bookingRecord) {
+        if (bookingRepository.existsByTenantAndMd5(accountCurrency.getId(), bookingRecord.md5())) {
             return false;
         }
-        var tx = new BookingEntity();
-        tx.setImported(imported);
-        tx.setDescription(bookingRecord.description());
-        tx.setBookedAt(bookingRecord.submittedAt());
-        tx.setMd5(bookingRecord.md5());
+        var booking = new BookingEntity();
+        booking.setImported(imported);
+        booking.setDescription(bookingRecord.description());
+        booking.setBookedAt(bookingRecord.submittedAt());
+        booking.setMd5(bookingRecord.md5());
         if (!bookingRecord.details().isEmpty()) {
             try {
-                tx.setMetadata(mapper.writeValueAsString(bookingRecord.details()));
+                booking.setMetadata(mapper.writeValueAsString(bookingRecord.details()));
             } catch (JsonProcessingException ex) {
                 throw new IllegalArgumentException("Cannot convert details to JSON for " + bookingRecord, ex);
             }
         }
-        tx = bookingRepository.save(tx);
-        addBooking(tx, account, bookingRecord.bookedAt(), bookingRecord.amount());
-        AccountCurrencyEntity partnerAccount = accountService.getOrCreateAccount(imported.getTenant(),
-                bookingRecord.partnerCode(), bookingRecord.partnerName(), account.getCurrency());
-        addBooking(tx, partnerAccount, bookingRecord.bookedAt(), bookingRecord.amount().negate());
+        booking = bookingRepository.save(booking);
+        addTransfer(booking, accountCurrency, bookingRecord.bookedAt(), bookingRecord.amount());
+        AccountCurrencyEntity partnerAccount = accountService.getOrCreateAccountCurrency(imported.getTenant(),
+                bookingRecord.partnerCode(), bookingRecord.partnerName(), accountCurrency.getCurrency());
+        addTransfer(booking, partnerAccount, bookingRecord.bookedAt(), bookingRecord.amount().negate());
         return true;
     }
 
     @Override
-    public boolean addSnapshot(ImportEntity imported, AccountCurrencyEntity account, SnapshotRecord snapshotRecord) {
+    public boolean addSnapshot(ImportEntity imported,
+                               AccountCurrencyEntity accountCurrency,
+                               SnapshotRecord snapshotRecord) {
         var snapshot = new SnapshotEntity();
         snapshot.setImported(imported);
-        snapshot.setAccount(account);
+        snapshot.setAccount(accountCurrency);
         snapshot.setTakenAt(snapshotRecord.takenAt());
         snapshot.setBalance(snapshotRecord.balance());
         snapshotRepository.save(snapshot);
         return true;
     }
 
-    private void addBooking(BookingEntity tx, AccountCurrencyEntity account, TrackingDateTime bookedAt, BigDecimal amount) {
-        var booking = new TransferEntity();
-        booking.setBooking(tx);
-        booking.setAccountCurrency(account);
-        booking.setTransferredAt(bookedAt);
-        booking.setAmount(amount);
-        transferRepository.save(booking);
+    private void addTransfer(BookingEntity booking,
+                             AccountCurrencyEntity accountCurrency,
+                             TrackingDateTime bookedAt,
+                             BigDecimal amount) {
+        var transfer = new TransferEntity();
+        transfer.setBooking(booking);
+        transfer.setAccountCurrency(accountCurrency);
+        transfer.setTransferredAt(bookedAt);
+        transfer.setAmount(amount);
+        transferRepository.save(transfer);
     }
 }

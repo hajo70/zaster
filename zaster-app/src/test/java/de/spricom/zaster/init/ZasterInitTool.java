@@ -121,7 +121,7 @@ public class ZasterInitTool {
         group.setParent(parent);
         group.setAccountName(account.getName());
         group.setAccountCode(account.getCode());
-        var savedGroup = accountService.saveAccountGroup(group);
+        var savedGroup = accountService.saveAccount(group);
         if (account.getAccounts() != null) {
             account.getAccounts().forEach(value -> initAccount(savedGroup, value));
         }

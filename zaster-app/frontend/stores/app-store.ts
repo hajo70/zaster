@@ -1,10 +1,10 @@
 import {RouterLocation} from '@vaadin/router';
 import {autorun, makeAutoObservable} from 'mobx';
-import ApplicationUserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/ApplicationUserEntity";
-import {ApplicationUserEndpoint} from "Frontend/generated/endpoints";
+import {UserEndpoint} from "Frontend/generated/endpoints";
 import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
 import {TrackingStore} from "Frontend/stores/tracking-store.ts";
 import {AccountingStore} from "Frontend/stores/accounting-store.ts";
+import UserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/UserEntity.ts";
 
 export class AppStore {
   accountingStore = new AccountingStore();
@@ -17,7 +17,7 @@ export class AppStore {
 
   currentViewTitle = '';
 
-  user: ApplicationUserEntity | undefined = undefined;
+  user: UserEntity | undefined = undefined;
 
   constructor() {
     makeAutoObservable(this);
@@ -47,7 +47,7 @@ export class AppStore {
   }
 
   async fetchUserInfo() {
-    this.user = await ApplicationUserEndpoint.getAuthenticatedUser();
+    this.user = await UserEndpoint.getAuthenticatedUser();
   }
 
   clearUserInfo() {

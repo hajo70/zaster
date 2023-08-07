@@ -67,7 +67,7 @@ class AccountServiceTest {
         var leaf1usd = createAccount(leaf1, "USD");
         var sub1eur = createAccount(sub1, "EUR");
 
-        var tree = accountService.findAllRootAccountGroups(tenant);
+        var tree = accountService.findAllRootAccounts(tenant);
         assertThat(tree).hasSize(2).contains(root1, root2);
         assertThat(render(tree)).isEqualTo("""
                 Root 1()
@@ -109,13 +109,13 @@ class AccountServiceTest {
         group.setTenant(tenant);
         group.setParent(parent);
         group.setAccountName(accountName);
-        return accountService.saveAccountGroup(group);
+        return accountService.saveAccount(group);
     }
 
     private AccountCurrencyEntity createAccount(AccountEntity group, String currencyCode) {
         var account = new AccountCurrencyEntity();
         account.setAccount(group);
         account.setCurrency(currencies.get(currencyCode));
-        return accountService.saveAccount(account);
+        return accountService.saveAccountCurrency(account);
     }
 }

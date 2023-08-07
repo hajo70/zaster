@@ -6,6 +6,6 @@ import java.util.List;
 
 public record AccountingDataDto(
         List<CurrencyEntity> currencies,
-        List<AccountGroupDto> rootAccountGroups
+        List<AccountDto> rootAccounts
 ) {
 }

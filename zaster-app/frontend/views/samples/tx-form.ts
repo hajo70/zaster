@@ -9,18 +9,18 @@ import '@vaadin/text-field';
 import '@vaadin/date-picker';
 
 import {View} from 'Frontend/views/view';
-import TransactionDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDtoModel.ts";
-import TransactionDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDto.ts";
-import BookingDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
 import BookingDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDtoModel.ts";
+import BookingDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
+import TransferDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransferDto.ts";
+import TransferDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransferDtoModel.ts";
 
 @customElement('tx-form')
 export class TxForm extends View {
 
     @property()
-    transaction = TransactionDtoModel.createEmptyValue();
+    transaction = BookingDtoModel.createEmptyValue();
 
-    protected binder = new Binder(this, TransactionDtoModel, {
+    protected binder = new Binder(this, BookingDtoModel, {
         onChange: this.handleChange,
         onSubmit: this.save
     });
@@ -32,7 +32,7 @@ export class TxForm extends View {
             <div>
                 <vaadin-date-picker
                         label="Datum"
-                        ${field(model.submittedAtDate)}
+                        ${field(model.bookedAtDate)}
                 ></vaadin-date-picker>
                 <vaadin-text-field
                         label="Beschreibung"
@@ -41,11 +41,11 @@ export class TxForm extends View {
                 ></vaadin-text-field>
             </div>
             <div>
-                <span>${this.binder.value.bookings.length}:</span>
-                ${repeat(this.binder.model.bookings, this.renderBooking)}
+                <span>${this.binder.value.transfers.length}:</span>
+                ${repeat(this.binder.model.transfers, this.renderBooking)}
                 <vaadin-button
                         @click=${() => {
-                            this.binder.for(this.binder.model.bookings).appendItem();
+                            this.binder.for(this.binder.model.transfers).appendItem();
                             this.requestUpdate();
                         }
                         }
@@ -56,12 +56,12 @@ export class TxForm extends View {
         `;
     }
 
-    private renderBooking(bookingBinder: BinderNode<BookingDto, BookingDtoModel>, index: number) {
+    private renderBooking(bookingBinder: BinderNode<TransferDto, TransferDtoModel>, index: number) {
         return html`
             <span>Booking: ${index}</span>
             <vaadin-date-picker
                     label="Buchungsdatum"
-                    ${field(bookingBinder.model.bookedAtDate)}
+                    ${field(bookingBinder.model.transferredAtDate)}
             ></vaadin-date-picker>
         `;
     }
@@ -70,7 +70,7 @@ export class TxForm extends View {
         console.log("changed: " + JSON.stringify(value));
     }
 
-    async save(tx: TransactionDto) {
+    async save(tx: BookingDto) {
         console.log("save: " + JSON.stringify(tx));
     }
 

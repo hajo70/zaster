@@ -9,17 +9,17 @@ import '@vaadin/multi-select-combo-box';
 
 import {Binder, field} from '@hilla/form';
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
-import AccountGroupDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountGroupDtoModel.ts";
+import AccountDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDtoModel.ts";
 
 @customElement('account-form')
 export class AccountForm extends View {
-    protected binder = new Binder(this, AccountGroupDtoModel);
+    protected binder = new Binder(this, AccountDtoModel);
 
     constructor() {
         super();
         this.autorun(() => {
-            if (accountsViewStore.selectedAccountGroup) {
-                this.binder.read(accountsViewStore.selectedAccountGroup);
+            if (accountsViewStore.selectedAccount) {
+                this.binder.read(accountsViewStore.selectedAccount);
             } else {
                 this.binder.clear();
             }

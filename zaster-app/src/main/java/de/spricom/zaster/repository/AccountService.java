@@ -8,17 +8,17 @@ import de.spricom.zaster.entities.tracking.AccountEntity;
 import java.util.List;
 
 public interface AccountService {
-    List<AccountEntity> findAllRootAccountGroups(TenantEntity tenant);
+    List<AccountEntity> findAllRootAccounts(TenantEntity tenant);
 
-    AccountEntity getAccountGroup(String accountGroupId);
+    AccountEntity getAccount(String accountGroupId);
 
-    AccountEntity saveAccountGroup(AccountEntity accountGroup);
+    AccountEntity saveAccount(AccountEntity accountGroup);
 
-    void deleteAccountGroup(String accountGroupId);
+    void deleteAccount(String accountGroupId);
 
-    AccountCurrencyEntity saveAccount(AccountCurrencyEntity account);
+    AccountCurrencyEntity saveAccountCurrency(AccountCurrencyEntity account);
 
-    void deleteAccount(String accountId);
+    void deleteAccountCurrency(String accountId);
 
-    AccountCurrencyEntity getOrCreateAccount(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency);
+    AccountCurrencyEntity getOrCreateAccountCurrency(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency);
 }

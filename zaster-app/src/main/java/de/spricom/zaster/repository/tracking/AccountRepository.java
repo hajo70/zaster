@@ -15,7 +15,7 @@ public interface AccountRepository
             "LEFT JOIN FETCH g.parent " +
             "LEFT JOIN FETCH g.currencies " +
             "WHERE g.tenant.id = :tenantId")
-    List<AccountEntity> findAccountGroups(@Param("tenantId") String tenantId);
+    List<AccountEntity> findAccounts(@Param("tenantId") String tenantId);
 
     AccountEntity findByTenantIdAndAccountCode(String tenantId, String accountCode);
 }

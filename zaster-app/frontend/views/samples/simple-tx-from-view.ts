@@ -12,17 +12,17 @@ import '@vaadin/icon';
 import './tx-form';
 
 import {View} from "Frontend/views/view.ts";
-import TransactionDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDtoModel.ts";
 import BookingDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDtoModel.ts";
-import BookingDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
+import TransferDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
+import TransferDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransferDtoModel.ts";
 
 @customElement("simple-tx-form-view")
 export class SimpleTxFromView extends View {
 
     @state()
-    private transaction = TransactionDtoModel.createEmptyValue();
+    private booking = BookingDtoModel.createEmptyValue();
 
-    private binder = new Binder(this, TransactionDtoModel);
+    private binder = new Binder(this, BookingDtoModel);
 
     protected override render() {
         const {model} = this.binder;
@@ -31,7 +31,7 @@ export class SimpleTxFromView extends View {
             <div>
                 <vaadin-date-picker
                         label="Datum"
-                        ${field(model.submittedAtDate)}
+                        ${field(model.bookedAtDate)}
                 ></vaadin-date-picker>
                 <vaadin-text-field
                         label="Beschreibung"
@@ -40,11 +40,11 @@ export class SimpleTxFromView extends View {
                 ></vaadin-text-field>
             </div>
             <div>
-                <span>${this.binder.value.bookings.length}:</span>
-                ${repeat(this.binder.model.bookings, this.renderBooking)}
+                <span>${this.binder.value.transfers.length}:</span>
+                ${repeat(this.binder.model.transfers, this.renderTransfer)}
                 <vaadin-button
-                        @click=${() => this.binder.for(this.binder.model.bookings)
-            .appendItem(BookingDtoModel.createEmptyValue())}
+                        @click=${() => this.binder.for(this.binder.model.transfers)
+            .appendItem(TransferDtoModel.createEmptyValue())}
                 >
                     <vaadin-icon icon="lumo:plus"></vaadin-icon>
                 </vaadin-button>
@@ -52,12 +52,12 @@ export class SimpleTxFromView extends View {
         `;
     }
 
-    private renderBooking(bookingBinder: BinderNode<BookingDto, BookingDtoModel>, index: number) {
+    private renderTransfer(transferBinder: BinderNode<TransferDto, TransferDtoModel>, index: number) {
         return html`
-            <span>Booking: ${index}</span>
+            <span>Transfer: ${index}</span>
             <vaadin-date-picker
-                    label="Buchungsdatum"
-                    ${field(bookingBinder.model.bookedAtDate)}
+                    label="Wertstellung"
+                    ${field(transferBinder.model.transferredAtDate)}
             ></vaadin-date-picker>
         `;
     }
@@ -73,6 +73,6 @@ export class SimpleTxFromView extends View {
             'w-full',
             'h-full'
         );
-        this.binder.read(this.transaction);
+        this.binder.read(this.booking);
     }
 }

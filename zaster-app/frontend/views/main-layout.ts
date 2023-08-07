@@ -18,7 +18,7 @@ import {router} from '../index.js';
 import {hasAccess, views} from '../routes.js';
 import {appStore} from '../stores/app-store.js';
 import {Layout} from './view.js';
-import ApplicationUserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/ApplicationUserEntity";
+import UserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/UserEntity";
 
 interface RouteInfo {
   path: string;
@@ -83,7 +83,7 @@ export class MainLayout extends Layout {
     );
   }
 
-  private getUserMenuItems(user: ApplicationUserEntity): MenuBarItem[] {
+  private getUserMenuItems(user: UserEntity): MenuBarItem[] {
     return [
       {
         component: this.createUserMenuItem(user),
@@ -92,7 +92,7 @@ export class MainLayout extends Layout {
     ];
   }
 
-  private createUserMenuItem(user: ApplicationUserEntity) {
+  private createUserMenuItem(user: UserEntity) {
     const item = document.createElement('div');
     item.style.display = 'flex';
     item.style.alignItems = 'center';

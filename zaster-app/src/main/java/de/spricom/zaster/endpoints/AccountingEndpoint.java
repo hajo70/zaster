@@ -1,7 +1,7 @@
 package de.spricom.zaster.endpoints;
 
+import de.spricom.zaster.dtos.tracking.AccountCurrencyDto;
 import de.spricom.zaster.dtos.tracking.AccountDto;
-import de.spricom.zaster.dtos.tracking.AccountGroupDto;
 import de.spricom.zaster.dtos.tracking.AccountingDataDto;
 import de.spricom.zaster.entities.managment.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
@@ -37,14 +37,14 @@ public class AccountingEndpoint {
         );
     }
 
-    public List<AccountGroupDto> findAllRootAccountGroups() {
-        return accountService.findAllRootAccountGroups(authenticatedUser.getCurrentTenant())
+    public List<AccountDto> findAllRootAccountGroups() {
+        return accountService.findAllRootAccounts(authenticatedUser.getCurrentTenant())
                 .stream().map(this::createAccountGroup)
                 .toList();
     }
 
-    private AccountGroupDto createAccountGroup(AccountEntity entity) {
-        return new AccountGroupDto(DtoUtils.id(entity),
+    private AccountDto createAccountGroup(AccountEntity entity) {
+        return new AccountDto(DtoUtils.id(entity),
                 entity.getAccountName(),
                 entity.getCurrencies() == null || entity.getCurrencies().isEmpty()
                         ? null
@@ -59,22 +59,22 @@ public class AccountingEndpoint {
                         .toList());
     }
 
-    private AccountDto createAccount(AccountCurrencyEntity entity) {
-        return new AccountDto(DtoUtils.id(entity), entity.getCurrency().getId());
+    private AccountCurrencyDto createAccount(AccountCurrencyEntity entity) {
+        return new AccountCurrencyDto(DtoUtils.id(entity), entity.getCurrency().getId());
     }
 
-    public AccountGroupDto saveAccountGroup(AccountGroupDto group) {
+    public AccountDto saveAccountGroup(AccountDto group) {
         AccountEntity entity = new AccountEntity();
         DtoUtils.setId(entity, group.id());
         entity.setAccountName(group.accountName());
         entity.setTenant(authenticatedUser.getCurrentTenant());
         if (StringUtils.isNotEmpty(group.parentId())) {
-            entity.setParent(accountService.getAccountGroup(group.parentId()));
+            entity.setParent(accountService.getAccount(group.parentId()));
         }
-        return createAccountGroup(accountService.saveAccountGroup(entity));
+        return createAccountGroup(accountService.saveAccount(entity));
     }
 
     public void deleteAccountGroupById(String accountGroupId) {
-        accountService.deleteAccountGroup(accountGroupId);
+        accountService.deleteAccount(accountGroupId);
     }
 }

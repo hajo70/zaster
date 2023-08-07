@@ -15,7 +15,7 @@ import './account-form';
 import {columnBodyRenderer, GridColumnBodyLitRenderer} from "@vaadin/grid/lit";
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
 import {Grid} from "@vaadin/grid";
-import AccountGroupDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountGroupDto.ts";
+import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
 import {accountingStore} from "Frontend/stores/app-store.ts";
 
 @customElement('accounts-view')
@@ -41,7 +41,7 @@ export class AccountsView extends View {
                 <vaadin-grid 
                         .itemHasChildrenPath="${'children'}" 
                         .dataProvider="${accountsViewStore.boundDataProvider}"
-                        .selectedItems=${[accountsViewStore.selectedAccountGroup]}
+                        .selectedItems=${[accountsViewStore.selectedAccount]}
                         @active-item-changed=${this.handleGridSelection}
                 >
                     <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
@@ -50,14 +50,14 @@ export class AccountsView extends View {
                 </vaadin-grid>
                 <account-form
                         class="flex flex-col gap-s"
-                        ?hidden=${!accountsViewStore.selectedAccountGroup}
+                        ?hidden=${!accountsViewStore.selectedAccount}
                         @accounts-changed=${this.updateGrid}
                 ></account-form>
             </div>
         `;
     }
 
-    private currenciesRenderer: GridColumnBodyLitRenderer<AccountGroupDto> = ({accounts}) => html`
+    private currenciesRenderer: GridColumnBodyLitRenderer<AccountDto> = ({accounts}) => html`
         <span>${accounts?.map(account => accountingStore.getCurrency(account.currencyId).currencyCode).join(', ')}</span>
     `;
 

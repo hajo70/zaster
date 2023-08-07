@@ -9,7 +9,7 @@ import '@vaadin/text-field';
 import '@vaadin/icon';
 
 import {columnBodyRenderer, GridColumnBodyLitRenderer} from "@vaadin/grid/lit";
-import AccountGroupDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountGroupDto.ts";
+import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
 import ColumnGroupDto from "Frontend/generated/de/spricom/zaster/dtos/samples/ColumnGroupDto.ts";
 import {SamplesEndpoint} from "Frontend/generated/endpoints.ts";
 import ColumnGroupDtoModel from "Frontend/generated/de/spricom/zaster/dtos/samples/ColumnGroupDtoModel.ts";
@@ -70,7 +70,7 @@ export class DynamicGridView extends View {
         `;
     }
 
-    private cellRenderer(columnName: () => string): GridColumnBodyLitRenderer<AccountGroupDto> {
+    private cellRenderer(columnName: () => string): GridColumnBodyLitRenderer<AccountDto> {
         return (row, model) => html`
             <span>${row}/${model.index} (${columnName()})</span>
         `;

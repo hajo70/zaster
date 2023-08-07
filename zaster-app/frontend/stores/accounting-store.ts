@@ -1,11 +1,11 @@
 import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity.ts";
 import {makeObservable, observable, runInAction} from "mobx";
 import {AccountingEndpoint} from "Frontend/generated/endpoints.ts";
-import {AccountGroup} from "Frontend/model/tracking/AccountGroup.ts";
+import {Account} from "Frontend/model/tracking/Account.ts";
 
 export class AccountingStore {
     currencies: CurrencyEntity[] = [];
-    rootAccountGroups: AccountGroup[] = [];
+    rootAccountGroups: Account[] = [];
 
     constructor() {
         makeObservable(
@@ -22,7 +22,7 @@ export class AccountingStore {
 
         runInAction(() => {
            this.currencies = data.currencies;
-           this.rootAccountGroups = data.rootAccountGroups.map(group => new AccountGroup(null, group, this.getCurrency));
+           this.rootAccountGroups = data.rootAccounts.map(group => new Account(null, group, this.getCurrency));
         });
     }
 

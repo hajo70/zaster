@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 public interface BookingService {
-    BookingEntity createTransaction(BookingEntity tx);
+    BookingEntity createBooking(BookingEntity tx);
 
-    boolean addTransaction(ImportEntity imported, AccountCurrencyEntity account, BookingRecord bookingRecord);
+    boolean addBooking(ImportEntity imported, AccountCurrencyEntity account, BookingRecord bookingRecord);
     boolean addSnapshot(ImportEntity imported, AccountCurrencyEntity account, SnapshotRecord snapshotRecord);
 
     record BookingRecord(

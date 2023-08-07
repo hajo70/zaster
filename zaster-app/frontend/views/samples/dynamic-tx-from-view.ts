@@ -7,18 +7,18 @@ import '@vaadin/grid/vaadin-grid-column';
 import '@vaadin/text-field';
 import '@vaadin/icon';
 import './tx-form';
-import TransactionDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDto.ts";
-import TransactionDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransactionDtoModel.ts";
+import BookingDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
 import BookingDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDtoModel.ts";
+import TransferDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransferDtoModel.ts";
 
 @customElement("dynamic-tx-form-view")
 export class DynamicTxFromView extends View {
 
     @state()
-    private transactions: TransactionDto[] = [];
+    private transactions: BookingDto[] = [];
 
     @state()
-    private deleted: TransactionDto[] = [];
+    private deleted: BookingDto[] = [];
 
     protected override render() {
         return html`
@@ -43,7 +43,7 @@ export class DynamicTxFromView extends View {
         `;
     }
 
-    private removeTx(tx: TransactionDto) {
+    private removeTx(tx: BookingDto) {
         this.deleted = [...this.deleted, tx];
     }
 
@@ -52,19 +52,19 @@ export class DynamicTxFromView extends View {
     }
 
    private createTx() {
-       const newTx = TransactionDtoModel.createEmptyValue();
-       newTx.submittedAtDate = new Date().toISOString().substring(0, 10);
-       newTx.bookings = [
+       const newBooking = BookingDtoModel.createEmptyValue();
+       newBooking.bookedAtDate = new Date().toISOString().substring(0, 10);
+       newBooking.transfers = [
            this.createBooking(),
            this.createBooking()
        ];
-       return newTx;
+       return newBooking;
    }
 
    private nextId = 1;
 
    private createBooking() {
-        const newBooking = BookingDtoModel.createEmptyValue();
+        const newBooking = TransferDtoModel.createEmptyValue();
         this.nextId++;
         newBooking.id.uuid = `${this.nextId}`;
         return newBooking;

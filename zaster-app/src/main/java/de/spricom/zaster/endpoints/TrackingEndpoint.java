@@ -1,6 +1,6 @@
 package de.spricom.zaster.endpoints;
 
-import de.spricom.zaster.dtos.tracking.TransactionDto;
+import de.spricom.zaster.dtos.tracking.BookingDto;
 import dev.hilla.Endpoint;
 import jakarta.annotation.security.PermitAll;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TrackingEndpoint {
 
-    public List<TransactionDto> getTransactions() {
+    public List<BookingDto> getTransactions() {
         return Collections.emptyList();
     }
 }

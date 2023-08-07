@@ -74,7 +74,7 @@ public class PostbankImporter implements CsvImporter {
         int importedCount = 0;
         for (CsvRow row : rows.subList(8, rows.size() - 1)) {
             var booking = toRecord(row);
-            if (bookingService.addTransaction(imported, account, booking)) {
+            if (bookingService.addBooking(imported, account, booking)) {
                 importedCount++;
             }
         }
@@ -137,7 +137,7 @@ public class PostbankImporter implements CsvImporter {
         String iban = accountRow.column("C");
         String currencyCode = accountRow.column("D");
         CurrencyEntity currency = currencyService.getOrCreateCurrencyByCode(tenant, currencyCode);
-        return accountService.getOrCreateAccount(tenant, iban, accountName, currency);
+        return accountService.getOrCreateAccountCurrency(tenant, iban, accountName, currency);
     }
 
     private void checkHeader(CsvRow header, String[] columns) {

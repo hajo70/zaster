@@ -1,19 +1,41 @@
+import {AccountCurrency} from "Frontend/model/tracking/AccountCurrency.ts";
 import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity.ts";
-import {AccountGroup} from "Frontend/model/tracking/AccountGroup.ts";
 import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
 
 export class Account {
-    readonly data: AccountDto;
-    readonly group: AccountGroup;
-    readonly currency: CurrencyEntity;
+    data: AccountDto;
+    parent: Account | null;
+    children: Account[] = [];
+    accounts: AccountCurrency[] = [];
 
-    constructor(group: AccountGroup, data: AccountDto, currency: CurrencyEntity) {
-        this.group = group;
+    constructor(parent: Account | null, data: AccountDto, currencyLookup: (id: string) => CurrencyEntity) {
+        this.parent = parent;
         this.data = data;
-        this.currency = currency;
+        if (data.children) {
+            data.children.map(child => new Account(this, child, currencyLookup));
+            delete data.children;
+        }
+        if (data.accounts) {
+            data.accounts.map(account => new AccountCurrency(this, account, currencyLookup(account.currencyId)));
+            delete data.accounts;
+        }
     }
 
-    get currencyCode() {
-        return this.currency.currencyCode;
+    get name() {
+        return this.data.accountName;
+    }
+
+    findAccount(id: string): AccountCurrency | undefined {
+        let account = this.accounts.find(a => id === a.data.id.uuid);
+        if (account) {
+            return account;
+        }
+        for (const child of this.children) {
+            account = child.findAccount(id);
+            if (account) {
+                return account;
+            }
+        }
+        return undefined;
     }
 }

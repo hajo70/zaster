@@ -25,70 +25,70 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
 
     @Override
-    public List<AccountEntity> findAllRootAccountGroups(TenantEntity tenant) {
-        var groups = accountRepository.findAccountGroups(tenant.getId());
-        for (AccountEntity group : groups) {
-            if (group.getParent() != null) {
-                if (group.getParent().getChildren() == null) {
-                    group.getParent().setChildren(
+    public List<AccountEntity> findAllRootAccounts(TenantEntity tenant) {
+        var accounts = accountRepository.findAccounts(tenant.getId());
+        for (AccountEntity account : accounts) {
+            if (account.getParent() != null) {
+                if (account.getParent().getChildren() == null) {
+                    account.getParent().setChildren(
                             new TreeSet<>(Comparator.comparing(AccountEntity::getAccountName)));
                 }
-                group.getParent().getChildren().add(group);
+                account.getParent().getChildren().add(account);
             }
         }
-        return groups.stream()
-                .filter(group -> group.getParent() == null)
+        return accounts.stream()
+                .filter(account -> account.getParent() == null)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public AccountEntity getAccountGroup(String accountGroupId) {
-        return accountRepository.getReferenceById(accountGroupId);
+    public AccountEntity getAccount(String accountId) {
+        return accountRepository.getReferenceById(accountId);
     }
 
     @Override
-    public AccountEntity saveAccountGroup(AccountEntity accountGroup) {
-        log.info("saving account group: {}", accountGroup);
-        return accountRepository.save(accountGroup);
-    }
-
-    @Override
-    public void deleteAccountGroup(String accountGroupId) {
-        log.info("deleting account group: {}", accountGroupId);
-        accountRepository.deleteById(accountGroupId);
-    }
-
-    @Override
-    public AccountCurrencyEntity saveAccount(AccountCurrencyEntity account) {
+    public AccountEntity saveAccount(AccountEntity account) {
         log.info("saving account: {}", account);
-        return accountCurrencyRepository.save(account);
+        return accountRepository.save(account);
     }
 
     @Override
     public void deleteAccount(String accountId) {
         log.info("deleting account: {}", accountId);
+        accountRepository.deleteById(accountId);
+    }
+
+    @Override
+    public AccountCurrencyEntity saveAccountCurrency(AccountCurrencyEntity accountCurrency) {
+        log.info("saving accountCurrency: {}", accountCurrency);
+        return accountCurrencyRepository.save(accountCurrency);
+    }
+
+    @Override
+    public void deleteAccountCurrency(String accountId) {
+        log.info("deleting account: {}", accountId);
         accountCurrencyRepository.deleteById(accountId);
     }
 
     @Override
-    public AccountCurrencyEntity getOrCreateAccount(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency) {
-        var group = accountRepository.findByTenantIdAndAccountCode(tenant.getId(), accountCode);
-        AccountCurrencyEntity account = null;
-        if (group == null) {
-            group = new AccountEntity();
-            group.setTenant(tenant);
-            group.setAccountCode(accountCode);
-            group.setAccountName(accountName);
-            group = accountRepository.save(group);
-        } else {
-            account = accountCurrencyRepository.findByAccountIdAndCurrencyId(group.getId(), currency.getId());
-        }
+    public AccountCurrencyEntity getOrCreateAccountCurrency(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency) {
+        var account = accountRepository.findByTenantIdAndAccountCode(tenant.getId(), accountCode);
+        AccountCurrencyEntity accountCurrency = null;
         if (account == null) {
-            account = new AccountCurrencyEntity();
-            account.setAccount(group);
-            account.setCurrency(currency);
-            account = accountCurrencyRepository.save(account);
+            account = new AccountEntity();
+            account.setTenant(tenant);
+            account.setAccountCode(accountCode);
+            account.setAccountName(accountName);
+            account = accountRepository.save(account);
+        } else {
+            accountCurrency = accountCurrencyRepository.findByAccountIdAndCurrencyId(account.getId(), currency.getId());
         }
-        return account;
+        if (accountCurrency == null) {
+            accountCurrency = new AccountCurrencyEntity();
+            accountCurrency.setAccount(account);
+            accountCurrency.setCurrency(currency);
+            accountCurrency = accountCurrencyRepository.save(accountCurrency);
+        }
+        return accountCurrency;
     }
 }

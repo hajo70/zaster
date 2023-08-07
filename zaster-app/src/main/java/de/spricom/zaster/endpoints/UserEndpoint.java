@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Endpoint
 @AnonymousAllowed
-public class ApplicationUserEndpoint {
+public class UserEndpoint {
 
     @Autowired
     private AuthenticatedUser authenticatedUser;
