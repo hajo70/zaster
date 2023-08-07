@@ -13,8 +13,8 @@ import './tx-form';
 
 import {View} from "Frontend/views/view.ts";
 import BookingDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDtoModel.ts";
-import TransferDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/BookingDto.ts";
 import TransferDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransferDtoModel.ts";
+import TransferDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/TransferDto.ts";
 
 @customElement("simple-tx-form-view")
 export class SimpleTxFromView extends View {

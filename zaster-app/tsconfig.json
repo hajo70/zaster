@@ -24,6 +24,7 @@
     "useDefineForClassFields": false,
     "baseUrl": "frontend",
     "allowImportingTsExtensions": true,
+    "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@vaadin/flow-frontend": ["generated/jar-resources"],
