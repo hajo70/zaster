@@ -15,7 +15,7 @@ import java.util.Map;
 @Data
 public class ZasterInitProperties {
 
-    private Map<String, Tenant> tenants;
+    private List<Tenant> tenants;
 
     @Data
     static class Tenant {
@@ -25,8 +25,8 @@ public class ZasterInitProperties {
         private Map<String, User> users;
         private List<String> isoCurrencies;
         private Map<String, Currency> currencies;
-        private Map<String, Account> accounts;
-        private Map<String, Import> imports;
+        private List<Account> accounts;
+        private List<Import> imports;
     }
 
 
@@ -50,12 +50,13 @@ public class ZasterInitProperties {
     static class Account {
         private String name;
         private String code;
-        private Map<String, Account> accounts;
+        private List<Account> accounts;
     }
 
     @Data
     static class Import {
         private String importer;
+        private String accountCode;
         private List<File> files;
     }
 }

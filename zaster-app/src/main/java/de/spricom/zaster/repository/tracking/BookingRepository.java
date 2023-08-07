@@ -11,7 +11,7 @@ public interface BookingRepository
 
     @Query("""
             select case when count(*) > 0 then true else false end
-            from BookingEntity b"
+            from BookingEntity b
             where b.md5 = :md5 and b.id != :accountCurrencyId
             """) // TODO
     boolean existsByTenantAndMd5(@Param("accountCurrencyId") String accountCurrencyId, @Param("md5") String md5);

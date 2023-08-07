@@ -21,7 +21,7 @@ public class ZasterInitTest {
     void checkProperties() {
         assertThat(props).isNotNull();
         assertThat(props.getTenants()).hasSize(2);
-        var me = props.getTenants().get("me");
+        var me = props.getTenants().get(0);
         assertThat(me.getName()).isEqualTo("My personal Zaster");
         assertThat(me.getLocale()).isEqualTo(Locale.US);
         assertThat(me.getTimezone()).isEqualTo(ZoneId.of("GMT"));
@@ -37,13 +37,13 @@ public class ZasterInitTest {
         assertThat(btc.getType()).isEqualTo(ZasterInitProperties.Currency.Type.CRYPTO);
 
         assertThat(me.getAccounts()).isNotEmpty();
-        var accounts = me.getAccounts().get("accounts");
+        var accounts = me.getAccounts().get(0);
         assertThat(accounts.getName()).isEqualTo("My bank accounts");
         assertThat(accounts.getAccounts()).isNotEmpty();
-        assertThat(accounts.getAccounts().get("bank").getName()).isEqualTo("My bank");
+        assertThat(accounts.getAccounts().get(0).getName()).isEqualTo("My bank");
 
         assertThat(me.getImports()).isNotEmpty();
-        var imp = me.getImports().get("bank");
+        var imp = me.getImports().get(0);
         assertThat(imp.getImporter()).isEqualTo("My bank CSV importer");
         assertThat(imp.getFiles()).hasSize(2);
         assertThat(imp.getFiles().get(0)).hasFileName("bank1.csv");

@@ -47,13 +47,13 @@ public class ZasterInitTool {
     void checkProperties() {
         assertThat(props).isNotNull();
         assertThat(props.getTenants()).isNotEmpty();
-        props.getTenants().forEach((key, tenant) ->
-                assertThat(tenant.getUsers()).as(key).isNotEmpty());
+        props.getTenants().forEach((tenant) ->
+                assertThat(tenant.getUsers()).isNotEmpty());
     }
 
     @Test
     void initDatabase() {
-        props.getTenants().values().forEach(this::initTenant);
+        props.getTenants().forEach(this::initTenant);
     }
 
     private void initTenant(ZasterInitProperties.Tenant tenant) {
@@ -75,11 +75,11 @@ public class ZasterInitTool {
         }
         initIsoCurrencies(tenant.getIsoCurrencies());
         tenant.getCurrencies().forEach(this::initCurrency);
-        tenant.getAccounts().forEach((key, value) -> initAccount(null, value));
+        tenant.getAccounts().forEach((value) -> initAccount(null, value));
         tenant.getImports().forEach(this::importFiles);
     }
 
-    private void importFiles(String key, ZasterInitProperties.Import importTask) {
+    private void importFiles(ZasterInitProperties.Import importTask) {
         for (File file : importTask.getFiles()) {
             importHandlingService.importFile(currentTenant, importTask.getImporter(), new FileSystemResource(file));
         }
@@ -123,7 +123,7 @@ public class ZasterInitTool {
         group.setAccountCode(account.getCode());
         var savedGroup = accountService.saveAccountGroup(group);
         if (account.getAccounts() != null) {
-            account.getAccounts().forEach((key, value) -> initAccount(savedGroup, value));
+            account.getAccounts().forEach(value -> initAccount(savedGroup, value));
         }
     }
 }
