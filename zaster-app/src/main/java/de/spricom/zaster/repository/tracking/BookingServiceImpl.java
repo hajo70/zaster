@@ -19,32 +19,32 @@ import java.util.HashSet;
 public class BookingServiceImpl implements BookingService {
 
     private final AccountService accountService;
+    private final TransferRepository transferRepository;
     private final BookingRepository bookingRepository;
-    private final TransactionRepository transactionRepository;
     private final SnapshotRepository snapshotRepository;
     private final ObjectMapper mapper;
 
     @Override
-    public TransactionEntity createTransaction(TransactionEntity tx) {
-        var txSaved = transactionRepository.save(tx);
-        HashSet<BookingEntity> bookingsSaved = new HashSet<>(tx.getBookings().size());
-        for (BookingEntity booking : tx.getBookings()) {
-            booking.setTransaction(txSaved);
-            bookingsSaved.add(bookingRepository.save(booking));
+    public BookingEntity createTransaction(BookingEntity tx) {
+        var txSaved = bookingRepository.save(tx);
+        HashSet<TransferEntity> bookingsSaved = new HashSet<>(tx.getTransfers().size());
+        for (TransferEntity booking : tx.getTransfers()) {
+            booking.setBooking(txSaved);
+            bookingsSaved.add(transferRepository.save(booking));
         }
-        txSaved.setBookings(bookingsSaved);
+        txSaved.setTransfers(bookingsSaved);
         return txSaved;
     }
 
     @Override
     public boolean addTransaction(ImportEntity imported, AccountCurrencyEntity account, BookingRecord bookingRecord) {
-        if (transactionRepository.existsByTenantAndMd5(account.getId(), bookingRecord.md5())) {
+        if (bookingRepository.existsByTenantAndMd5(account.getId(), bookingRecord.md5())) {
             return false;
         }
-        var tx = new TransactionEntity();
+        var tx = new BookingEntity();
         tx.setImported(imported);
         tx.setDescription(bookingRecord.description());
-        tx.setSubmittedAt(bookingRecord.submittedAt());
+        tx.setBookedAt(bookingRecord.submittedAt());
         tx.setMd5(bookingRecord.md5());
         if (!bookingRecord.details().isEmpty()) {
             try {
@@ -53,7 +53,7 @@ public class BookingServiceImpl implements BookingService {
                 throw new IllegalArgumentException("Cannot convert details to JSON for " + bookingRecord, ex);
             }
         }
-        tx = transactionRepository.save(tx);
+        tx = bookingRepository.save(tx);
         addBooking(tx, account, bookingRecord.bookedAt(), bookingRecord.amount());
         AccountCurrencyEntity partnerAccount = accountService.getOrCreateAccount(imported.getTenant(),
                 bookingRecord.partnerCode(), bookingRecord.partnerName(), account.getCurrency());
@@ -72,12 +72,12 @@ public class BookingServiceImpl implements BookingService {
         return true;
     }
 
-    private void addBooking(TransactionEntity tx, AccountCurrencyEntity account, TrackingDateTime bookedAt, BigDecimal amount) {
-        var booking = new BookingEntity();
-        booking.setTransaction(tx);
+    private void addBooking(BookingEntity tx, AccountCurrencyEntity account, TrackingDateTime bookedAt, BigDecimal amount) {
+        var booking = new TransferEntity();
+        booking.setBooking(tx);
         booking.setAccountCurrency(account);
-        booking.setBookedAt(bookedAt);
+        booking.setTransferredAt(bookedAt);
         booking.setAmount(amount);
-        bookingRepository.save(booking);
+        transferRepository.save(booking);
     }
 }

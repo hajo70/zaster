@@ -44,8 +44,8 @@ public class EntitiesToLiquiTool {
         schema.add(asLiquiTable(AccountEntity.class));
         schema.add(asLiquiTable(AccountCurrencyEntity.class));
         schema.add(asLiquiTable(SnapshotEntity.class));
-        schema.add(asLiquiTable(TransactionEntity.class));
         schema.add(asLiquiTable(BookingEntity.class));
+        schema.add(asLiquiTable(TransferEntity.class));
         updateForeignKeys();
 
         schema.dump();

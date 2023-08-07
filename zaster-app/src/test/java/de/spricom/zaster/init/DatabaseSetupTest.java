@@ -43,10 +43,10 @@ public class DatabaseSetupTest {
     private AccountCurrencyRepository accountCurrencyRepository;
 
     @Autowired
-    private BookingRepository bookingRepository;
+    private TransferRepository transferRepository;
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private BookingRepository bookingRepository;
 
     @Autowired
     private SnapshotRepository snapshotRepository;
@@ -115,11 +115,11 @@ public class DatabaseSetupTest {
         return snapshot;
     }
 
-    private TransactionEntity createTransaction() {
-        var transaction = new TransactionEntity();
+    private BookingEntity createTransaction() {
+        var transaction = new BookingEntity();
         transaction.setDescription("Sample transaction");
-        transaction.setSubmittedAt(TrackingDateTime.now());
-        transaction = transactionRepository.save(transaction);
+        transaction.setBookedAt(TrackingDateTime.now());
+        transaction = bookingRepository.save(transaction);
         AccountCurrencyEntity account = accounts.values().stream().findAny().get();
         createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("500.1"));
         createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("499.98"));
@@ -127,13 +127,13 @@ public class DatabaseSetupTest {
         return transaction;
     }
 
-    private BookingEntity createBooking(TransactionEntity transaction, AccountCurrencyEntity account, TrackingDateTime ts, BigDecimal amount) {
-        var booking = new BookingEntity();
-        booking.setTransaction(transaction);
+    private TransferEntity createBooking(BookingEntity transaction, AccountCurrencyEntity account, TrackingDateTime ts, BigDecimal amount) {
+        var booking = new TransferEntity();
+        booking.setBooking(transaction);
         booking.setAccountCurrency(account);
-        booking.setBookedAt(ts);
+        booking.setTransferredAt(ts);
         booking.setAmount(amount);
-        booking = bookingRepository.save(booking);
+        booking = transferRepository.save(booking);
         return booking;
     }
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,17 +16,22 @@ import java.math.BigDecimal;
 @Table(name = "BOOKING")
 public class BookingEntity extends AbstractEntity {
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private TransactionEntity transaction;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private AccountCurrencyEntity accountCurrency;
-
     @Embedded
     private TrackingDateTime bookedAt;
 
-    @Column(precision = 40, scale = 15)
-    private BigDecimal amount;
+    @Column(length = 4095)
+    private String description;
+
+    @Column(length = 63)
+    private String md5;
+
+    @Lob
+    @Column(length = 65535)
+    private String metadata;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ImportEntity imported;
+
+    @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TransferEntity> transfers;
 }
