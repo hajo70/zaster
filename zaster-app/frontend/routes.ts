@@ -39,9 +39,20 @@ export const views: ViewRoute[] = [
   {
     path: 'about',
     component: 'about-view',
-    requiresLogin: true,
+    requiresLogin: false,
     icon: 'file',
     title: 'About',
+  },
+  {
+    path: 'settings',
+    component: 'settings-view',
+    rolesAllowed: [UserRole.ADMIN],
+    icon: 'bath-solid',
+    title: 'Settings',
+    action: async (_context, _command) => {
+      await import('Frontend/views/settings/settings-view.ts');
+      return;
+    },
   },
   {
     path: 'currencies',

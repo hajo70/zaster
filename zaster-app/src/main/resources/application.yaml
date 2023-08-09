@@ -24,7 +24,7 @@ spring:
 logging:
   level:
     org.atmosphere: warn
-    org.hibernate.SQL: debug
+    org.hibernate.SQL: info
     org.hibernate.type.descriptor.sql: debug
     org.springframework.security: info
 

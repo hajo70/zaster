@@ -1,6 +1,6 @@
-import { html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { View } from '../../views/view.js';
+import {html} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import {View} from '../../views/view.js';
 
 @customElement('about-view')
 export class AboutView extends View {
@@ -9,6 +9,7 @@ export class AboutView extends View {
       <img style="width: 200px;" src="images/empty-plant.png" />
       <h2 class="mt-xl mb-m">This place intentionally left empty</h2>
       <p>It’s a place where you can grow your own UI 🤗</p>
+      <a href="/h2-console/" target="_blank">H2-Console</a>
     </div>`;
   }
 
