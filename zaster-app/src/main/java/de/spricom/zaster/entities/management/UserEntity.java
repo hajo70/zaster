@@ -1,4 +1,4 @@
-package de.spricom.zaster.entities.managment;
+package de.spricom.zaster.entities.management;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.spricom.zaster.entities.common.AbstractEntity;

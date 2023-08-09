@@ -1,7 +1,7 @@
 package de.spricom.zaster.endpoints;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import de.spricom.zaster.entities.managment.UserEntity;
+import de.spricom.zaster.entities.management.UserEntity;
 import de.spricom.zaster.security.AuthenticatedUser;
 import dev.hilla.Endpoint;
 import org.springframework.beans.factory.annotation.Autowired;

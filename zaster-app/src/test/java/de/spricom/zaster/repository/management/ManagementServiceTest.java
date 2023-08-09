@@ -1,8 +1,8 @@
 package de.spricom.zaster.repository.management;
 
-import de.spricom.zaster.entities.managment.TenantEntity;
-import de.spricom.zaster.entities.managment.UserEntity;
-import de.spricom.zaster.entities.managment.UserRole;
+import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.entities.management.UserEntity;
+import de.spricom.zaster.entities.management.UserRole;
 import de.spricom.zaster.repository.ManagementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

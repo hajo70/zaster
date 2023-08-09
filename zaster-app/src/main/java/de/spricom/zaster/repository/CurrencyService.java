@@ -1,7 +1,7 @@
 package de.spricom.zaster.repository;
 
 import de.spricom.zaster.entities.currency.CurrencyEntity;
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
 
 import java.util.List;
 

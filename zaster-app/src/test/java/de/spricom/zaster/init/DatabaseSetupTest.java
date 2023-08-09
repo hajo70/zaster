@@ -4,7 +4,7 @@ import de.spricom.zaster.entities.common.TrackingDateTime;
 import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.currency.CurrencyType;
 import de.spricom.zaster.entities.currency.ZasterCurrency;
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
 import de.spricom.zaster.entities.tracking.*;
 import de.spricom.zaster.repository.currency.CurrencyRepository;
 import de.spricom.zaster.repository.management.TenantRepository;

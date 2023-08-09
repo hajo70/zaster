@@ -18,7 +18,7 @@ import {router} from '../index.js';
 import {hasAccess, views} from '../routes.js';
 import {appStore} from '../stores/app-store.js';
 import {Layout} from './view.js';
-import UserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/UserEntity";
+import UserEntity from "Frontend/generated/de/spricom/zaster/entities/management/UserEntity";
 
 interface RouteInfo {
   path: string;

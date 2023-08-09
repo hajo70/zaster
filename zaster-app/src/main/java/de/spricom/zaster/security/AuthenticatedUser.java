@@ -1,8 +1,8 @@
 package de.spricom.zaster.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
-import de.spricom.zaster.entities.managment.TenantEntity;
-import de.spricom.zaster.entities.managment.UserEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.entities.management.UserEntity;
 import de.spricom.zaster.repository.management.UserRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;

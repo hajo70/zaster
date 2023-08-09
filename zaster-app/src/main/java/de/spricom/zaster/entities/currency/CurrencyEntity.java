@@ -1,7 +1,7 @@
 package de.spricom.zaster.entities.currency;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;

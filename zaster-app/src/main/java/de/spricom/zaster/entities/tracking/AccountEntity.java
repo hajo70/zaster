@@ -2,7 +2,7 @@ package de.spricom.zaster.entities.tracking;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.spricom.zaster.entities.common.AbstractEntity;
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package de.spricom.zaster.importing;
 
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
 import org.springframework.core.io.Resource;
 
 import java.util.List;

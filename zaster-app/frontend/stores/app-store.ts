@@ -1,10 +1,10 @@
 import {RouterLocation} from '@vaadin/router';
 import {autorun, makeAutoObservable} from 'mobx';
 import {UserEndpoint} from "Frontend/generated/endpoints";
-import UserRole from "Frontend/generated/de/spricom/zaster/entities/managment/UserRole";
+import UserRole from "Frontend/generated/de/spricom/zaster/entities/management/UserRole";
 import {TrackingStore} from "Frontend/stores/tracking-store.ts";
 import {AccountingStore} from "Frontend/stores/accounting-store.ts";
-import UserEntity from "Frontend/generated/de/spricom/zaster/entities/managment/UserEntity.ts";
+import UserEntity from "Frontend/generated/de/spricom/zaster/entities/management/UserEntity.ts";
 
 export class AppStore {
   accountingStore = new AccountingStore();

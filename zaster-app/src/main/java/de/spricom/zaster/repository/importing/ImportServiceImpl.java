@@ -1,6 +1,6 @@
 package de.spricom.zaster.repository.importing;
 
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
 import de.spricom.zaster.entities.tracking.FileSourceEntity;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.BookingService;

@@ -4,6 +4,7 @@ import {html} from "lit";
 
 import '@vaadin/tabsheet';
 import '@vaadin/tabs';
+import './tenant-form';
 
 @customElement("settings-view")
 export class SettingsView extends View {
@@ -19,7 +20,7 @@ export class SettingsView extends View {
                         <vaadin-tab id="export-tab">Import / Export</vaadin-tab>
                     </vaadin-tabs>
 
-                    <div tab="tentant-tab">This is the Tenant tab content</div>
+                    <tenant-form tab="tenant-tab"></tenant-form>
                     <div tab="users-tab">This is the Users tab content</div>
                     <div tab="currencies-tab">This is the Currencies tab content</div>
                     <div tab="export-tab">This is the Import / Export tab content</div>

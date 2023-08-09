@@ -3,7 +3,7 @@ package de.spricom.zaster.endpoints;
 import de.spricom.zaster.dtos.tracking.AccountCurrencyDto;
 import de.spricom.zaster.dtos.tracking.AccountDto;
 import de.spricom.zaster.dtos.tracking.AccountingDataDto;
-import de.spricom.zaster.entities.managment.TenantEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.repository.AccountService;

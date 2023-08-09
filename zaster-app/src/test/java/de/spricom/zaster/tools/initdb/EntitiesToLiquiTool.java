@@ -2,8 +2,8 @@ package de.spricom.zaster.tools.initdb;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
 import de.spricom.zaster.entities.currency.CurrencyEntity;
-import de.spricom.zaster.entities.managment.TenantEntity;
-import de.spricom.zaster.entities.managment.UserEntity;
+import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.entities.management.UserEntity;
 import de.spricom.zaster.entities.tracking.*;
 import jakarta.persistence.*;
 import org.dessertj.partitioning.ClazzPredicates;

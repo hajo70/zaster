@@ -2,9 +2,9 @@ package de.spricom.zaster.init;
 
 import de.spricom.zaster.entities.currency.CurrencyEntity;
 import de.spricom.zaster.entities.currency.CurrencyType;
-import de.spricom.zaster.entities.managment.TenantEntity;
-import de.spricom.zaster.entities.managment.UserEntity;
-import de.spricom.zaster.entities.managment.UserRole;
+import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.entities.management.UserEntity;
+import de.spricom.zaster.entities.management.UserRole;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.importing.ImportHandlingService;
 import de.spricom.zaster.repository.AccountService;
