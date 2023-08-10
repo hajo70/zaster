@@ -47,7 +47,12 @@ export class AppStore {
   }
 
   async fetchUserInfo() {
-    this.user = await UserEndpoint.getAuthenticatedUser();
+    const user = await UserEndpoint.getAuthenticatedUser();
+    this.updateUserLocally(user);
+  }
+
+  private updateUserLocally = (user: UserEntity|undefined) => {
+    this.user = user;
   }
 
   clearUserInfo() {

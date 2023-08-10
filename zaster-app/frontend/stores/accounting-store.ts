@@ -26,7 +26,7 @@ export class AccountingStore {
         });
     }
 
-    getCurrency(id: string) {
+    getCurrency = (id: string) => {
         let currency = this.currencies.find(currency => currency.id === id);
         if (!currency) {
             throw new Error("There is no currency with id = " + id);
@@ -34,7 +34,7 @@ export class AccountingStore {
         return currency;
     }
 
-    getAccount(id: string) {
+    getAccount = (id: string) => {
         for (const group of this.rootAccountGroups) {
             let account = group.findAccount(id);
             if (account) {

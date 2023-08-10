@@ -44,6 +44,5 @@ export class TenantForm extends View {
 
     async save() {
         await this.binder.submitTo(settingsStore.saveTenant);
-        this.binder.clear();
     }
 }

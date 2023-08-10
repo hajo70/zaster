@@ -5,6 +5,7 @@ import de.spricom.zaster.entities.management.UserEntity;
 import de.spricom.zaster.entities.management.UserEntity_;
 import de.spricom.zaster.repository.ManagementService;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @AllArgsConstructor
+@Log4j2
 public class ManagementServiceImpl implements ManagementService {
 
     private final UserRepository userRepository;
@@ -30,6 +32,7 @@ public class ManagementServiceImpl implements ManagementService {
 
     @Override
     public TenantEntity updateTenant(TenantEntity tenant) {
+        log.info("updating tenant to {}", tenant);
         return tenantRepository.save(tenant);
     }
 
