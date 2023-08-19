@@ -1,0 +1,18 @@
+== Developer Notes
+
+=== npm
+
+* `npm prune` deletes unused modules
+* `npm i -D xx` is short for `npm install --save-dev xx`
+* `npm uninstall xx -g` uninstall xx globally
+* `npx tsc` run typescript compiler
+* `npx vitest` run vitest
+
+=== Unit testing for TypeScript
+
+* https://vitest.dev/guide/
+
+----
+npm i vitest -D
+npx vitest
+----
