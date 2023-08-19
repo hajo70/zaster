@@ -1,4 +1,4 @@
-package de.spricom.zaster.repository.currency;
+package de.spricom.zaster.repository.settings;
 
 import de.spricom.zaster.entities.settings.CurrencyEntity;
 import de.spricom.zaster.entities.settings.TenantEntity;

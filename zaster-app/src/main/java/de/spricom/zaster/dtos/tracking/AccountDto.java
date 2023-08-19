@@ -10,7 +10,7 @@ public record AccountDto(
         IdDto id,
         String accountName,
         @Nullable
-        List<AccountCurrencyDto> accounts,
+        List<AccountCurrencyDto> currencies,
         @Nullable
         String parentId,
         @Nullable

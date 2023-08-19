@@ -1,9 +1,9 @@
-package de.spricom.zaster.repository.management;
+package de.spricom.zaster.repository.settings;
 
 import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.settings.UserEntity;
 import de.spricom.zaster.enums.settings.UserRole;
-import de.spricom.zaster.repository.ManagementService;
+import de.spricom.zaster.repository.SettingsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,10 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class ManagementServiceTest {
+class SettingsServiceTest {
 
     @Autowired
-    private ManagementService managementService;
+    private SettingsService settingsService;
 
     @Test
     void testCreateTenant() {
@@ -32,7 +32,7 @@ class ManagementServiceTest {
         user.setHashedPassword("abcdef");
         user.setTenant(tenant);
 
-        var savedUser = managementService.createTenant(user);
+        var savedUser = settingsService.createTenant(user);
         assertThat(savedUser.getId()).isNotNull();
         assertThat(savedUser.getTenant().getId()).isNotNull();
         assertThat(savedUser)
@@ -40,7 +40,7 @@ class ManagementServiceTest {
                 .ignoringExpectedNullFields()
                 .isEqualTo(user);
 
-        var loggedInUser = managementService.findByUsername(user.getUsername()).get();
+        var loggedInUser = settingsService.findByUsername(user.getUsername()).get();
         assertThat(loggedInUser)
                 .usingRecursiveComparison()
                 .isEqualTo(savedUser);

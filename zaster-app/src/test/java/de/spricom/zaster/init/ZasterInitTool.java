@@ -9,7 +9,7 @@ import de.spricom.zaster.enums.tracking.CurrencyType;
 import de.spricom.zaster.importing.ImportHandlingService;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
-import de.spricom.zaster.repository.ManagementService;
+import de.spricom.zaster.repository.SettingsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +33,7 @@ public class ZasterInitTool {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private ManagementService managementService;
+    private SettingsService settingsService;
     @Autowired
     private CurrencyService currencyService;
     @Autowired
@@ -66,12 +66,12 @@ public class ZasterInitTool {
                 .toList();
         var firstUser = users.get(0);
         firstUser.setTenant(tenantEntity);
-        var savedUser = managementService.createTenant(firstUser);
+        var savedUser = settingsService.createTenant(firstUser);
         currentTenant = savedUser.getTenant();
         for (int i = 1; i < users.size(); i++) {
             var user = users.get(i);
             user.setTenant(currentTenant);
-            managementService.saveUser(user);
+            settingsService.saveUser(user);
         }
         initIsoCurrencies(tenant.getIsoCurrencies());
         tenant.getCurrencies().forEach(this::initCurrency);

@@ -1,7 +1,7 @@
 package de.spricom.zaster.security;
 
 import de.spricom.zaster.entities.settings.UserEntity;
-import de.spricom.zaster.repository.management.UserRepository;
+import de.spricom.zaster.repository.settings.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

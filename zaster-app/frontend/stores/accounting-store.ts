@@ -36,7 +36,7 @@ export class AccountingStore {
 
     getAccount = (id: string) => {
         for (const account of this._rootAccounts) {
-            let match = account.findAccount(id);
+            let match = account.lookUpAccountCurrency(id);
             if (match) {
                 return match;
             }

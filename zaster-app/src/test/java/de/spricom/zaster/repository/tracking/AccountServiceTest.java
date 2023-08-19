@@ -7,7 +7,7 @@ import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.enums.tracking.CurrencyType;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
-import de.spricom.zaster.repository.management.TenantRepository;
+import de.spricom.zaster.repository.settings.TenantRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;

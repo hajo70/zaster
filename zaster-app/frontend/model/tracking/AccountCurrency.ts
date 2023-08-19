@@ -4,11 +4,11 @@ import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/Curr
 
 export class AccountCurrency {
     readonly data: AccountCurrencyDto;
-    readonly group: Account;
+    readonly account: Account;
     readonly currency: CurrencyDto;
 
-    constructor(group: Account, data: AccountCurrencyDto, currency: CurrencyDto) {
-        this.group = group;
+    constructor(account: Account, data: AccountCurrencyDto, currency: CurrencyDto) {
+        this.account = account;
         this.data = data;
         this.currency = currency;
     }

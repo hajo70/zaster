@@ -6,9 +6,9 @@ export class Booking {
     data: BookingDto;
     transfers: Transfer[];
 
-    constructor(data: BookingDto, accountLookup: (id: string) => AccountCurrency) {
+    constructor(data: BookingDto, accountCurrencyLookup: (id: string) => AccountCurrency) {
         this.data = data;
-        this.transfers = data.transfers.map(booking =>
-            new Transfer(this, booking, accountLookup(booking.id.uuid)));
+        this.transfers = data.transfers.map(transfer =>
+            new Transfer(this, transfer, accountCurrencyLookup(transfer.id.uuid)));
     }
 }

@@ -1,4 +1,4 @@
-package de.spricom.zaster.repository.management;
+package de.spricom.zaster.repository.settings;
 
 import de.spricom.zaster.entities.settings.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

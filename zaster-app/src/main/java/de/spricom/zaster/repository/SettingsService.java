@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Optional;
 
-public interface ManagementService {
+public interface SettingsService {
     UserEntity createTenant(UserEntity user);
 
     TenantEntity updateTenant(TenantEntity tenant);

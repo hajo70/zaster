@@ -1,9 +1,9 @@
-package de.spricom.zaster.repository.management;
+package de.spricom.zaster.repository.settings;
 
 import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.settings.UserEntity;
 import de.spricom.zaster.entities.settings.UserEntity_;
-import de.spricom.zaster.repository.ManagementService;
+import de.spricom.zaster.repository.SettingsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 @Log4j2
-public class ManagementServiceImpl implements ManagementService {
+public class SettingsServiceImpl implements SettingsService {
 
     private final UserRepository userRepository;
     private final TenantRepository tenantRepository;

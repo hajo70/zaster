@@ -6,18 +6,20 @@ export class Account {
     data: AccountDto;
     parent: Account | null;
     children: Account[] = [];
-    accounts: AccountCurrency[] = [];
+    currencies: AccountCurrency[] = [];
 
     constructor(parent: Account | null, data: AccountDto, currencyLookup: (id: string) => CurrencyDto) {
         this.parent = parent;
         this.data = data;
         if (data.children) {
-            data.children.map(child => new Account(this, child, currencyLookup));
+            this.children = data.children
+                .map(child => new Account(this, child, currencyLookup));
             delete data.children;
         }
-        if (data.accounts) {
-            data.accounts.map(account => new AccountCurrency(this, account, currencyLookup(account.currencyId)));
-            delete data.accounts;
+        if (data.currencies) {
+            this.currencies = data.currencies
+                .map(ac => new AccountCurrency(this, ac, currencyLookup(ac.currencyId)));
+            delete data.currencies;
         }
     }
 
@@ -25,13 +27,13 @@ export class Account {
         return this.data.accountName;
     }
 
-    findAccount(id: string): AccountCurrency | undefined {
-        let account = this.accounts.find(a => id === a.data.id.uuid);
+    lookUpAccountCurrency(id: string): AccountCurrency | undefined {
+        let account = this.currencies.find(a => id === a.data.id.uuid);
         if (account) {
             return account;
         }
         for (const child of this.children) {
-            account = child.findAccount(id);
+            account = child.lookUpAccountCurrency(id);
             if (account) {
                 return account;
             }

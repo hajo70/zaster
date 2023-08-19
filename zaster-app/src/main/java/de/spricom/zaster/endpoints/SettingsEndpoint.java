@@ -3,7 +3,7 @@ package de.spricom.zaster.endpoints;
 import de.spricom.zaster.dtos.settings.TenantDto;
 import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.repository.CurrencyService;
-import de.spricom.zaster.repository.ManagementService;
+import de.spricom.zaster.repository.SettingsService;
 import de.spricom.zaster.security.AuthenticatedUser;
 import dev.hilla.Endpoint;
 import jakarta.annotation.security.RolesAllowed;
@@ -15,11 +15,11 @@ import lombok.AllArgsConstructor;
 public class SettingsEndpoint {
 
     private final AuthenticatedUser authenticatedUser;
-    private final ManagementService managementService;
+    private final SettingsService settingsService;
     private final CurrencyService currencyService;
 
     public TenantDto saveTenant(TenantDto tenant) {
-        return DtoUtils.toTenantDto(managementService.updateTenant(toCurrencyEntity(tenant)));
+        return DtoUtils.toTenantDto(settingsService.updateTenant(toCurrencyEntity(tenant)));
     }
 
     private TenantEntity toCurrencyEntity(TenantDto dto) {
