@@ -1,7 +1,8 @@
-package de.spricom.zaster.entities.currency;
+package de.spricom.zaster.entities.settings;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
-import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.enums.tracking.CurrencyType;
+import de.spricom.zaster.enums.tracking.ZasterCurrency;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package de.spricom.zaster.entities.currency;
+package de.spricom.zaster.enums.tracking;
 
 public enum ZasterCurrency {
     EUR,

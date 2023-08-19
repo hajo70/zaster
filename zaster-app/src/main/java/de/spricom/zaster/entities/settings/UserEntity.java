@@ -1,7 +1,8 @@
-package de.spricom.zaster.entities.management;
+package de.spricom.zaster.entities.settings;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.spricom.zaster.entities.common.AbstractEntity;
+import de.spricom.zaster.enums.settings.UserRole;
 import dev.hilla.Nonnull;
 import jakarta.persistence.*;
 import lombok.Getter;

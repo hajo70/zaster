@@ -1,10 +1,10 @@
 import {RouterLocation} from '@vaadin/router';
-import {autorun, makeAutoObservable} from 'mobx';
-import {UserEndpoint} from "Frontend/generated/endpoints";
-import UserRole from "Frontend/generated/de/spricom/zaster/entities/management/UserRole";
+import {action, makeObservable, observable} from 'mobx';
+import {AppEndpoint} from "Frontend/generated/endpoints";
 import {TrackingStore} from "Frontend/stores/tracking-store.ts";
 import {AccountingStore} from "Frontend/stores/accounting-store.ts";
-import UserEntity from "Frontend/generated/de/spricom/zaster/entities/management/UserEntity.ts";
+import UserInfoDto from "Frontend/generated/de/spricom/zaster/dtos/app/UserInfoDto.ts";
+import UserRole from "Frontend/generated/de/spricom/zaster/enums/settings/UserRole.ts";
 
 export class AppStore {
   accountingStore = new AccountingStore();
@@ -17,17 +17,15 @@ export class AppStore {
 
   currentViewTitle = '';
 
-  user: UserEntity | undefined = undefined;
+  userInfo: UserInfoDto | undefined = undefined;
 
   constructor() {
-    makeAutoObservable(this);
-
-    autorun(() => {
-      if (this.loggedIn) {
-        this.accountingStore.initFromServer();
-        this.trackingStore.initFromServer();
-      }
-    })
+    makeObservable(this, {
+      location: observable,
+      currentViewTitle: observable,
+      userInfo: observable.ref,
+      setLocation: action
+    });
   }
 
   setLocation(location: RouterLocation) {
@@ -47,24 +45,28 @@ export class AppStore {
   }
 
   async fetchUserInfo() {
-    const user = await UserEndpoint.getAuthenticatedUser();
-    this.updateUserLocally(user);
+    const userInfo = await AppEndpoint.getUserInfo();
+    this.updateUserInfoLocally(userInfo);
   }
 
-  private updateUserLocally = (user: UserEntity|undefined) => {
-    this.user = user;
+  private updateUserInfoLocally = (userInfo: UserInfoDto|undefined) => {
+    this.userInfo = userInfo;
+    if (userInfo) {
+      accountingStore.currencies = userInfo.currencies;
+      accountingStore.rootAccounts = userInfo.rootAccounts;
+    }
   }
 
   clearUserInfo() {
-    this.user = undefined;
+    this.userInfo = undefined;
   }
 
   get loggedIn() {
-    return !!this.user;
+    return !!this.userInfo;
   }
 
   isUserInRole(role: UserRole) {
-    return this.user?.userRoles?.includes(role);
+    return this.userInfo?.user.roles.includes(role);
   }
 }
 

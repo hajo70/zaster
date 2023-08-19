@@ -1,7 +1,7 @@
 package de.spricom.zaster.importing;
 
 import de.spricom.zaster.entities.common.TrackingDateTime;
-import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.tracking.FileSourceEntity;
 import de.spricom.zaster.entities.tracking.ImportEntity;
 import de.spricom.zaster.importing.csv.CsvReader;

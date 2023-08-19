@@ -1,9 +1,10 @@
-package de.spricom.zaster.entities.currency;
+package de.spricom.zaster.enums.tracking;
 
 public enum CurrencyType {
+    ISO_4217,
     FIAT,
     CRYPTO,
-    SHARE,
+    SECURITY,
     METAL,
     COMMODITY
 }

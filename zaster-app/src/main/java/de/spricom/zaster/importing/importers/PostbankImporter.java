@@ -1,8 +1,8 @@
 package de.spricom.zaster.importing.importers;
 
 import de.spricom.zaster.entities.common.TrackingDateTime;
-import de.spricom.zaster.entities.currency.CurrencyEntity;
-import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.entities.settings.CurrencyEntity;
+import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.ImportEntity;
 import de.spricom.zaster.importing.CsvImporter;

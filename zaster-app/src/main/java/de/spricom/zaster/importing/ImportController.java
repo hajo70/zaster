@@ -1,6 +1,6 @@
 package de.spricom.zaster.importing;
 
-import de.spricom.zaster.entities.management.UserEntity;
+import de.spricom.zaster.entities.settings.UserEntity;
 import de.spricom.zaster.security.AuthenticatedUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;

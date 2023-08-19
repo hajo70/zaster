@@ -1,11 +1,11 @@
 package de.spricom.zaster.init;
 
 import de.spricom.zaster.entities.common.TrackingDateTime;
-import de.spricom.zaster.entities.currency.CurrencyEntity;
-import de.spricom.zaster.entities.currency.CurrencyType;
-import de.spricom.zaster.entities.currency.ZasterCurrency;
-import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.entities.settings.CurrencyEntity;
+import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.tracking.*;
+import de.spricom.zaster.enums.tracking.CurrencyType;
+import de.spricom.zaster.enums.tracking.ZasterCurrency;
 import de.spricom.zaster.repository.currency.CurrencyRepository;
 import de.spricom.zaster.repository.management.TenantRepository;
 import de.spricom.zaster.repository.tracking.*;

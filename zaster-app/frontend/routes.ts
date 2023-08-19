@@ -2,10 +2,10 @@ import type {Route} from '@vaadin/router';
 import {appStore} from './stores/app-store.js';
 import './views/about/about-view';
 import './views/main-layout';
-import UserRole from "Frontend/generated/de/spricom/zaster/entities/management/UserRole";
 import './views/samples/dynamic-grid-view';
 import './views/samples/simple-tx-from-view';
 import './views/samples/dynamic-tx-from-view';
+import UserRole from "Frontend/generated/de/spricom/zaster/enums/settings/UserRole.ts";
 
 export type ViewRoute = Route & {
   title?: string;

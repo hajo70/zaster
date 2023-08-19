@@ -1,7 +1,7 @@
 package de.spricom.zaster.entities.tracking;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
-import de.spricom.zaster.entities.currency.CurrencyEntity;
+import de.spricom.zaster.entities.settings.CurrencyEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

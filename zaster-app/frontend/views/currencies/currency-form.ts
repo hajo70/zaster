@@ -6,11 +6,11 @@ import '@vaadin/combo-box';
 import '@vaadin/text-field';
 import {Binder, field} from '@hilla/form';
 import {currenciesViewStore} from "Frontend/views/currencies/currencies-view-store";
-import CurrencyEntityModel from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntityModel";
+import CurrencyDtoModel from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDtoModel.ts";
 
 @customElement('currency-form')
 export class CurrencyForm extends View {
-    protected binder = new Binder(this, CurrencyEntityModel);
+    protected binder = new Binder(this, CurrencyDtoModel);
 
     constructor() {
         super();

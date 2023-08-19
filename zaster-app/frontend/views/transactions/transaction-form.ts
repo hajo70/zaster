@@ -5,12 +5,12 @@ import '@vaadin/button';
 import '@vaadin/combo-box';
 import '@vaadin/text-field';
 import {Binder, field} from '@hilla/form';
-import CurrencyEntityModel from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntityModel";
 import {transactionsViewStore} from "Frontend/views/transactions/transactions-view-store.ts";
+import CurrencyDtoModel from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDtoModel.ts";
 
 @customElement('transaction-form')
 export class TransactionForm extends View {
-    protected binder = new Binder(this, CurrencyEntityModel);
+    protected binder = new Binder(this, CurrencyDtoModel);
 
     constructor() {
         super();

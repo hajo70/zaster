@@ -68,7 +68,7 @@ export class AccountsView extends View {
             this.firstSelectionEvent = false;
             return;
         }
-        accountsViewStore.setSelectedAccountGroup(ev.detail.value);
+        accountsViewStore.setSelectedAccount(ev.detail.value);
     }
 
     updateFilter(ev: { target: HTMLInputElement }) {

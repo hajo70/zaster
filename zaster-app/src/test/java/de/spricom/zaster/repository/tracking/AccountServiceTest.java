@@ -1,10 +1,10 @@
 package de.spricom.zaster.repository.tracking;
 
-import de.spricom.zaster.entities.currency.CurrencyEntity;
-import de.spricom.zaster.entities.currency.CurrencyType;
-import de.spricom.zaster.entities.management.TenantEntity;
+import de.spricom.zaster.entities.settings.CurrencyEntity;
+import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
+import de.spricom.zaster.enums.tracking.CurrencyType;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.repository.management.TenantRepository;

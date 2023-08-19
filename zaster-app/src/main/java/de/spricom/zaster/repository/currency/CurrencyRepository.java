@@ -1,6 +1,6 @@
 package de.spricom.zaster.repository.currency;
 
-import de.spricom.zaster.entities.currency.CurrencyEntity;
+import de.spricom.zaster.entities.settings.CurrencyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

@@ -1,6 +1,6 @@
 import {AccountCurrency} from "Frontend/model/tracking/AccountCurrency.ts";
-import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity.ts";
 import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
+import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDto.ts";
 
 export class Account {
     data: AccountDto;
@@ -8,7 +8,7 @@ export class Account {
     children: Account[] = [];
     accounts: AccountCurrency[] = [];
 
-    constructor(parent: Account | null, data: AccountDto, currencyLookup: (id: string) => CurrencyEntity) {
+    constructor(parent: Account | null, data: AccountDto, currencyLookup: (id: string) => CurrencyDto) {
         this.parent = parent;
         this.data = data;
         if (data.children) {

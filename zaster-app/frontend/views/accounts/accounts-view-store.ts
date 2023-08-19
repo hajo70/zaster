@@ -1,53 +1,46 @@
-import {makeAutoObservable, observable} from "mobx";
+import {makeObservable, observable, runInAction} from "mobx";
 import {AccountingEndpoint} from "Frontend/generated/endpoints.ts";
 import {GridDataProviderCallback, GridDataProviderParams} from "@vaadin/grid";
 import {accountingStore} from "Frontend/stores/app-store.ts";
 import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
 import AccountDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDtoModel.ts";
+import {Account} from "Frontend/model/tracking/Account.ts";
 
 class AccountsViewStore {
-    rootAccounts: AccountDto[] | undefined;
     selectedAccount: AccountDto | null = null;
-    selectedAccountParent: AccountDto | undefined;
+    selectedAccountParent: Account | null = null;
     filterText = '';
+    boundDataProvider = this.dataProvider.bind(this);
 
     constructor() {
-        makeAutoObservable(
-            this,
+        makeObservable(this,
             {
-                boundDataProvider: false,
-                allAccountGroups: false,
-                rootAccounts: observable.deep,
-                selectedAccount: observable.ref
-            },
-        {autoBind: true}
+                selectedAccount: observable.ref,
+                filterText: observable
+            }
         );
     }
 
     async dataProvider(
-        params: GridDataProviderParams<AccountDto>,
-        callback: GridDataProviderCallback<AccountDto>
-    ){
-        if (params.parentItem) {
-            const parentItem: AccountDto = params.parentItem;
-            callback(parentItem.children || [], parentItem.children?.length);
-        } else {
-            if (!this.rootAccounts) {
-                this.rootAccounts = await AccountingEndpoint.findAllRootAccountGroups();
+        params: GridDataProviderParams<Account>,
+        callback: GridDataProviderCallback<Account>
+    ) {
+        runInAction(() => {
+            if (params.parentItem) {
+                const parentItem: Account = params.parentItem;
+                callback(parentItem.children || [], parentItem.children?.length);
+            } else {
+                callback(accountingStore._rootAccounts, accountingStore._rootAccounts.length);
             }
-            callback(this.rootAccounts, this.rootAccounts.length);
-        }
+        })
     }
-
-    boundDataProvider = this.dataProvider.bind(this);
 
     updateFilter(filterText: string) {
         this.filterText = filterText;
     }
 
-    setSelectedAccountGroup(accountGroup: AccountDto) {
-        this.selectedAccount = accountGroup;
-        this.selectedAccountParent = this.parent(accountGroup);
+    setSelectedAccount(account: AccountDto) {
+        this.selectedAccount = account;
     }
 
     editNew() {
@@ -58,21 +51,21 @@ class AccountsViewStore {
         this.selectedAccount = null;
     }
 
-    async save(accountGroup: AccountDto) {
-        await this.saveAccountGroup(accountGroup);
+    async save(account: AccountDto) {
+        await this.saveAccount(account);
         this.cancelEdit();
     }
 
     async delete() {
         if (this.selectedAccount) {
-            await this.deleteAccountGroup(this.selectedAccount);
+            await this.deleteAccount(this.selectedAccount);
             this.cancelEdit();
         }
     }
 
-    async saveAccountGroup(accountGroup: AccountDto) {
+    async saveAccount(account: AccountDto) {
         try {
-            const saved = await AccountingEndpoint.saveAccountGroup(accountGroup);
+            const saved = await AccountingEndpoint.saveAccountGroup(account);
             if (saved) {
                 this.saveLocal(saved);
             } else {
@@ -83,21 +76,21 @@ class AccountsViewStore {
         }
     }
 
-    async deleteAccountGroup(accountGroup: AccountDto) {
-        if (!accountGroup.id) return;
+    async deleteAccount(account: AccountDto) {
+        if (!account.id) return;
 
         try {
-            await AccountingEndpoint.deleteAccountGroupById(accountGroup.id.uuid);
-            this.deleteLocal(this.selectedAccountParent, accountGroup);
+            await AccountingEndpoint.deleteAccountGroupById(account.id.uuid);
+            // this.deleteLocal(this.selectedAccountParent, account);
         } catch (ex) {
             console.log('AccountDto delete failed: ' + ex);
         }
     }
 
-    get allAccountGroups() {
-        let groups = this.rootAccounts?.flatMap(this.ancestors);
-        console.log("groups total: " + groups?.length + ", roots: " + this.rootAccounts?.length);
-        return groups;
+    get allAccountGroups(): AccountDto[] {
+        // let groups = this.rootAccounts?.flatMap(this.ancestors);
+        // console.log("groups total: " + groups?.length + ", roots: " + this.rootAccounts?.length);
+        return [];
     }
 
     private ancestors(group: AccountDto): AccountDto[] {
@@ -119,13 +112,13 @@ class AccountsViewStore {
 
     private saveLocal(saved: AccountDto) {
         const parent = this.parent(saved);
-        if (this.selectedAccountParent !== parent) {
-            this.deleteLocal(this.selectedAccountParent, saved);
-        }
+        //if (this.selectedAccountParent !== parent) {
+        //     this.deleteLocal(this.selectedAccountParent, saved);
+        // }
         if (parent) {
             parent.children = this.replaceSaved(parent.children, saved);
         } else {
-            this.rootAccounts = this.replaceSaved(this.rootAccounts, saved);
+            // this.rootAccounts = this.replaceSaved(this.rootAccounts, saved);
         }
     }
 
@@ -151,7 +144,7 @@ class AccountsViewStore {
         if (parent) {
             parent.children = this.removeDeleted(parent.children, deleted) || [];
         } else {
-            this.rootAccounts = this.removeDeleted(this.rootAccounts, deleted);
+            // this.rootAccounts = this.removeDeleted(this.rootAccounts, deleted);
         }
     }
 

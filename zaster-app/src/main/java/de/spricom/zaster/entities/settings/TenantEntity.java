@@ -1,4 +1,4 @@
-package de.spricom.zaster.entities.management;
+package de.spricom.zaster.entities.settings;
 
 import de.spricom.zaster.entities.common.AbstractEntity;
 import jakarta.persistence.Entity;

@@ -1,8 +1,8 @@
 package de.spricom.zaster.repository.management;
 
-import de.spricom.zaster.entities.management.TenantEntity;
-import de.spricom.zaster.entities.management.UserEntity;
-import de.spricom.zaster.entities.management.UserEntity_;
+import de.spricom.zaster.entities.settings.TenantEntity;
+import de.spricom.zaster.entities.settings.UserEntity;
+import de.spricom.zaster.entities.settings.UserEntity_;
 import de.spricom.zaster.repository.ManagementService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;

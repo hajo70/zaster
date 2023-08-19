@@ -7,12 +7,12 @@ import '@vaadin/combo-box';
 import '@vaadin/text-field';
 
 import {Binder, field} from '@hilla/form';
-import TenantEntityModel from "Frontend/generated/de/spricom/zaster/entities/management/TenantEntityModel.ts";
 import {settingsStore} from "Frontend/views/settings/settings-store.ts";
+import TenantDtoModel from "Frontend/generated/de/spricom/zaster/dtos/settings/TenantDtoModel.ts";
 
 @customElement('tenant-form')
 export class TenantForm extends View {
-    protected binder = new Binder(this, TenantEntityModel);
+    protected binder = new Binder(this, TenantDtoModel);
 
     constructor() {
         super();

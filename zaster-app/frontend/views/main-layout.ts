@@ -18,7 +18,7 @@ import {router} from '../index.js';
 import {hasAccess, views} from '../routes.js';
 import {appStore} from '../stores/app-store.js';
 import {Layout} from './view.js';
-import UserEntity from "Frontend/generated/de/spricom/zaster/entities/management/UserEntity";
+import UserDto from "Frontend/generated/de/spricom/zaster/dtos/settings/UserDto.ts";
 
 interface RouteInfo {
   path: string;
@@ -53,11 +53,11 @@ export class MainLayout extends Layout {
         </vaadin-scroller>
 
         <footer slot="drawer">
-          ${appStore.user
+          ${appStore.userInfo?.user
             ? html`
                 <vaadin-menu-bar
                   theme="tertiary-inline contrast"
-                  .items="${this.getUserMenuItems(appStore.user)}"
+                  .items="${this.getUserMenuItems(appStore.userInfo.user)}"
                   @item-selected="${this.userMenuItemSelected}"
                 ></vaadin-menu-bar>
               `
@@ -83,7 +83,7 @@ export class MainLayout extends Layout {
     );
   }
 
-  private getUserMenuItems(user: UserEntity): MenuBarItem[] {
+  private getUserMenuItems(user: UserDto): MenuBarItem[] {
     return [
       {
         component: this.createUserMenuItem(user),
@@ -92,7 +92,7 @@ export class MainLayout extends Layout {
     ];
   }
 
-  private createUserMenuItem(user: UserEntity) {
+  private createUserMenuItem(user: UserDto) {
     const item = document.createElement('div');
     item.style.display = 'flex';
     item.style.alignItems = 'center';

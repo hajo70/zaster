@@ -1,34 +1,26 @@
 import {makeAutoObservable, observable} from "mobx";
-import CurrencyEntity from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntity";
-import CurrencyEntityModel from "Frontend/generated/de/spricom/zaster/entities/currency/CurrencyEntityModel";
 import {CurrencyEndpoint} from "Frontend/generated/endpoints";
+import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDto.ts";
+import {accountingStore} from "Frontend/stores/app-store.ts";
+import CurrencyDtoModel from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDtoModel.ts";
 
 class CurrenciesViewStore {
-    currencies: CurrencyEntity[] = [];
     filterText = '';
-    selectedCurrency: CurrencyEntity | null = null;
+    selectedCurrency: CurrencyDto | null = null;
 
     constructor() {
         makeAutoObservable(
             this,
             {
-                initFromServer: false,
-                currencies: observable.shallow,
                 selectedCurrency: observable.ref
             },
             {autoBind: true}
         );
-
-        this.initFromServer();
-    }
-
-    async initFromServer() {
-        this.currencies = await CurrencyEndpoint.findAllCurrencies();
     }
 
     get filteredCurrencies() {
         const filter = new RegExp(this.filterText, 'i');
-        return this.currencies.filter((currency) =>
+        return accountingStore._currencies.filter((currency) =>
             filter.test(`${currency.currencyCode} ${currency.currencyName}`)
         );
     }
@@ -37,12 +29,12 @@ class CurrenciesViewStore {
         this.filterText = filterText;
     }
 
-    setSelectedCurrency(currency: CurrencyEntity) {
+    setSelectedCurrency(currency: CurrencyDto) {
         this.selectedCurrency = currency;
     }
 
     editNew() {
-        this.selectedCurrency = CurrencyEntityModel.createEmptyValue();
+        this.selectedCurrency = CurrencyDtoModel.createEmptyValue();
         this.selectedCurrency.currencyCode = this.filterText.toUpperCase();
     }
 
@@ -50,7 +42,7 @@ class CurrenciesViewStore {
         this.selectedCurrency = null;
     }
 
-    async save(currency: CurrencyEntity) {
+    async save(currency: CurrencyDto) {
         await this.saveCurrency(currency)
         this.cancelEdit();
     }
@@ -62,7 +54,7 @@ class CurrenciesViewStore {
         }
     }
 
-    async saveCurrency(currency: CurrencyEntity) {
+    async saveCurrency(currency: CurrencyDto) {
         try {
             const saved = await CurrencyEndpoint.saveCurrency(currency);
             if (saved) {
@@ -75,21 +67,21 @@ class CurrenciesViewStore {
         }
     }
 
-    async deleteCurrency(currency: CurrencyEntity) {
+    async deleteCurrency(currency: CurrencyDto) {
         if (!currency.id) return;
 
         try {
-            await CurrencyEndpoint.deleteCurrencyById(currency.id);
+            await CurrencyEndpoint.deleteCurrencyById(currency.id.uuid);
             this.deleteLocal(currency);
         } catch (ex) {
             console.log('Currency delete failed: ' + ex);
         }
     }
 
-    private saveLocal(saved: CurrencyEntity) {
-        const currencyExists = this.currencies.some((c) => c.id === saved.id);
+    private saveLocal(saved: CurrencyDto) {
+        const currencyExists = accountingStore._currencies.some((c) => c.id === saved.id);
         if (currencyExists) {
-            this.currencies = this.currencies.map((existing) => {
+            accountingStore._currencies = accountingStore._currencies.map((existing) => {
                 if (existing.id === saved.id) {
                     return saved;
                 } else {
@@ -97,12 +89,13 @@ class CurrenciesViewStore {
                 }
             });
         } else {
-            this.currencies.push(saved);
+            accountingStore._currencies.push(saved);
         }
     }
 
-    private deleteLocal(currencyEntity: CurrencyEntity) {
-        this.currencies = this.currencies.filter((c) => c.id !== currencyEntity.id);
+    private deleteLocal(currencyEntity: CurrencyDto) {
+        accountingStore._currencies = accountingStore._currencies
+            .filter((c) => c.id !== currencyEntity.id);
     }
 }
 

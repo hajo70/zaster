@@ -1,7 +1,7 @@
 package de.spricom.zaster.repository;
 
-import de.spricom.zaster.entities.management.TenantEntity;
-import de.spricom.zaster.entities.management.UserEntity;
+import de.spricom.zaster.entities.settings.TenantEntity;
+import de.spricom.zaster.entities.settings.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

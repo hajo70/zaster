@@ -1,6 +1,6 @@
 package de.spricom.zaster.repository.management;
 
-import de.spricom.zaster.entities.management.UserEntity;
+import de.spricom.zaster.entities.settings.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
