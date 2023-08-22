@@ -5,11 +5,11 @@ import TransferDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/Tran
 export class Transfer {
     readonly data: TransferDto;
     readonly booking: Booking;
-    readonly account: AccountCurrency;
+    readonly accountCurrency: AccountCurrency;
 
     constructor(tx: Booking, data: TransferDto, account: AccountCurrency) {
         this.booking = tx;
         this.data = data;
-        this.account = account;
+        this.accountCurrency = account;
     }
 }

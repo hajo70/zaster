@@ -6,16 +6,14 @@ import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/Accou
 import {Account} from "Frontend/model/tracking/Account.ts";
 import AccountCurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountCurrencyDto.ts";
 
-const someDate = '2023-08-17';
-
-const currencyDto: CurrencyDto = {
+export const currencyDto: CurrencyDto = {
     id: id(1),
     currencyCode: "EUR",
     currencyName: "Euro",
     currencyType: CurrencyType.ISO_4217
 }
 
-function id(n: number): IdDto {
+export function id(n: number): IdDto {
     return {
         uuid: "" + n,
         version: 0

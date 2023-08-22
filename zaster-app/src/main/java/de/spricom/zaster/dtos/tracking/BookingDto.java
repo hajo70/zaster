@@ -1,13 +1,13 @@
 package de.spricom.zaster.dtos.tracking;
 
 import de.spricom.zaster.dtos.common.IdDto;
+import de.spricom.zaster.dtos.common.TrackingDateTimeDto;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public record BookingDto(
     IdDto id,
-    LocalDate bookedAtDate,
+    TrackingDateTimeDto bookedAt,
     String description,
     List<TransferDto> transfers
 ) {

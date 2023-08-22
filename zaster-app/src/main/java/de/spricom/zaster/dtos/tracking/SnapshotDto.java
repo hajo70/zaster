@@ -5,10 +5,10 @@ import de.spricom.zaster.dtos.common.TrackingDateTimeDto;
 
 import java.math.BigDecimal;
 
-public record TransferDto(
+public record SnapshotDto(
         IdDto id,
         String accountCurrencyId,
         BigDecimal amount,
-        TrackingDateTimeDto transferredAt
+        TrackingDateTimeDto takenAt
 ) {
 }
