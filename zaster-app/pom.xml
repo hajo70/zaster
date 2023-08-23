@@ -36,6 +36,10 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.lucee</groupId>
+                    <artifactId>jcip-annotations</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -85,11 +89,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench-junit5</artifactId>
+            <version>24.0.0</version>
             <scope>test</scope>
         </dependency>
+          -->
 
         <!-- Additional -->
         <dependency>
@@ -100,7 +107,7 @@
         <dependency>
             <groupId>org.dessertj</groupId>
             <artifactId>dessertj-core</artifactId>
-            <version>0.6.0</version>
+            <version>0.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
