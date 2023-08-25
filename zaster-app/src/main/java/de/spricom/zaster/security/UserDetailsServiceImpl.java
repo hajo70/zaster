@@ -1,9 +1,11 @@
 package de.spricom.zaster.security;
 
 import de.spricom.zaster.entities.settings.UserEntity;
-import de.spricom.zaster.repository.settings.UserRepository;
+import de.spricom.zaster.repository.SettingsService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,29 +15,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepository;
-
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final SettingsService settingsService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity applicationUser = userRepository.findByUsername(username);
-        if (applicationUser == null) {
-            throw new UsernameNotFoundException("No applicationUser present with username: " + username);
-        } else {
-            return new org.springframework.security.core.userdetails.User(applicationUser.getUsername(), applicationUser.getHashedPassword(),
-                    getAuthorities(applicationUser));
-        }
+        UserEntity user = settingsService.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No applicationUser present with username: " + username));
+        return new User(user.getUsername(), user.getHashedPassword(), getAuthorities(user));
     }
 
-    private static List<GrantedAuthority> getAuthorities(UserEntity applicationUser) {
-        return applicationUser.getUserRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+    private static List<GrantedAuthority> getAuthorities(UserEntity user) {
+        return user.getUserRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
-
     }
-
 }

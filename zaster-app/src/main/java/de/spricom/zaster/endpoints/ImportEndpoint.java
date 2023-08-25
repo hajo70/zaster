@@ -1,5 +1,6 @@
-package de.spricom.zaster.importing;
+package de.spricom.zaster.endpoints;
 
+import de.spricom.zaster.importing.ImportHandlingService;
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
 import jakarta.annotation.security.PermitAll;

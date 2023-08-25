@@ -3,26 +3,23 @@ package de.spricom.zaster.security;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.settings.UserEntity;
-import de.spricom.zaster.repository.settings.UserRepository;
+import de.spricom.zaster.repository.SettingsService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
+@AllArgsConstructor
 public class AuthenticatedUser {
 
-    private final UserRepository userRepository;
+    private final SettingsService settingsService;
     private final AuthenticationContext authenticationContext;
-
-    public AuthenticatedUser(AuthenticationContext authenticationContext, UserRepository userRepository) {
-        this.userRepository = userRepository;
-        this.authenticationContext = authenticationContext;
-    }
 
     public Optional<UserEntity> get() {
         return authenticationContext.getAuthenticatedUser(Jwt.class)
-                .map(userDetails -> userRepository.findByUsername(userDetails.getSubject()));
+                .flatMap(userDetails -> settingsService.findByUsername(userDetails.getSubject()));
     }
 
     public void logout() {

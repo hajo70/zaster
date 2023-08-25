@@ -3,7 +3,6 @@ package de.spricom.zaster.entities.settings;
 import de.spricom.zaster.entities.common.AbstractEntity;
 import de.spricom.zaster.enums.tracking.CurrencyType;
 import de.spricom.zaster.enums.tracking.ZasterCurrency;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +31,5 @@ public class CurrencyEntity extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 8)
-    @Nullable
     private ZasterCurrency zasterCurrency;
 }
