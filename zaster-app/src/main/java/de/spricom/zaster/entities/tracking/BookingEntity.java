@@ -33,5 +33,6 @@ public class BookingEntity extends AbstractEntity {
     private ImportEntity imported;
 
     @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Set<TransferEntity> transfers;
 }

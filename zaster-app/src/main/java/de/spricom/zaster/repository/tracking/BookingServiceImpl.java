@@ -3,6 +3,7 @@ package de.spricom.zaster.repository.tracking;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.spricom.zaster.entities.common.TrackingDateTime;
+import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.tracking.*;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.BookingService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -86,5 +88,37 @@ public class BookingServiceImpl implements BookingService {
         transfer.setTransferredAt(bookedAt);
         transfer.setAmount(amount);
         transferRepository.save(transfer);
+    }
+
+    @Override
+    public List<BookingEntity> loadAllBookings(TenantEntity tenant) {
+        return bookingRepository.findAllByTenant(tenant.getId());
+    }
+
+    @Override
+    public BookingEntity saveBookingWithTransfers(BookingEntity booking) {
+        BookingEntity saved = saveBooking(booking);
+        for (TransferEntity transfer : saved.getTransfers()) {
+            if (!booking.getTransfers().contains(transfer)) {
+                transferRepository.delete(transfer);
+            }
+        }
+        for (TransferEntity transfer : booking.getTransfers()) {
+            saveTransfer(transfer);
+        }
+        return bookingRepository.getReferenceById(booking.getId());
+    }
+
+    @Override
+    public BookingEntity saveBooking(BookingEntity booking) {
+        if (booking.getTransfers() != null) {
+            booking.getTransfers().forEach(tf -> tf.setBooking(booking));
+        }
+        return bookingRepository.save(booking);
+    }
+
+    @Override
+    public TransferEntity saveTransfer(TransferEntity transfer) {
+        return transferRepository.save(transfer);
     }
 }

@@ -21,4 +21,6 @@ public interface AccountService {
     void deleteAccountCurrency(String accountId);
 
     AccountCurrencyEntity getOrCreateAccountCurrency(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency);
+
+    AccountCurrencyEntity getOrCreateAccountCurrency(AccountEntity account, CurrencyEntity currency);
 }

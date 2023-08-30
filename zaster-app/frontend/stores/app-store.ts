@@ -33,7 +33,7 @@ export class AppStore {
     if (location.route && !serverSideRoute) {
       this.location = location.route.path;
     } else if (location.pathname.startsWith(location.baseUrl)) {
-      this.location = location.pathname.substr(location.baseUrl.length);
+      this.location = location.pathname.substring(location.baseUrl.length);
     } else {
       this.location = location.pathname;
     }

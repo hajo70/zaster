@@ -73,16 +73,19 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountCurrencyEntity getOrCreateAccountCurrency(TenantEntity tenant, String accountCode, String accountName, CurrencyEntity currency) {
         var account = accountRepository.findByTenantIdAndAccountCode(tenant.getId(), accountCode);
-        AccountCurrencyEntity accountCurrency = null;
         if (account == null) {
             account = new AccountEntity();
             account.setTenant(tenant);
             account.setAccountCode(accountCode);
             account.setAccountName(accountName);
             account = accountRepository.save(account);
-        } else {
-            accountCurrency = accountCurrencyRepository.findByAccountIdAndCurrencyId(account.getId(), currency.getId());
         }
+        return getOrCreateAccountCurrency(account, currency);
+    }
+
+    @Override
+    public AccountCurrencyEntity getOrCreateAccountCurrency(AccountEntity account, CurrencyEntity currency) {
+        var accountCurrency = accountCurrencyRepository.findByAccountIdAndCurrencyId(account.getId(), currency.getId());
         if (accountCurrency == null) {
             accountCurrency = new AccountCurrencyEntity();
             accountCurrency.setAccount(account);
