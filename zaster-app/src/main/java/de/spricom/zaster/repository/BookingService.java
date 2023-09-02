@@ -12,18 +12,20 @@ import java.util.List;
 import java.util.Map;
 
 public interface BookingService {
-    BookingEntity createBooking(BookingEntity tx);
-
     boolean addBooking(ImportEntity imported, AccountCurrencyEntity account, BookingRecord bookingRecord);
     boolean addSnapshot(ImportEntity imported, AccountCurrencyEntity account, SnapshotRecord snapshotRecord);
 
     List<BookingEntity> loadAllBookings(TenantEntity tenant);
 
-    BookingEntity saveBookingWithTransfers(BookingEntity booking);
+    BookingEntity loadBooking(String bookingId);
 
     BookingEntity saveBooking(BookingEntity booking);
 
+    void deleteBooking(BookingEntity booking);
+
     TransferEntity saveTransfer(TransferEntity transfer);
+
+    void deleteTransfer(TransferEntity transfer);
 
     record BookingRecord(
         TrackingDateTime submittedAt,

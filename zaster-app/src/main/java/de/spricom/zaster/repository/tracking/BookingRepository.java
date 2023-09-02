@@ -25,4 +25,15 @@ public interface BookingRepository
             where t.accountCurrency.account.tenant.id = :tenantId
             """)
     List<BookingEntity> findAllByTenant(@Param("tenantId") String tenantId);
+
+    @Query("""
+            from BookingEntity b
+            left join fetch b.transfers t
+            left join fetch t.accountCurrency ac
+            left join fetch ac.account
+            left join fetch ac.currency
+            left join fetch b.imported
+            where b.id = :bookingId
+            """)
+    BookingEntity loadBookingCompletely(@Param("bookingId") String bookingId);
 }

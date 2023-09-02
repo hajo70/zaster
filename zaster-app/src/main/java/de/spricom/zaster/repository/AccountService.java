@@ -6,9 +6,12 @@ import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AccountService {
     List<AccountEntity> findAllRootAccounts(TenantEntity tenant);
+
+    Optional<AccountEntity> findAccountByCode(TenantEntity tenant, String accountCode);
 
     AccountEntity getAccount(String accountGroupId);
 

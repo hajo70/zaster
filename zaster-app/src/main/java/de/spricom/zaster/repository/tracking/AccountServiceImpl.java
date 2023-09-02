@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,11 @@ public class AccountServiceImpl implements AccountService {
         return accounts.stream()
                 .filter(account -> account.getParent() == null)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<AccountEntity> findAccountByCode(TenantEntity tenant, String accountCode) {
+        return Optional.ofNullable(accountRepository.findByTenantIdAndAccountCode(tenant.getId(), accountCode));
     }
 
     @Override

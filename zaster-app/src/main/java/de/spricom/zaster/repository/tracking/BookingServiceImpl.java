@@ -12,7 +12,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -25,18 +24,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final SnapshotRepository snapshotRepository;
     private final ObjectMapper mapper;
-
-    @Override
-    public BookingEntity createBooking(BookingEntity booking) {
-        var bookingSaved = bookingRepository.save(booking);
-        HashSet<TransferEntity> transfersSaved = new HashSet<>(booking.getTransfers().size());
-        for (TransferEntity transfer : booking.getTransfers()) {
-            transfer.setBooking(bookingSaved);
-            transfersSaved.add(transferRepository.save(transfer));
-        }
-        bookingSaved.setTransfers(transfersSaved);
-        return bookingSaved;
-    }
 
     @Override
     public boolean addBooking(ImportEntity imported,
@@ -96,17 +83,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingEntity saveBookingWithTransfers(BookingEntity booking) {
-        BookingEntity saved = saveBooking(booking);
-        for (TransferEntity transfer : saved.getTransfers()) {
-            if (!booking.getTransfers().contains(transfer)) {
-                transferRepository.delete(transfer);
-            }
-        }
-        for (TransferEntity transfer : booking.getTransfers()) {
-            saveTransfer(transfer);
-        }
-        return bookingRepository.getReferenceById(booking.getId());
+    public BookingEntity loadBooking(String bookingId) {
+        return bookingRepository.loadBookingCompletely(bookingId);
     }
 
     @Override
@@ -118,7 +96,17 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public void deleteBooking(BookingEntity booking) {
+        bookingRepository.delete(booking);
+    }
+
+    @Override
     public TransferEntity saveTransfer(TransferEntity transfer) {
         return transferRepository.save(transfer);
+    }
+
+    @Override
+    public void deleteTransfer(TransferEntity transfer) {
+        transferRepository.delete(transfer);
     }
 }

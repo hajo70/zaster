@@ -19,11 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.EnumSet;
 import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -78,18 +79,28 @@ public class TrackingDataFactory {
 
     public BookingEntity createBooking(AccountEntity debitor, AccountEntity creditor,
                                        BigDecimal amount, CurrencyEntity currency, String description) {
-        var debitorAccountCurrency = accountService.getOrCreateAccountCurrency(debitor, currency);
-        var creditorAccountCurrency = accountService.getOrCreateAccountCurrency(creditor, currency);
-        var debitorTransfer = new TransferEntity();
-        debitorTransfer.setAccountCurrency(debitorAccountCurrency);
-        debitorTransfer.setTransferredAt(TrackingDateTime.now());
-        debitorTransfer.setAmount(amount.negate());
-        var creditorTransfer = new TransferEntity();
-        creditorTransfer.setAccountCurrency(creditorAccountCurrency);
-        creditorTransfer.setTransferredAt(TrackingDateTime.now());
-        creditorTransfer.setAmount(amount);
+        return createBooking(description,
+                createTransfer(debitor, currency, amount),
+                createTransfer(creditor, currency, amount.negate()));
+    }
+
+    public TransferEntity createTransfer(AccountEntity account, CurrencyEntity currency, BigDecimal amount) {
+        var accountCurrency = accountService.getOrCreateAccountCurrency(account, currency);
+        var transfer = new TransferEntity();
+        transfer.setAccountCurrency(accountCurrency);
+        transfer.setTransferredAt(TrackingDateTime.now());
+        transfer.setAmount(amount);
+        return transfer;
+    }
+
+    public BookingEntity createBooking(String description, TransferEntity... transfers) {
         var booking = new BookingEntity();
-        booking.setTransfers(Set.of(debitorTransfer, creditorTransfer));
+        for (TransferEntity transfer : transfers) {
+            if (transfer.getTransferredAt() == null) {
+                transfer.setTransferredAt(TrackingDateTime.now());
+            }
+        }
+        booking.setTransfers(Arrays.stream(transfers).collect(Collectors.toSet()));
         booking.setBookedAt(TrackingDateTime.now());
         booking.setDescription(description);
         return bookingService.saveBooking(booking);
@@ -97,10 +108,11 @@ public class TrackingDataFactory {
 
     public UserEntity createTenantWithBookings() {
         UserEntity user = createUserWithTenant();
-        CurrencyEntity eur = createCurrency(user.getTenant(), "EUR");
-        CurrencyEntity usd = createCurrency(user.getTenant(), "USD");
-        AccountEntity bank1 = createAccount(user.getTenant(), "111", "Bank 1");
-        AccountEntity bank2 = createAccount(user.getTenant(), "222", "Bank 2");
+        TenantEntity tenant = user.getTenant();
+        CurrencyEntity eur = createCurrency(tenant, "EUR");
+        AccountEntity parent = createAccount(tenant, null, "Banks");
+        AccountEntity bank1 = createAccount(parent, "111", "Bank 1");
+        AccountEntity bank2 = createAccount(parent, "222", "Bank 2");
         createBooking(bank1, bank2, BigDecimal.valueOf(25.25), eur, "Booking 1");
         createBooking(bank1, bank2, BigDecimal.valueOf(0.98), eur, "Booking 2");
         return user;
