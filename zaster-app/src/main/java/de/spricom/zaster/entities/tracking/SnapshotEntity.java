@@ -18,7 +18,7 @@ public class SnapshotEntity extends AbstractEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
-    private AccountCurrencyEntity account;
+    private AccountCurrencyEntity accountCurrency;
 
     @Embedded
     private TrackingDateTime takenAt;

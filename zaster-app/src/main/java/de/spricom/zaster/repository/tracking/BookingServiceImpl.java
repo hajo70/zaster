@@ -58,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
                                SnapshotRecord snapshotRecord) {
         var snapshot = new SnapshotEntity();
         snapshot.setImported(imported);
-        snapshot.setAccount(accountCurrency);
+        snapshot.setAccountCurrency(accountCurrency);
         snapshot.setTakenAt(snapshotRecord.takenAt());
         snapshot.setBalance(snapshotRecord.balance());
         snapshotRepository.save(snapshot);
@@ -75,6 +75,11 @@ public class BookingServiceImpl implements BookingService {
         transfer.setTransferredAt(bookedAt);
         transfer.setAmount(amount);
         transferRepository.save(transfer);
+    }
+
+    @Override
+    public List<SnapshotEntity> loadAllSnapshots(TenantEntity tenant) {
+        return snapshotRepository.findAllByTenant(tenant.getId());
     }
 
     @Override

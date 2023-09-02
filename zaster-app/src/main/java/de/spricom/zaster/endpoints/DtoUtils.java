@@ -1,17 +1,21 @@
 package de.spricom.zaster.endpoints;
 
 import de.spricom.zaster.dtos.common.IdDto;
+import de.spricom.zaster.dtos.common.TrackingDateTimeDto;
 import de.spricom.zaster.dtos.settings.CurrencyDto;
 import de.spricom.zaster.dtos.settings.TenantDto;
 import de.spricom.zaster.dtos.settings.UserDto;
-import de.spricom.zaster.dtos.tracking.AccountCurrencyDto;
-import de.spricom.zaster.dtos.tracking.AccountDto;
+import de.spricom.zaster.dtos.tracking.*;
 import de.spricom.zaster.entities.common.AbstractEntity;
+import de.spricom.zaster.entities.common.TrackingDateTime;
 import de.spricom.zaster.entities.settings.CurrencyEntity;
 import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.settings.UserEntity;
-import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
-import de.spricom.zaster.entities.tracking.AccountEntity;
+import de.spricom.zaster.entities.tracking.*;
+
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Optional;
 
 public final class DtoUtils {
 
@@ -26,9 +30,18 @@ public final class DtoUtils {
         entity.setVersion(id.version());
     }
 
+    public static TrackingDateTimeDto ts(TrackingDateTime ts) {
+        return new TrackingDateTimeDto(
+                ts.getDate(),
+                ts.getTime(),
+                Optional.ofNullable(ts.getOffset()).map(ZoneOffset::toString).orElse(null),
+                Optional.ofNullable(ts.getZone()).map(ZoneId::toString).orElse(null)
+        );
+    }
+
     public static UserDto toUserDto(UserEntity user) {
         return new UserDto(
-                DtoUtils.id(user),
+                id(user),
                 user.getUsername(),
                 user.getName(),
                 null,
@@ -38,7 +51,7 @@ public final class DtoUtils {
 
     public static TenantDto toTenantDto(TenantEntity tenant) {
         return new TenantDto(
-                DtoUtils.id(tenant),
+                id(tenant),
                 tenant.getName(),
                 tenant.getLocale(),
                 tenant.getTimezone()
@@ -47,7 +60,7 @@ public final class DtoUtils {
 
     public static CurrencyDto toCurrencyDto(CurrencyEntity currency) {
         return new CurrencyDto(
-                DtoUtils.id(currency),
+                id(currency),
                 currency.getCurrencyCode(),
                 currency.getCurrencyName(),
                 currency.getCurrencyType()
@@ -56,7 +69,8 @@ public final class DtoUtils {
 
     public static AccountDto toAccountDto(AccountEntity entity) {
         return new AccountDto(
-                DtoUtils.id(entity),
+                id(entity),
+                entity.getAccountCode(),
                 entity.getAccountName(),
                 entity.getCurrencies() == null || entity.getCurrencies().isEmpty()
                         ? null
@@ -74,8 +88,35 @@ public final class DtoUtils {
 
     public static AccountCurrencyDto toAccountCurrencyDto(AccountCurrencyEntity entity) {
         return new AccountCurrencyDto(
-                DtoUtils.id(entity),
+                id(entity),
                 entity.getCurrency().getId()
+        );
+    }
+
+    public static BookingDto toBookingDto(BookingEntity entity) {
+        return new BookingDto(
+                id(entity),
+                ts(entity.getBookedAt()),
+                entity.getDescription(),
+                entity.getTransfers().stream().map(DtoUtils::toTransferDto).toList()
+        );
+    }
+
+    public static TransferDto toTransferDto(TransferEntity entity) {
+        return new TransferDto(
+                id(entity),
+                entity.getAccountCurrency().getId(),
+                entity.getAmount(),
+                DtoUtils.ts(entity.getTransferredAt())
+        );
+    }
+
+    public static SnapshotDto toSnapshotDto(SnapshotEntity entity) {
+        return new SnapshotDto(
+                id(entity),
+                entity.getAccountCurrency().getId(),
+                entity.getBalance(),
+                DtoUtils.ts(entity.getTakenAt())
         );
     }
 }

@@ -8,6 +8,8 @@ import java.util.List;
 
 public record AccountDto(
         IdDto id,
+        @Nullable
+        String accountCode,
         String accountName,
         @Nullable
         List<AccountCurrencyDto> currencies,

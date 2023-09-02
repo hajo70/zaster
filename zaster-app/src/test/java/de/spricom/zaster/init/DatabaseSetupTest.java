@@ -108,7 +108,7 @@ public class DatabaseSetupTest {
 
     private SnapshotEntity createSnapshot(AccountCurrencyEntity account, TrackingDateTime ts, BigDecimal amount) {
         var snapshot = new SnapshotEntity();
-        snapshot.setAccount(account);
+        snapshot.setAccountCurrency(account);
         snapshot.setTakenAt(ts);
         snapshot.setBalance(amount);
         snapshot = snapshotRepository.save(snapshot);
