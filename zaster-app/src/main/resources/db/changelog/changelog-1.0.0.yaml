@@ -297,11 +297,11 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
-                  name: ACCOUNT_ID
+                  name: ACCOUNT_CURRENCY_ID
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
-                    foreignKeyName: FK_SNAPSHOT_ACCOUNT_ID_ACCOUNT_CURRENY
+                    foreignKeyName: FK_SNAPSHOT_ACCOUNT_CURRENCY_ID_ACCOUNT_CURRENY
                     referencedTableName: ACCOUNT_CURRENY
                     referencedColumnNames: ID
               - column:
