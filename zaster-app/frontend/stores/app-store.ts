@@ -54,6 +54,7 @@ export class AppStore {
     if (userInfo) {
       accountingStore.currencies = userInfo.currencies;
       accountingStore.rootAccounts = userInfo.rootAccounts;
+      trackingStore.loadBookings();
     }
   }
 

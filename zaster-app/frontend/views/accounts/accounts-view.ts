@@ -15,8 +15,7 @@ import './account-form';
 import {columnBodyRenderer, GridColumnBodyLitRenderer} from "@vaadin/grid/lit";
 import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
 import {Grid} from "@vaadin/grid";
-import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
-import {accountingStore} from "Frontend/stores/app-store.ts";
+import {Account} from "Frontend/model/tracking/Account.ts";
 
 @customElement('accounts-view')
 export class AccountsView extends View {
@@ -38,13 +37,13 @@ export class AccountsView extends View {
                 </vaadin-button>
             </div>
             <div class="content flex gap-m h-full">
-                <vaadin-grid 
-                        .itemHasChildrenPath="${'children'}" 
+                <vaadin-grid
+                        .itemHasChildrenPath="${'children'}"
                         .dataProvider="${accountsViewStore.boundDataProvider}"
                         .selectedItems=${[accountsViewStore.selectedAccount]}
                         @active-item-changed=${this.handleGridSelection}
                 >
-                    <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
+                    <vaadin-grid-tree-column path="data.accountName"></vaadin-grid-tree-column>
                     <vaadin-grid-column header="Currencies" auto-width
                                         ${columnBodyRenderer(this.currenciesRenderer, [])}></vaadin-grid-column>
                 </vaadin-grid>
@@ -57,12 +56,15 @@ export class AccountsView extends View {
         `;
     }
 
-    private currenciesRenderer: GridColumnBodyLitRenderer<AccountDto> = ({accounts}) => html`
-        <span>${accounts?.map(account => accountingStore.getCurrency(account.currencyId).currencyCode).join(', ')}</span>
+    private currenciesRenderer: GridColumnBodyLitRenderer<Account> = (account) => html`
+        <span>${account.currencies
+                .map(accountCurrency => accountCurrency.currency.currencyCode)
+                .join(', ')}</span>
     `;
 
     // vaadin-grid fires a null-event when initialized. Ignore it.
     firstSelectionEvent = true;
+
     handleGridSelection(ev: CustomEvent) {
         if (this.firstSelectionEvent) {
             this.firstSelectionEvent = false;

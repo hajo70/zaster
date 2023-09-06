@@ -8,7 +8,6 @@ import {Account} from "Frontend/model/tracking/Account.ts";
 
 class AccountsViewStore {
     selectedAccount: AccountDto | null = null;
-    selectedAccountParent: Account | null = null;
     filterText = '';
     boundDataProvider = this.dataProvider.bind(this);
 
@@ -91,16 +90,6 @@ class AccountsViewStore {
         // let groups = this.rootAccounts?.flatMap(this.ancestors);
         // console.log("groups total: " + groups?.length + ", roots: " + this.rootAccounts?.length);
         return [];
-    }
-
-    private ancestors(group: AccountDto): AccountDto[] {
-        if (!group) {
-            return [];
-        }
-        if (!group.children) {
-            return [group];
-        }
-        return [group, ...group.children.flatMap(this.ancestors)];
     }
 
     private parent(group: AccountDto): AccountDto | undefined {

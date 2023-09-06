@@ -53,7 +53,6 @@ export class DynamicTxFromView extends View {
 
    private createTx() {
        const newBooking = BookingDtoModel.createEmptyValue();
-       newBooking.bookedAtDate = new Date().toISOString().substring(0, 10);
        newBooking.transfers = [
            this.createBooking(),
            this.createBooking()

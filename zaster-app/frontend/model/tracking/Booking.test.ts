@@ -9,6 +9,7 @@ import BookingDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/Booki
 import {Booking} from "Frontend/model/tracking/Booking.ts";
 
 const someDate: TrackingDateTimeDto = {
+    ts: '1111111',
     date: '2023-08-17'
 };
 
@@ -40,7 +41,7 @@ const account0Dto: AccountDto = {
     children: [account1Dto, account2Dto]
 }
 
-const account = new Account(null, account0Dto, (id) => currencyDto);
+const account = new Account(null, account0Dto, (_) => currencyDto);
 
 test('creates simple booking', () => {
     const transfer1Dto: TransferDto = {

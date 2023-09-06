@@ -31,7 +31,7 @@ export class SimpleTxFromView extends View {
             <div>
                 <vaadin-date-picker
                         label="Datum"
-                        ${field(model.bookedAtDate)}
+                        ${field(model.bookedAt.date)}
                 ></vaadin-date-picker>
                 <vaadin-text-field
                         label="Beschreibung"
@@ -57,7 +57,7 @@ export class SimpleTxFromView extends View {
             <span>Transfer: ${index}</span>
             <vaadin-date-picker
                     label="Wertstellung"
-                    ${field(transferBinder.model.transferredAtDate)}
+                    ${field(transferBinder.model.transferredAt.date)}
             ></vaadin-date-picker>
         `;
     }

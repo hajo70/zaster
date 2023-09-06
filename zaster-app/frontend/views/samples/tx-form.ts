@@ -32,7 +32,7 @@ export class TxForm extends View {
             <div>
                 <vaadin-date-picker
                         label="Datum"
-                        ${field(model.bookedAtDate)}
+                        ${field(model.bookedAt.date)}
                 ></vaadin-date-picker>
                 <vaadin-text-field
                         label="Beschreibung"
@@ -61,7 +61,7 @@ export class TxForm extends View {
             <span>Booking: ${index}</span>
             <vaadin-date-picker
                     label="Buchungsdatum"
-                    ${field(bookingBinder.model.transferredAtDate)}
+                    ${field(bookingBinder.model.transferredAt.date)}
             ></vaadin-date-picker>
         `;
     }

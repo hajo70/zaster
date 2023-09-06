@@ -13,8 +13,8 @@ export class TrackingStore {
     }
 
     async loadBookings() {
-        const bookingDtos = await TrackingEndpoint.getBookings();
-        const transactions = await TrackingEndpoint.getTransactions();
-        this.transactions = transactions.map(tx => new Booking(tx, accountingStore.getAccount));
+        const trackingData = await TrackingEndpoint.loadTrackingData();
+        this.bookings = trackingData.bookings.map(bookingDto =>
+            new Booking(bookingDto, accountingStore.lookUpAccountCurrency));
     }
 }

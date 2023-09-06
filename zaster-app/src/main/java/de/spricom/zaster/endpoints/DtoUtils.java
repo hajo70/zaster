@@ -13,6 +13,7 @@ import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.settings.UserEntity;
 import de.spricom.zaster.entities.tracking.*;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Optional;
@@ -32,11 +33,16 @@ public final class DtoUtils {
 
     public static TrackingDateTimeDto ts(TrackingDateTime ts) {
         return new TrackingDateTimeDto(
+                timeStamp(ts),
                 ts.getDate(),
                 ts.getTime(),
                 Optional.ofNullable(ts.getOffset()).map(ZoneOffset::toString).orElse(null),
                 Optional.ofNullable(ts.getZone()).map(ZoneId::toString).orElse(null)
         );
+    }
+
+    private static Instant timeStamp(TrackingDateTime ts) {
+        return ts.toZonedDateTime().toInstant();
     }
 
     public static UserDto toUserDto(UserEntity user) {

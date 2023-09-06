@@ -2,6 +2,7 @@ import {makeObservable, observable} from "mobx";
 import {Account} from "Frontend/model/tracking/Account.ts";
 import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDto.ts";
 import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
+import {AccountCurrency} from "Frontend/model/tracking/AccountCurrency.ts";
 
 export class AccountingStore {
     _currencies: CurrencyDto[] = [];
@@ -42,5 +43,15 @@ export class AccountingStore {
             }
         }
         throw new Error("There is no account with id = " + id);
+    }
+
+    lookUpAccountCurrency(id: string): AccountCurrency {
+        for (const account of this._rootAccounts) {
+            const accountCurrency = account.lookUpAccountCurrency(id);
+            if (accountCurrency) {
+                return accountCurrency;
+            }
+        }
+        throw new Error("There is no account-currency " + id);
     }
 }
