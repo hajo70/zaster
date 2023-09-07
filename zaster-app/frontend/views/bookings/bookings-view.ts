@@ -8,14 +8,27 @@ export class BookingsView extends View {
 
     protected override render() {
         return html`
-            <div class="content flex gap-m h-full">
+            <div>
                 <vaadin-grid
                         .itemHasChildrenPath="${'hasChildren'}"
-                        .dataProvider="${bookingsViewStore.dataProvider}"
+                        .dataProvider="${bookingsViewStore.boundDataProvider}"
+                        .selectedItems=${[bookingsViewStore.selectedAccount]}
+                        @active-item-changed=${this.handleGridSelection}
                 >
                     <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
                 </vaadin-grid>
             </div>
         `;
+    }
+
+    // vaadin-grid fires a null-event when initialized. Ignore it.
+    firstSelectionEvent = true;
+
+    handleGridSelection(ev: CustomEvent) {
+        if (this.firstSelectionEvent) {
+            this.firstSelectionEvent = false;
+            return;
+        }
+        bookingsViewStore.setSelectedAccount(ev.detail.value);
     }
 }
