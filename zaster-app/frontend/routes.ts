@@ -77,13 +77,13 @@ export const views: ViewRoute[] = [
     },
   },
   {
-    path: 'transactions',
-    component: 'transactions-view',
+    path: 'bookings',
+    component: 'bookings-view',
     requiresLogin: true,
     icon: 'file',
-    title: 'Transaktionen',
+    title: 'Bookings',
     action: async (_context, _command) => {
-      await import('./views/transactions/transactions-view');
+      await import('./views/bookings/bookings-view');
       return;
     },
   },

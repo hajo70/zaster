@@ -23,8 +23,20 @@ export class Account {
         }
     }
 
-    get name() {
+    get accountName() {
         return this.data.accountName;
+    }
+
+    get accountCode() {
+        return this.data.accountCode;
+    }
+
+    get hasChildren() {
+        return this.children.length > 0;
+    }
+
+    get parentAccountName() {
+        return this.parent?.accountName;
     }
 
     lookUpAccountCurrency(id: string): AccountCurrency | undefined {

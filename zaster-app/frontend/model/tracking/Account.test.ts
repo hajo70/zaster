@@ -23,12 +23,16 @@ export function id(n: number): IdDto {
 test('creates empty root account', () => {
     const dto: AccountDto = {
         id: id(10),
-        accountName: "empty root account"
+        accountName: "empty root account",
+        accountCode: "123"
     }
     const account = new Account(null, dto, (id) => currencyDto);
     expect(account.data.id.uuid).toBe("10");
     expect(account.parent).toBe(null);
-    expect(account.name).toBe("empty root account");
+    expect(account.accountName).toBe("empty root account");
+    expect(account.accountCode).toBe("123");
+    expect(account.parentAccountName).toBe(undefined);
+    expect(account.hasChildren).toBe(false);
     expect(account.lookUpAccountCurrency("11")).toBe(undefined);
 })
 
@@ -59,11 +63,14 @@ test('creates hierarchy', () => {
     const account = new Account(null, parent, (id) => currencyDto);
     expect(account.data.id.uuid).toBe("13");
     expect(account.parent).toBe(null);
-    expect(account.name).toBe("parent");
+    expect(account.accountName).toBe("parent");
+    expect(account.accountCode).toBe(undefined);
+    expect(account.hasChildren).toBe(true);
     expect(account.children).toHaveLength(2);
-    expect(account.children[0].name).toBe("child_1")
-    expect(account.children[1].name).toBe("child_2")
-    expect(account.children[0].children[0].name).toBe("child_1_1");
+    expect(account.children[0].accountName).toBe("child_1")
+    expect(account.children[0].parentAccountName).toBe("parent")
+    expect(account.children[1].accountName).toBe("child_2")
+    expect(account.children[0].children[0].accountName).toBe("child_1_1");
     expect(account.children[0].parent).toBe(account);
     expect(account.children[0].children[0].parent?.parent).toBe(account);
     expect(account.lookUpAccountCurrency("21")).toBe(undefined);

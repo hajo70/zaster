@@ -27,23 +27,24 @@ export class AccountsView extends View {
         return html`
             <div class="toolbar flex gap-s">
                 <vaadin-text-field
-                        placeholder="Filter nach Name"
+                        placeholder="Filter"
                         .value=${accountsViewStore.filterText}
                         @input=${this.updateFilter}
                         clear-button-visible
                 ></vaadin-text-field>
                 <vaadin-button @click=${accountsViewStore.editNew}>
-                    Konto hinzufügen
+                    Add Account
                 </vaadin-button>
             </div>
             <div class="content flex gap-m h-full">
                 <vaadin-grid
-                        .itemHasChildrenPath="${'children'}"
+                        .itemHasChildrenPath="${'hasChildren'}"
                         .dataProvider="${accountsViewStore.boundDataProvider}"
                         .selectedItems=${[accountsViewStore.selectedAccount]}
                         @active-item-changed=${this.handleGridSelection}
                 >
                     <vaadin-grid-tree-column path="data.accountName"></vaadin-grid-tree-column>
+                    <vaadin-grid-column path="data.accountCode"></vaadin-grid-column>
                     <vaadin-grid-column header="Currencies" auto-width
                                         ${columnBodyRenderer(this.currenciesRenderer, [])}></vaadin-grid-column>
                 </vaadin-grid>
