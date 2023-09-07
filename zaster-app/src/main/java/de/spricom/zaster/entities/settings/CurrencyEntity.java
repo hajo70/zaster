@@ -22,14 +22,14 @@ public class CurrencyEntity extends AbstractEntity {
     @Column(length = 8)
     private String currencyCode;
 
-    @Column(length = 63)
+    @Column(length = 64)
     private String currencyName;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 8)
+    @Column(length = 32)
     private CurrencyType currencyType;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 8)
+    @Column(length = 32)
     private ZasterCurrency zasterCurrency;
 }

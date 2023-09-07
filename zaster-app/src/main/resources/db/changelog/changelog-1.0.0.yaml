@@ -195,13 +195,13 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(8)
               - column:
                   name: CURRENCY_NAME
-                  type: java.sql.Types.NVARCHAR(63)
+                  type: java.sql.Types.NVARCHAR(64)
               - column:
                   name: CURRENCY_TYPE
-                  type: java.sql.Types.NVARCHAR(8)
+                  type: java.sql.Types.NVARCHAR(32)
               - column:
                   name: ZASTER_CURRENCY
-                  type: java.sql.Types.NVARCHAR(8)
+                  type: java.sql.Types.NVARCHAR(32)
         - createTable:
             tableName: ACCOUNT
             columns:

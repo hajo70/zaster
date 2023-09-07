@@ -13,7 +13,6 @@ import de.spricom.zaster.entities.settings.TenantEntity;
 import de.spricom.zaster.entities.settings.UserEntity;
 import de.spricom.zaster.entities.tracking.*;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Optional;
@@ -27,13 +26,15 @@ public final class DtoUtils {
     }
 
     public static void setId(AbstractEntity entity, IdDto id) {
-        entity.setId(id.uuid());
-        entity.setVersion(id.version());
+        if (id != null) {
+            entity.setId(id.uuid());
+            entity.setVersion(id.version());
+        }
     }
 
-    public static TrackingDateTimeDto ts(TrackingDateTime ts) {
+    public static TrackingDateTimeDto toTrackingDateTimeDto(TrackingDateTime ts) {
         return new TrackingDateTimeDto(
-                timeStamp(ts),
+                ts.toZonedDateTime().toInstant(),
                 ts.getDate(),
                 ts.getTime(),
                 Optional.ofNullable(ts.getOffset()).map(ZoneOffset::toString).orElse(null),
@@ -41,8 +42,13 @@ public final class DtoUtils {
         );
     }
 
-    private static Instant timeStamp(TrackingDateTime ts) {
-        return ts.toZonedDateTime().toInstant();
+    public static TrackingDateTime toTrackingDateTime(TrackingDateTimeDto dto) {
+        var ts = new TrackingDateTime();
+        ts.setDate(dto.date());
+        ts.setTime(dto.time());
+        ts.setOffset(dto.offset() == null ? null : ZoneOffset.of(dto.offset()));
+        ts.setZone(dto.zone() == null ? null : ZoneId.of(dto.zone()));
+        return ts;
     }
 
     public static UserDto toUserDto(UserEntity user) {
@@ -102,7 +108,7 @@ public final class DtoUtils {
     public static BookingDto toBookingDto(BookingEntity entity) {
         return new BookingDto(
                 id(entity),
-                ts(entity.getBookedAt()),
+                toTrackingDateTimeDto(entity.getBookedAt()),
                 entity.getDescription(),
                 entity.getTransfers().stream().map(DtoUtils::toTransferDto).toList()
         );
@@ -113,7 +119,7 @@ public final class DtoUtils {
                 id(entity),
                 entity.getAccountCurrency().getId(),
                 entity.getAmount(),
-                DtoUtils.ts(entity.getTransferredAt())
+                DtoUtils.toTrackingDateTimeDto(entity.getTransferredAt())
         );
     }
 
@@ -122,7 +128,7 @@ public final class DtoUtils {
                 id(entity),
                 entity.getAccountCurrency().getId(),
                 entity.getBalance(),
-                DtoUtils.ts(entity.getTakenAt())
+                DtoUtils.toTrackingDateTimeDto(entity.getTakenAt())
         );
     }
 }
