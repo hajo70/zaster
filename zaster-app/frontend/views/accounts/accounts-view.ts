@@ -58,7 +58,7 @@ export class AccountsView extends View {
     }
 
     private currenciesRenderer: GridColumnBodyLitRenderer<Account> = (account) => html`
-        <span>${account.currencies
+        <span>${account.accountCurrencies
                 .map(accountCurrency => accountCurrency.currency.currencyCode)
                 .join(', ')}</span>
     `;

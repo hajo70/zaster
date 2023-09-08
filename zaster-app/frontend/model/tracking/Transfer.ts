@@ -12,4 +12,8 @@ export class Transfer {
         this.data = data;
         this.accountCurrency = account;
     }
+
+    get description() {
+        return this.booking.data.description;
+    }
 }

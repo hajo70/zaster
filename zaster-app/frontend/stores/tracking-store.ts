@@ -15,6 +15,6 @@ export class TrackingStore {
     async loadBookings() {
         const trackingData = await TrackingEndpoint.loadTrackingData();
         this.bookings = trackingData.bookings.map(bookingDto =>
-            new Booking(bookingDto, accountingStore.lookUpAccountCurrency));
+            new Booking(bookingDto, accountingStore.lookUpAccountCurrency.bind(accountingStore)));
     }
 }
