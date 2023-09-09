@@ -1,5 +1,11 @@
 {
     "lit-plugin.strict": true,
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.configuration.runtimes": [
+         {
+          "name": "JavaSE-20",
+          "path": "/home/hjhessmann/tools/jdk/jdk-20"
+         }
+      ]
 }

@@ -10,6 +10,8 @@ import de.spricom.zaster.importing.ImportHandlingService;
 import de.spricom.zaster.repository.AccountService;
 import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.repository.SettingsService;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("initme")
+@Disabled("run manually")
 public class ZasterInitTool {
 
     @Autowired
