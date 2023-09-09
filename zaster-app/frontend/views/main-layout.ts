@@ -20,6 +20,8 @@ import {appStore} from '../stores/app-store.js';
 import {Layout} from './view.js';
 import UserDto from "Frontend/generated/de/spricom/zaster/dtos/settings/UserDto.ts";
 
+import "@vaadin/vaadin-lumo-styles/presets/compact.js"
+
 interface RouteInfo {
   path: string;
   title: string;

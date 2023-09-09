@@ -15,7 +15,7 @@ export class BookingsView extends View {
     protected override render() {
         return html`
             <div class="content flex gap-m h-full">
-                <vaadin-grid
+                <vaadin-grid class="accounts-grid flex-grow-0"
                         .itemHasChildrenPath="${'hasChildren'}"
                         .dataProvider="${bookingsViewStore.dataProvider}"
                         .selectedItems=${[bookingsViewStore.selectedAccount]}
@@ -23,7 +23,7 @@ export class BookingsView extends View {
                 >
                     <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
                 </vaadin-grid>
-                <div class="flex flex-col">
+                <div class="flex flex-col h-full flex-grow">
                     <vaadin-grid .items="${bookingsViewStore.transfers}">
                         <vaadin-grid-column path="description"></vaadin-grid-column>
                     </vaadin-grid>

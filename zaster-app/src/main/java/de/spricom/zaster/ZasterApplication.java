@@ -2,6 +2,8 @@ package de.spricom.zaster;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * and some desktop browsers.
  */
 @SpringBootApplication
-@Theme(value = "zaster")
+@Theme(value = "zaster", variant = Lumo.DARK)
 public class ZasterApplication implements AppShellConfigurator {
 
     public static void main(String[] args) {

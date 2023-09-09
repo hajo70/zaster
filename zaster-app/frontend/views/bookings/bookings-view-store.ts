@@ -53,6 +53,7 @@ class BookingsViewStore {
 
     setSelectedAccount(account: Account) {
         this.selectedAccount = account;
+        this.setSelectedCurrency(0);
     }
 
     setSelectedCurrency(tabIndex: number) {
