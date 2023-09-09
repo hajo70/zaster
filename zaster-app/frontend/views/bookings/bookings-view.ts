@@ -15,7 +15,7 @@ export class BookingsView extends View {
     protected override render() {
         return html`
             <div class="content flex gap-m h-full">
-                <vaadin-grid class="accounts-grid flex-grow-0"
+                <vaadin-grid class="accounts-grid flex-grow-0" theme="compact no-border"
                         .itemHasChildrenPath="${'hasChildren'}"
                         .dataProvider="${bookingsViewStore.dataProvider}"
                         .selectedItems=${[bookingsViewStore.selectedAccount]}
@@ -24,10 +24,10 @@ export class BookingsView extends View {
                     <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
                 </vaadin-grid>
                 <div class="flex flex-col h-full flex-grow">
-                    <vaadin-grid .items="${bookingsViewStore.transfers}">
-                        <vaadin-grid-column path="bookingDate"></vaadin-grid-column>
-                        <vaadin-grid-column path="amount"></vaadin-grid-column>
-                        <vaadin-grid-column path="description"></vaadin-grid-column>
+                    <vaadin-grid .items="${bookingsViewStore.transfers}" theme="compact" column-reordering-allowed>
+                        <vaadin-grid-sort-column path="bookingDate" resizable></vaadin-grid-sort-column>
+                        <vaadin-grid-sort-column path="amount" resizable></vaadin-grid-sort-column>
+                        <vaadin-grid-sort-column path="description" resizable></vaadin-grid-sort-column>
                     </vaadin-grid>
                     <vaadin-tabs @selected-changed="${this.selectedChanged}">
                         ${bookingsViewStore.currencies.map(currency =>
