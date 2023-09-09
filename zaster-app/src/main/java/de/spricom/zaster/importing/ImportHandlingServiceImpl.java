@@ -78,7 +78,7 @@ public class ImportHandlingServiceImpl implements ImportHandlingService {
         try {
             return DigestUtils.md5Hex(resource.getInputStream());
         } catch (IOException ex) {
-            throw new IllegalArgumentException("MD5-Hash for " + resource.getFilename());
+            throw new IllegalArgumentException("MD5-Hash for " + resource.getFilename(), ex);
         }
     }
 
