@@ -16,4 +16,12 @@ export class Transfer {
     get description() {
         return this.booking.data.description;
     }
+
+    get bookingDate() {
+        return this.booking.data.bookedAt.date;
+    }
+
+    get amount() {
+        return this.data.amount;
+    }
 }

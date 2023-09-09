@@ -25,6 +25,8 @@ export class BookingsView extends View {
                 </vaadin-grid>
                 <div class="flex flex-col h-full flex-grow">
                     <vaadin-grid .items="${bookingsViewStore.transfers}">
+                        <vaadin-grid-column path="bookingDate"></vaadin-grid-column>
+                        <vaadin-grid-column path="amount"></vaadin-grid-column>
                         <vaadin-grid-column path="description"></vaadin-grid-column>
                     </vaadin-grid>
                     <vaadin-tabs @selected-changed="${this.selectedChanged}">
