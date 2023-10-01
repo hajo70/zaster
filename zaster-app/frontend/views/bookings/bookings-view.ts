@@ -1,4 +1,4 @@
-import {customElement} from "lit/decorators.js";
+import {customElement, query} from "lit/decorators.js";
 import {View} from "Frontend/views/view.ts";
 import {html} from "lit";
 import {bookingsViewStore} from "Frontend/views/bookings/bookings-view-store.ts";
@@ -8,9 +8,14 @@ import '@vaadin/grid/vaadin-grid-column';
 import '@vaadin/grid/vaadin-grid-tree-column';
 import '@vaadin/grid/vaadin-grid-sort-column';
 import {TabsSelectedChangedEvent} from "@vaadin/tabs";
+import {Grid} from "@vaadin/grid";
+import './account-form';
 
 @customElement('bookings-view')
 export class BookingsView extends View {
+
+    @query("vaadin-grid.accounts-grid")
+    accountsGrid!: Grid;
 
     protected override render() {
         return html`
@@ -37,6 +42,11 @@ export class BookingsView extends View {
                     </vaadin-tabs>
                 </div>
             </div>
+            <account-form
+                    class="flex flex-col gap-s"
+                    ?hidden=${!bookingsViewStore.selectedAccount}
+                    @accounts-changed=${this.updateGrid}
+            ></account-form>
         `;
     }
 
@@ -53,6 +63,10 @@ export class BookingsView extends View {
 
     selectedChanged(e: TabsSelectedChangedEvent) {
         bookingsViewStore.setSelectedCurrency(e.detail.value);
+    }
+
+    updateGrid() {
+        this.accountsGrid.clearCache();
     }
 
     connectedCallback() {
