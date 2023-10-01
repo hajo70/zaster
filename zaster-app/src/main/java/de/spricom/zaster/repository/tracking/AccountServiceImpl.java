@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AccountServiceImpl implements AccountService {
     private static final Logger log = LogManager.getLogger(MethodHandles.lookup().lookupClass());
+    public static final Comparator<AccountEntity> ACCOUNT_ENTITY_COMPARATOR = Comparator.comparing(AccountEntity::getAccountName);
 
     private final AccountCurrencyRepository accountCurrencyRepository;
     private final AccountRepository accountRepository;
@@ -32,13 +33,14 @@ public class AccountServiceImpl implements AccountService {
             if (account.getParent() != null) {
                 if (account.getParent().getChildren() == null) {
                     account.getParent().setChildren(
-                            new TreeSet<>(Comparator.comparing(AccountEntity::getAccountName)));
+                            new TreeSet<>(ACCOUNT_ENTITY_COMPARATOR));
                 }
                 account.getParent().getChildren().add(account);
             }
         }
         return accounts.stream()
                 .filter(account -> account.getParent() == null)
+                .sorted(ACCOUNT_ENTITY_COMPARATOR)
                 .collect(Collectors.toList());
     }
 
