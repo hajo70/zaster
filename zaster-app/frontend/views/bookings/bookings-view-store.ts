@@ -4,6 +4,7 @@ import {accountingStore, trackingStore} from "Frontend/stores/app-store.ts";
 import {action, makeObservable, observable} from "mobx";
 import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDto.ts";
 import {Transfer} from "Frontend/model/tracking/Transfer.ts";
+import {Notification} from "@vaadin/notification";
 
 class BookingsViewStore {
     selectedAccount: Account | null = null;
@@ -15,7 +16,8 @@ class BookingsViewStore {
                 selectedAccount: observable.ref,
                 selectedCurrency: observable.ref,
                 setSelectedAccount: action,
-                setSelectedCurrency: action
+                setSelectedCurrency: action,
+                cancelEdit: action
             }
         );
     }
@@ -58,6 +60,11 @@ class BookingsViewStore {
 
     setSelectedCurrency(tabIndex: number) {
         this.selectedCurrency = this.currencies[tabIndex];
+    }
+
+    cancelEdit() {
+        Notification.show("cancel edit");
+        this.selectedAccount = null;
     }
 }
 

@@ -8,7 +8,6 @@ import '@vaadin/text-field';
 import '@vaadin/multi-select-combo-box';
 
 import {Binder, field} from '@hilla/form';
-import {accountsViewStore} from "Frontend/views/accounts/accounts-view-store.ts";
 import AccountDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDtoModel.ts";
 import {bookingsViewStore} from "Frontend/views/bookings/bookings-view-store.ts";
 
@@ -35,12 +34,12 @@ export class AccountForm extends View {
                 style="--vaadin-field-default-width: 18em">
                 <vaadin-text-field
                         class="flex-grow"
-                        label="Konto-Name"
+                        label="Account Name"
                         ${field(model.accountName)}
                 ></vaadin-text-field>
 
                 <vaadin-text-field
-                        label="Konto-Nummer"
+                        label="Account Nummer"
                         ${field(model.accountCode)}
                 ></vaadin-text-field>
             </div>
@@ -52,7 +51,7 @@ export class AccountForm extends View {
                 <vaadin-button theme="error" @click=${this.delete}>
                     Löschen
                 </vaadin-button>
-                <vaadin-button theme="tertiary" @click=${accountsViewStore.cancelEdit}>
+                <vaadin-button theme="tertiary" @click=${bookingsViewStore.cancelEdit}>
                     Abbrechen
                 </vaadin-button>
             </div>
