@@ -18,8 +18,8 @@ export class AccountForm extends View {
     constructor() {
         super();
         this.autorun(() => {
-            if (bookingsViewStore.selectedAccount) {
-                this.binder.read(bookingsViewStore.selectedAccount.data);
+            if (bookingsViewStore.editedAccount) {
+                this.binder.read(bookingsViewStore.editedAccount);
             } else {
                 this.binder.clear();
             }

@@ -36,6 +36,8 @@ test('creates empty root account', () => {
     expect(account.lookUpAccountCurrency("11")).toBe(undefined);
     expect(account.lookupAccountCurrencies(currencyDto)).toStrictEqual([]);
     expect(account.currencies).toStrictEqual([]);
+    expect(account.matchesFilter(_ => true)).toBe(true);
+    expect(account.matchesFilter(_ => false)).toBe(false);
 })
 
 test('creates hierarchy', () => {
@@ -82,4 +84,6 @@ test('creates hierarchy', () => {
     expect(accountCurrency?.account.data).toBe(child_1_1);
     expect(account.lookupAccountCurrencies(currencyDto).map(ac => ac.data)).toStrictEqual([ac]);
     expect(account.currencies.map(c => c.currencyCode)).toStrictEqual(["EUR"]);
+    expect(account.matchesFilter(a => a.accountName === "child_2")).toBe(true);
+    expect(account.filteredChildren).length(1);
 })

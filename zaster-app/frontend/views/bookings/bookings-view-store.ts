@@ -1,37 +1,50 @@
 import {GridDataProviderCallback, GridDataProviderParams} from "@vaadin/grid";
 import {Account} from "Frontend/model/tracking/Account.ts";
 import {accountingStore, trackingStore} from "Frontend/stores/app-store.ts";
-import {action, makeObservable, observable} from "mobx";
+import {action, computed, makeObservable, observable} from "mobx";
 import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDto.ts";
 import {Transfer} from "Frontend/model/tracking/Transfer.ts";
+import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
+import AccountDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDtoModel.ts";
 import {Notification} from "@vaadin/notification";
 
 class BookingsViewStore {
     selectedAccount: Account | null = null;
     selectedCurrency: CurrencyDto | null = null;
+    filterText = '';
+    editedAccount: AccountDto | null = null;
 
     constructor() {
         makeObservable(this,
             {
                 selectedAccount: observable.ref,
                 selectedCurrency: observable.ref,
+                filterText: observable,
+                filteredAccounts: computed,
+                editedAccount: observable.ref,
                 setSelectedAccount: action,
                 setSelectedCurrency: action,
+                editNew: action,
                 cancelEdit: action
             }
         );
     }
 
-    dataProvider(
+    dataProvider = (
         params: GridDataProviderParams<Account>,
         callback: GridDataProviderCallback<Account>
-    ) {
-        if (params.parentItem) {
-            const parentItem: Account = params.parentItem;
-            callback(parentItem.children || [], parentItem.children?.length);
-        } else {
-            callback(accountingStore._rootAccounts, accountingStore._rootAccounts.length);
-        }
+    ) => {
+        const accounts = params.parentItem ? params.parentItem.filteredChildren : this.filteredAccounts;
+        callback(accounts, accounts.length);
+    }
+
+    get filteredAccounts() {
+        const nameFilter = new RegExp(this.filterText, 'i');
+        const accountFilter = (account: Account) => nameFilter.test(account.accountName);
+        const accounts = accountingStore._rootAccounts;
+        return accounts.filter((account) =>
+            account.matchesFilter(accountFilter)
+        );
     }
 
     get currencies(): CurrencyDto[] {
@@ -62,9 +75,17 @@ class BookingsViewStore {
         this.selectedCurrency = this.currencies[tabIndex];
     }
 
+    updateFilter(filterText: string) {
+        this.filterText = filterText;
+    }
+
+    editNew() {
+        Notification.show("editNew");
+        this.editedAccount = AccountDtoModel.createEmptyValue();
+    }
+
     cancelEdit() {
-        Notification.show("cancel edit");
-        this.selectedAccount = null;
+        this.editedAccount = null;
     }
 }
 

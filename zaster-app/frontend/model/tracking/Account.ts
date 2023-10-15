@@ -8,6 +8,8 @@ export class Account {
     children: Account[] = [];
     accountCurrencies: AccountCurrency[] = [];
 
+    filteredChildren: Account[] = [];
+
     constructor(parent: Account | null, data: AccountDto, currencyLookup: (id: string) => CurrencyDto) {
         this.parent = parent;
         this.data = data;
@@ -23,9 +25,30 @@ export class Account {
         }
     }
 
+    matchesFilter(filter: (a: Account) => boolean): boolean {
+        if (this.children) {
+            this.filteredChildren = this.children.filter(filter);
+        }
+        return this.filteredChildren.length > 0 || filter(this);
+    }
+
     lookupAccountCurrencies(currency: CurrencyDto): AccountCurrency[] {
         return this.accountCurrencies.filter(ac => ac.currency === currency)
             .concat(this.children.flatMap(a => a.lookupAccountCurrencies(currency)));
+    }
+
+    lookUpAccountCurrency(id: string): AccountCurrency | undefined {
+        let account = this.accountCurrencies.find(a => id === a.data.id.uuid);
+        if (account) {
+            return account;
+        }
+        for (const child of this.children) {
+            account = child.lookUpAccountCurrency(id);
+            if (account) {
+                return account;
+            }
+        }
+        return undefined;
     }
 
     get currencies(): CurrencyDto[] {
@@ -47,19 +70,5 @@ export class Account {
 
     get parentAccountName() {
         return this.parent?.accountName;
-    }
-
-    lookUpAccountCurrency(id: string): AccountCurrency | undefined {
-        let account = this.accountCurrencies.find(a => id === a.data.id.uuid);
-        if (account) {
-            return account;
-        }
-        for (const child of this.children) {
-            account = child.lookUpAccountCurrency(id);
-            if (account) {
-                return account;
-            }
-        }
-        return undefined;
     }
 }

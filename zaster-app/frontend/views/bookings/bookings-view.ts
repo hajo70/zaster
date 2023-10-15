@@ -8,6 +8,7 @@ import '@vaadin/grid/vaadin-grid-column';
 import '@vaadin/grid/vaadin-grid-tree-column';
 import '@vaadin/grid/vaadin-grid-sort-column';
 import '@vaadin/split-layout';
+import '@vaadin/icon'
 
 import {TabsSelectedChangedEvent} from "@vaadin/tabs";
 import {Grid} from "@vaadin/grid";
@@ -23,14 +24,28 @@ export class BookingsView extends View {
     protected override render() {
         return html`
             <vaadin-split-layout class="h-full">
-                <vaadin-grid class="accounts-grid flex-grow-0" theme="compact"
-                             .itemHasChildrenPath="${'hasChildren'}"
-                             .dataProvider="${bookingsViewStore.dataProvider}"
-                             .selectedItems=${[bookingsViewStore.selectedAccount]}
-                             @active-item-changed=${this.handleGridSelection}
-                >
-                    <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
-                </vaadin-grid>
+                <div class="flex flex-col flex-grow-0">
+                    <div class="toolbar flex gap-s">
+                        <vaadin-text-field
+                                placeholder="Filter"
+                                .value=${bookingsViewStore.filterText}
+                                @input=${this.updateFilter}
+                                clear-button-visible
+                        ></vaadin-text-field>
+                        <vaadin-button @click=${bookingsViewStore.editNew}>
+                            <vaadin-icon icon="lumo:plus"></vaadin-icon>
+                        </vaadin-button>
+                    </div>
+                    <vaadin-grid theme="compact"
+                                 class="accounts-grid"
+                                 .itemHasChildrenPath="${'hasChildren'}"
+                                 .dataProvider="${bookingsViewStore.dataProvider}"
+                                 .selectedItems=${[bookingsViewStore.selectedAccount]}
+                                 @active-item-changed=${this.handleGridSelection}
+                    >
+                        <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
+                    </vaadin-grid>
+                </div>
                 <div class="flex flex-col h-full flex-grow">
                     <vaadin-grid .items="${bookingsViewStore.transfers}" theme="compact" column-reordering-allowed>
                         <vaadin-grid-sort-column path="bookingDate" resizable></vaadin-grid-sort-column>
@@ -44,8 +59,8 @@ export class BookingsView extends View {
             </vaadin-split-layout>
             <account-form
                     class="flex flex-col gap-s"
-                    ?hidden=${!bookingsViewStore.selectedAccount}
-                    @accounts-changed=${this.updateGrid}
+                    ?hidden=${!bookingsViewStore.editedAccount}
+                    @accounts-changed=${this.updateAccountsGrid}
             ></account-form>
         `;
     }
@@ -71,8 +86,13 @@ export class BookingsView extends View {
         bookingsViewStore.setSelectedCurrency(e.detail.value);
     }
 
-    updateGrid() {
+    updateAccountsGrid() {
         this.accountsGrid.clearCache();
+    }
+
+    updateFilter(ev: { target: HTMLInputElement }) {
+        bookingsViewStore.updateFilter(ev.target.value);
+        this.updateAccountsGrid();
     }
 
     connectedCallback() {
