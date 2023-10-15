@@ -6,7 +6,6 @@ import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/Curr
 import {Transfer} from "Frontend/model/tracking/Transfer.ts";
 import AccountDto from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDto.ts";
 import AccountDtoModel from "Frontend/generated/de/spricom/zaster/dtos/tracking/AccountDtoModel.ts";
-import {Notification} from "@vaadin/notification";
 
 class BookingsViewStore {
     selectedAccount: Account | null = null;
@@ -80,7 +79,6 @@ class BookingsViewStore {
     }
 
     editNew() {
-        Notification.show("editNew");
         this.editedAccount = AccountDtoModel.createEmptyValue();
     }
 

@@ -1,4 +1,4 @@
-import {customElement, query} from "lit/decorators.js";
+import {customElement, query, state} from "lit/decorators.js";
 import {View} from "Frontend/views/view.ts";
 import {html} from "lit";
 import {bookingsViewStore} from "Frontend/views/bookings/bookings-view-store.ts";
@@ -9,17 +9,23 @@ import '@vaadin/grid/vaadin-grid-tree-column';
 import '@vaadin/grid/vaadin-grid-sort-column';
 import '@vaadin/split-layout';
 import '@vaadin/icon'
+import '@vaadin/menu-bar'
+import '@vaadin/context-menu'
 
 import {TabsSelectedChangedEvent} from "@vaadin/tabs";
 import {Grid} from "@vaadin/grid";
 import './account-form';
 import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDto.ts";
+import {columnBodyRenderer} from "@vaadin/grid/lit";
 
 @customElement('bookings-view')
 export class BookingsView extends View {
 
     @query("vaadin-grid.accounts-grid")
     accountsGrid!: Grid;
+
+    @state()
+    private items = [{text: 'View'}, {text: 'Edit'}, {text: 'Delete'}];
 
     protected override render() {
         return html`
@@ -32,19 +38,32 @@ export class BookingsView extends View {
                                 @input=${this.updateFilter}
                                 clear-button-visible
                         ></vaadin-text-field>
-                        <vaadin-button @click=${bookingsViewStore.editNew}>
+                        <vaadin-button @click=${this.editNew}>
                             <vaadin-icon icon="lumo:plus"></vaadin-icon>
                         </vaadin-button>
                     </div>
-                    <vaadin-grid theme="compact"
-                                 class="accounts-grid"
-                                 .itemHasChildrenPath="${'hasChildren'}"
-                                 .dataProvider="${bookingsViewStore.dataProvider}"
-                                 .selectedItems=${[bookingsViewStore.selectedAccount]}
-                                 @active-item-changed=${this.handleGridSelection}
-                    >
-                        <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
-                    </vaadin-grid>
+                    <vaadin-context-menu .items=${this.items} class="h-full">
+                        <vaadin-grid theme="compact"
+                                     class="accounts-grid h-full"
+                                     .itemHasChildrenPath="${'hasChildren'}"
+                                     .dataProvider="${bookingsViewStore.dataProvider}"
+                                     .selectedItems=${[bookingsViewStore.selectedAccount]}
+                                     @active-item-changed=${this.handleGridSelection}
+                        >
+                            <vaadin-grid-tree-column path="accountName"></vaadin-grid-tree-column>
+                            <vaadin-grid-column
+                                    width="50px"
+                                    flex-grow="0"
+                                    ${columnBodyRenderer(
+                                            () => html`
+                                                <vaadin-menu-bar .items=${this.items}
+                                                                 theme="tertiary"></vaadin-menu-bar>
+                                            `,
+                                            []
+                                    )}
+                            ></vaadin-grid-column>
+                        </vaadin-grid>
+                    </vaadin-context-menu>
                 </div>
                 <div class="flex flex-col h-full flex-grow">
                     <vaadin-grid .items="${bookingsViewStore.transfers}" theme="compact" column-reordering-allowed>
@@ -93,6 +112,10 @@ export class BookingsView extends View {
     updateFilter(ev: { target: HTMLInputElement }) {
         bookingsViewStore.updateFilter(ev.target.value);
         this.updateAccountsGrid();
+    }
+
+    editNew() {
+        bookingsViewStore.editNew();
     }
 
     connectedCallback() {
