@@ -11,12 +11,18 @@ import '@vaadin/split-layout';
 import '@vaadin/icon'
 import '@vaadin/menu-bar'
 import '@vaadin/context-menu'
+import {Notification} from "@vaadin/notification";
 
 import {TabsSelectedChangedEvent} from "@vaadin/tabs";
 import {Grid} from "@vaadin/grid";
 import './account-form';
 import CurrencyDto from "Frontend/generated/de/spricom/zaster/dtos/settings/CurrencyDto.ts";
 import {columnBodyRenderer} from "@vaadin/grid/lit";
+
+interface Item {
+    text: string,
+    handler: () => void
+}
 
 @customElement('bookings-view')
 export class BookingsView extends View {
@@ -25,7 +31,10 @@ export class BookingsView extends View {
     accountsGrid!: Grid;
 
     @state()
-    private items = [{text: 'View'}, {text: 'Edit'}, {text: 'Delete'}];
+    private items : Item[] = [
+        {text: 'View', handler: this.handleView},
+        {text: 'Edit', handler: this.handleEdit},
+        {text: 'Delete', handler: this.handleDelete}];
 
     protected override render() {
         return html`
@@ -42,7 +51,10 @@ export class BookingsView extends View {
                             <vaadin-icon icon="lumo:plus"></vaadin-icon>
                         </vaadin-button>
                     </div>
-                    <vaadin-context-menu .items=${this.items} class="h-full">
+                    <vaadin-context-menu .items=${this.items} 
+                                         class="h-full"
+                                         @item-selected=${this.handleItemSelected}
+                    >
                         <vaadin-grid theme="compact"
                                      class="accounts-grid h-full"
                                      .itemHasChildrenPath="${'hasChildren'}"
@@ -57,7 +69,10 @@ export class BookingsView extends View {
                                     ${columnBodyRenderer(
                                             () => html`
                                                 <vaadin-menu-bar .items=${this.items}
-                                                                 theme="tertiary"></vaadin-menu-bar>
+                                                                 theme="tertiary"
+                                                                 @item-selected=${this.handleItemSelected}
+                                                >
+                                                </vaadin-menu-bar>
                                             `,
                                             []
                                     )}
@@ -99,6 +114,24 @@ export class BookingsView extends View {
             return;
         }
         bookingsViewStore.setSelectedAccount(ev.detail.value);
+    }
+
+    handleItemSelected(ev: CustomEvent) {
+        this.items
+            .filter(item => item.text === ev.detail.value.text)
+            .forEach(item => item.handler())
+    }
+
+    handleView() {
+        Notification.show("View!");
+    }
+
+    handleEdit() {
+        Notification.show("Edit!");
+    }
+
+    handleDelete() {
+        Notification.show("Delete!");
     }
 
     selectedChanged(e: TabsSelectedChangedEvent) {
