@@ -11,6 +11,7 @@ class BookingsViewStore {
     selectedAccount: Account | null = null;
     selectedCurrency: CurrencyDto | null = null;
     filterText = '';
+    editedParentAccount: Account | null = null;
     editedAccount: AccountDto | null = null;
 
     constructor() {
@@ -20,6 +21,7 @@ class BookingsViewStore {
                 selectedCurrency: observable.ref,
                 filterText: observable,
                 filteredAccounts: computed,
+                editedParentAccount: observable.ref,
                 editedAccount: observable.ref,
                 setSelectedAccount: action,
                 setSelectedCurrency: action,
@@ -78,11 +80,18 @@ class BookingsViewStore {
         this.filterText = filterText;
     }
 
-    editNew() {
+    editNew(parent: Account | null) {
+        this.editedParentAccount = parent;
         this.editedAccount = AccountDtoModel.createEmptyValue();
     }
 
+    editCurrent(current: Account) {
+        this.editedParentAccount = null;
+        this.editedAccount = current.data;
+    }
+
     cancelEdit() {
+        this.editedParentAccount = null;
         this.editedAccount = null;
     }
 }

@@ -51,11 +51,15 @@ export class AccountForm extends View {
                 <vaadin-button theme="error" @click=${this.delete}>
                     Löschen
                 </vaadin-button>
-                <vaadin-button theme="tertiary" @click=${bookingsViewStore.cancelEdit}>
+                <vaadin-button theme="tertiary" @click=${this.onCancel}>
                     Abbrechen
                 </vaadin-button>
             </div>
         `;
+    }
+
+    onCancel() {
+        bookingsViewStore.cancelEdit();
     }
 
     async save() {

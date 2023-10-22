@@ -10,7 +10,6 @@ import '@vaadin/grid/vaadin-grid-sort-column';
 import '@vaadin/split-layout';
 import '@vaadin/icon'
 import '@vaadin/menu-bar'
-import {Notification} from "@vaadin/notification";
 
 import {TabsSelectedChangedEvent} from "@vaadin/tabs";
 import {Grid} from "@vaadin/grid";
@@ -41,7 +40,7 @@ export class BookingsView extends View {
                                 @input=${this.updateFilter}
                                 clear-button-visible
                         ></vaadin-text-field>
-                        <vaadin-button @click=${this.editNew}>
+                        <vaadin-button @click=${this.onAddTopLevel}>
                             <vaadin-icon icon="lumo:plus"></vaadin-icon>
                         </vaadin-button>
                     </div>
@@ -120,15 +119,19 @@ export class BookingsView extends View {
     }
 
     onAdd(account: Account) {
-        Notification.show("Add: " + account.accountName);
+        bookingsViewStore.editNew(account);
     }
 
     onEdit(account: Account) {
-        Notification.show("Edit: " + account.accountName);
+        bookingsViewStore.editCurrent(account);
     }
 
     onDelete(account: Account) {
-        Notification.show("Delete: " + account.accountName);
+        bookingsViewStore.editCurrent(account);
+    }
+
+    onAddTopLevel() {
+        bookingsViewStore.editNew(null);
     }
 
     selectedChanged(e: TabsSelectedChangedEvent) {
@@ -142,10 +145,6 @@ export class BookingsView extends View {
     updateFilter(ev: { target: HTMLInputElement }) {
         bookingsViewStore.updateFilter(ev.target.value);
         this.updateAccountsGrid();
-    }
-
-    editNew() {
-        bookingsViewStore.editNew();
     }
 
     connectedCallback() {
