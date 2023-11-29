@@ -64,7 +64,8 @@ class AccountsViewStore {
 
     async saveAccount(account: AccountDto) {
         try {
-            const saved = await AccountingEndpoint.saveAccountGroup(account);
+            // const saved = await AccountingEndpoint.saveAccountGroup(account);
+            const saved = null;
             if (saved) {
                 this.saveLocal(saved);
             } else {
