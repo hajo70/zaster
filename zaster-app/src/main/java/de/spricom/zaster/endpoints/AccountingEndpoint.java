@@ -3,7 +3,6 @@ package de.spricom.zaster.endpoints;
 import de.spricom.zaster.dtos.tracking.AccountDto;
 import de.spricom.zaster.entities.tracking.AccountEntity;
 import de.spricom.zaster.repository.AccountService;
-import de.spricom.zaster.repository.CurrencyService;
 import de.spricom.zaster.security.AuthenticatedUser;
 import dev.hilla.Endpoint;
 import jakarta.annotation.security.PermitAll;
@@ -19,12 +18,12 @@ public class AccountingEndpoint {
 
     private final AuthenticatedUser authenticatedUser;
     private final AccountService accountService;
-    private final CurrencyService currencyService;
 
-    public AccountDto saveAccountGroup(AccountDto group) {
+    public AccountDto saveAccount(AccountDto group) {
         AccountEntity entity = new AccountEntity();
         DtoUtils.setId(entity, group.id());
         entity.setAccountName(group.accountName());
+        entity.setAccountCode(group.accountCode());
         entity.setTenant(authenticatedUser.getCurrentTenant());
         if (StringUtils.isNotEmpty(group.parentId())) {
             entity.setParent(accountService.getAccount(group.parentId()));
