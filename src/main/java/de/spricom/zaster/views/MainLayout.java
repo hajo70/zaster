@@ -2,9 +2,6 @@ package de.spricom.zaster.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.avatar.Avatar;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
@@ -12,19 +9,12 @@ import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Nav;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
-import de.spricom.zaster.entities.settings.UserEntity;
-import de.spricom.zaster.security.AuthenticatedUser;
 import de.spricom.zaster.views.helloworld.HelloWorldView;
 import de.spricom.zaster.views.masterdetail.MasterDetailView;
 import de.spricom.zaster.views.personform.PersonFormView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
-
-import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -63,13 +53,7 @@ public class MainLayout extends AppLayout {
 
     }
 
-    private final AuthenticatedUser authenticatedUser;
-    private final AccessAnnotationChecker accessChecker;
-
-    public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
-        this.authenticatedUser = authenticatedUser;
-        this.accessChecker = accessChecker;
-
+    public MainLayout() {
         addToNavbar(createHeaderContent());
     }
 
@@ -84,34 +68,6 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
 
-        Optional<UserEntity> maybeUser = authenticatedUser.get();
-        if (maybeUser.isPresent()) {
-            UserEntity user = maybeUser.get();
-
-            Avatar avatar = new Avatar(user.getName());
-            avatar.setThemeName("xsmall");
-            avatar.getElement().setAttribute("tabindex", "-1");
-
-            MenuBar userMenu = new MenuBar();
-            userMenu.setThemeName("tertiary-inline contrast");
-
-            MenuItem userName = userMenu.addItem("");
-            Div div = new Div();
-            div.add(avatar);
-            div.add(user.getName());
-            div.add(new Icon("lumo", "dropdown"));
-            div.getElement().getStyle().set("display", "flex");
-            div.getElement().getStyle().set("align-items", "center");
-            div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
-            userName.add(div);
-            userName.getSubMenu().addItem("Sign out", e -> authenticatedUser.logout());
-
-            layout.add(userMenu);
-        } else {
-            Anchor loginLink = new Anchor("login", "Sign in");
-            layout.add(loginLink);
-        }
-
         Nav nav = new Nav();
         nav.addClassNames(Display.FLEX, Overflow.AUTO, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
 
@@ -121,10 +77,7 @@ public class MainLayout extends AppLayout {
         nav.add(list);
 
         for (MenuItemInfo menuItem : createMenuItems()) {
-            if (accessChecker.hasAccess(menuItem.getView())) {
-                list.add(menuItem);
-            }
-
+            list.add(menuItem);
         }
 
         header.add(layout, nav);
