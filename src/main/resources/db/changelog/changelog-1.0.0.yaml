@@ -4,88 +4,6 @@ databaseChangeLog:
       author: EntitiesToLiquiTool
       changes:
         - createTable:
-            tableName: TENANT
-            columns:
-              - column:
-                  name: ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    primaryKey: true
-                    primaryKeyName: PK_TENANT
-              - column:
-                  name: VERSION
-                  type: java.sql.Types.BIGINT
-              - column:
-                  name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
-              - column:
-                  name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
-              - column:
-                  name: NAME
-                  type: java.sql.Types.NVARCHAR(255)
-              - column:
-                  name: LOCALE
-                  type: java.sql.Types.NVARCHAR(63)
-              - column:
-                  name: TIMEZONE
-                  type: java.sql.Types.NVARCHAR(63)
-        - createTable:
-            tableName: USERZ
-            columns:
-              - column:
-                  name: ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    primaryKey: true
-                    primaryKeyName: PK_USERZ
-              - column:
-                  name: VERSION
-                  type: java.sql.Types.BIGINT
-              - column:
-                  name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
-              - column:
-                  name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
-              - column:
-                  name: TENANT_ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-                    foreignKeyName: FK_USERZ_TENANT_ID_TENANT
-                    referencedTableName: TENANT
-                    referencedColumnNames: ID
-              - column:
-                  name: USERNAME
-                  type: java.sql.Types.NVARCHAR(255)
-                  constraints:
-                    unique: true
-                    uniqueConstraintName: UQ_USERZ_USERNAME
-              - column:
-                  name: NAME
-                  type: java.sql.Types.NVARCHAR(255)
-              - column:
-                  name: HASHED_PASSWORD
-                  type: java.sql.Types.NVARCHAR(255)
-        - createTable:
-            tableName: USER_ROLE
-            columns:
-              - column:
-                  name: USER_ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-                    foreignKeyName: FK_USER_ROLE
-                    referencedTableName: USERZ
-                    referencedColumnNames: ID
-                    deleteCascade: true
-              - column:
-                  name: USER_ROLES
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-        - createTable:
             tableName: IMPORT
             columns:
               - column:
@@ -99,30 +17,16 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
-              - column:
-                  name: TENANT_ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-                    foreignKeyName: FK_IMPORT_TENANT_ID_TENANT
-                    referencedTableName: TENANT
-                    referencedColumnNames: ID
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: IMPORTED_AT_DATE
                   type: java.sql.Types.DATE
               - column:
                   name: IMPORTED_AT_TIME
                   type: java.sql.Types.TIME
-              - column:
-                  name: IMPORTED_AT_OFFSET
-                  type: java.sql.Types.NVARCHAR(6)
-              - column:
-                  name: IMPORTED_AT_ZONE
-                  type: java.sql.Types.NVARCHAR(63)
               - column:
                   name: IMPORTER_NAME
                   type: java.sql.Types.NVARCHAR(255)
@@ -140,10 +44,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: IMPORTED_ID
                   type: java.sql.Types.NVARCHAR(63)
@@ -178,18 +82,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
-              - column:
-                  name: TENANT_ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-                    foreignKeyName: FK_CURRENCY_TENANT_ID_TENANT
-                    referencedTableName: TENANT
-                    referencedColumnNames: ID
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: CURRENCY_CODE
                   type: java.sql.Types.NVARCHAR(8)
@@ -216,18 +112,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
-              - column:
-                  name: TENANT_ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-                    foreignKeyName: FK_ACCOUNT_TENANT_ID_TENANT
-                    referencedTableName: TENANT
-                    referencedColumnNames: ID
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: PARENT_ID
                   type: java.sql.Types.NVARCHAR(63)
@@ -258,10 +146,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: ACCOUNT_ID
                   type: java.sql.Types.NVARCHAR(63)
@@ -292,10 +180,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: ACCOUNT_CURRENCY_ID
                   type: java.sql.Types.NVARCHAR(63)
@@ -310,12 +198,6 @@ databaseChangeLog:
               - column:
                   name: TAKEN_AT_TIME
                   type: java.sql.Types.TIME
-              - column:
-                  name: TAKEN_AT_OFFSET
-                  type: java.sql.Types.NVARCHAR(6)
-              - column:
-                  name: TAKEN_AT_ZONE
-                  type: java.sql.Types.NVARCHAR(63)
               - column:
                   name: BALANCE
                   type: java.sql.Types.DECIMAL(40, 15)
@@ -340,22 +222,16 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: BOOKED_AT_DATE
                   type: java.sql.Types.DATE
               - column:
                   name: BOOKED_AT_TIME
                   type: java.sql.Types.TIME
-              - column:
-                  name: BOOKED_AT_OFFSET
-                  type: java.sql.Types.NVARCHAR(6)
-              - column:
-                  name: BOOKED_AT_ZONE
-                  type: java.sql.Types.NVARCHAR(63)
               - column:
                   name: DESCRIPTION
                   type: java.sql.Types.NVARCHAR(4095)
@@ -386,10 +262,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+                  type: java.sql.Types.TIMESTAMP
               - column:
                   name: BOOKING_ID
                   type: java.sql.Types.NVARCHAR(63)
@@ -412,12 +288,6 @@ databaseChangeLog:
               - column:
                   name: TRANSFERRED_AT_TIME
                   type: java.sql.Types.TIME
-              - column:
-                  name: TRANSFERRED_AT_OFFSET
-                  type: java.sql.Types.NVARCHAR(6)
-              - column:
-                  name: TRANSFERRED_AT_ZONE
-                  type: java.sql.Types.NVARCHAR(63)
               - column:
                   name: AMOUNT
                   type: java.sql.Types.DECIMAL(40, 15)

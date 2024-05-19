@@ -19,24 +19,25 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import de.spricom.zaster.entities.tracking.AccountEntity;
-import de.spricom.zaster.repository.AccountService;
+import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+import de.spricom.zaster.data.Account;
+import de.spricom.zaster.services.AccountService;
 import de.spricom.zaster.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @PageTitle("Master-Detail")
 @Route(value = "master-detail/:sampleBookID?/:action?(edit)", layout = MainLayout.class)
 @PermitAll
 public class MasterDetailView extends Div implements BeforeEnterObserver {
 
-    private final String ACCOUNT_ID = "accountID";
+    private final String ACCOUNT_ID = "accountId";
     private final String ACCOUNT_EDIT_ROUTE_TEMPLATE = "master-detail/%s/edit";
 
-    private final Grid<AccountEntity> grid = new Grid<>(AccountEntity.class, false);
+    private final Grid<Account> grid = new Grid<>(Account.class, false);
 
     private TextField accountName;
     private TextField accountCode;
@@ -44,9 +45,9 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
     private final Button cancel = new Button("Cancel");
     private final Button save = new Button("Save");
 
-    private final BeanValidationBinder<AccountEntity> binder;
+    private final BeanValidationBinder<Account> binder;
 
-    private AccountEntity account;
+    private Account account;
 
     private final AccountService accountService;
 
@@ -65,6 +66,9 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
         // Configure Grid
         grid.addColumn("accountName").setAutoWidth(true);
         grid.addColumn("accountCode").setAutoWidth(true);
+        grid.setItems(query -> accountService.list(
+                        PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
+                .stream());
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 
         // when a row is selected or deselected, populate form
@@ -78,7 +82,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
         });
 
         // Configure Form
-        binder = new BeanValidationBinder<>(AccountEntity.class);
+        binder = new BeanValidationBinder<>(Account.class);
 
         // Bind fields. This is where you'd define e.g. validation rules
         binder.bindInstanceFields(this);
@@ -91,7 +95,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
         save.addClickListener(e -> {
             try {
                 if (this.account == null) {
-                    this.account = new AccountEntity();
+                    this.account = new Account();
                 }
                 binder.writeBean(this.account);
                 accountService.saveAccount(this.account);
@@ -112,13 +116,13 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Optional<UUID> sampleBookId = event.getRouteParameters().get(ACCOUNT_ID).map(UUID::fromString);
-        if (sampleBookId.isPresent()) {
-            Optional<AccountEntity> sampleBookFromBackend = Optional.ofNullable(accountService.getAccount(sampleBookId.get().toString()));
-            if (sampleBookFromBackend.isPresent()) {
-                populateForm(sampleBookFromBackend.get());
+        Optional<String> sampleAccountId = event.getRouteParameters().get(ACCOUNT_ID);
+        if (sampleAccountId.isPresent()) {
+            Optional<Account> sampleAccountFromBackend = accountService.getAccount(sampleAccountId.get());
+            if (sampleAccountFromBackend.isPresent()) {
+                populateForm(sampleAccountFromBackend.get());
             } else {
-                Notification.show(String.format("The requested sampleBook was not found, ID = %s", sampleBookId.get()),
+                Notification.show(String.format("The requested sampleBook was not found, ID = %s", sampleAccountId.get()),
                         3000, Notification.Position.BOTTOM_START);
                 // when a row is selected but the data is no longer available,
                 // refresh grid
@@ -172,7 +176,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
         populateForm(null);
     }
 
-    private void populateForm(AccountEntity value) {
+    private void populateForm(Account value) {
         this.account = value;
         binder.readBean(this.account);
     }

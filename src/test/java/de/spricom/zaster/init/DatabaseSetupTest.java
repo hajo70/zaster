@@ -1,22 +1,7 @@
 package de.spricom.zaster.init;
 
+import de.spricom.zaster.data.*;
 import de.spricom.zaster.entities.common.TrackingDateTime;
-import de.spricom.zaster.entities.settings.CurrencyEntity;
-import de.spricom.zaster.entities.settings.TenantEntity;
-import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
-import de.spricom.zaster.entities.tracking.AccountEntity;
-import de.spricom.zaster.entities.tracking.BookingEntity;
-import de.spricom.zaster.entities.tracking.SnapshotEntity;
-import de.spricom.zaster.entities.tracking.TransferEntity;
-import de.spricom.zaster.enums.tracking.CurrencyType;
-import de.spricom.zaster.enums.tracking.ZasterCurrency;
-import de.spricom.zaster.repository.settings.CurrencyRepository;
-import de.spricom.zaster.repository.settings.TenantRepository;
-import de.spricom.zaster.repository.tracking.AccountCurrencyRepository;
-import de.spricom.zaster.repository.tracking.AccountRepository;
-import de.spricom.zaster.repository.tracking.BookingRepository;
-import de.spricom.zaster.repository.tracking.SnapshotRepository;
-import de.spricom.zaster.repository.tracking.TransferRepository;
 import de.spricom.zaster.util.RemoteInMemConfig;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -39,9 +24,6 @@ public class DatabaseSetupTest {
     private static final BigDecimal SMALLEST_AMOUNT = new BigDecimal("0." + "0".repeat(14) + "1");
 
     @Autowired
-    private TenantRepository tenantRepository;
-
-    @Autowired
     private CurrencyRepository currencyRepository;
 
     @Autowired
@@ -59,10 +41,8 @@ public class DatabaseSetupTest {
     @Autowired
     private SnapshotRepository snapshotRepository;
 
-    private TenantEntity tenant;
-
-    private final Map<String, CurrencyEntity> currencies = new TreeMap<>();
-    private final Map<String, AccountCurrencyEntity> accounts = new TreeMap<>();
+    private final Map<String, Currency> currencies = new TreeMap<>();
+    private final Map<String, AccountCurrency> accounts = new TreeMap<>();
 
     @AfterEach
     void shutDown() {
@@ -71,7 +51,6 @@ public class DatabaseSetupTest {
 
     @Test
     void testDatabaseSchema() {
-        tenant = createTenant();
         var currency = createCurrency();
         var account = createAccount(currency);
         createSnapshot(account, TrackingDateTime.now(), BigDecimal.valueOf(421234, 4));
@@ -84,14 +63,8 @@ public class DatabaseSetupTest {
         createTransaction();
     }
 
-    private TenantEntity createTenant() {
-        var tenant = new TenantEntity();
-        return tenantRepository.save(tenant);
-    }
-
-    private CurrencyEntity createCurrency() {
-        var currency = new CurrencyEntity();
-        currency.setTenant(tenant);
+    private Currency createCurrency() {
+        var currency = new Currency();
         currency.setCurrencyCode("EUR");
         currency.setCurrencyName("Euro");
         currency.setCurrencyType(CurrencyType.FIAT);
@@ -101,12 +74,11 @@ public class DatabaseSetupTest {
         return currency;
     }
 
-    private AccountCurrencyEntity createAccount(CurrencyEntity currency) {
-        var accountGroup = new AccountEntity();
-        accountGroup.setTenant(tenant);
+    private AccountCurrency createAccount(Currency currency) {
+        var accountGroup = new Account();
         accountGroup.setAccountName("My bank account");
         accountGroup = accountRepository.save(accountGroup);
-        var account = new AccountCurrencyEntity();
+        var account = new AccountCurrency();
         account.setAccount(accountGroup);
         account.setCurrency(currency);
         account = accountCurrencyRepository.save(account);
@@ -114,8 +86,8 @@ public class DatabaseSetupTest {
         return account;
     }
 
-    private SnapshotEntity createSnapshot(AccountCurrencyEntity account, TrackingDateTime ts, BigDecimal amount) {
-        var snapshot = new SnapshotEntity();
+    private Snapshot createSnapshot(AccountCurrency account, TrackingDateTime ts, BigDecimal amount) {
+        var snapshot = new Snapshot();
         snapshot.setAccountCurrency(account);
         snapshot.setTakenAt(ts);
         snapshot.setBalance(amount);
@@ -123,20 +95,20 @@ public class DatabaseSetupTest {
         return snapshot;
     }
 
-    private BookingEntity createTransaction() {
-        var transaction = new BookingEntity();
+    private Booking createTransaction() {
+        var transaction = new Booking();
         transaction.setDescription("Sample transaction");
         transaction.setBookedAt(TrackingDateTime.now());
         transaction = bookingRepository.save(transaction);
-        AccountCurrencyEntity account = accounts.values().stream().findAny().get();
+        AccountCurrency account = accounts.values().stream().findAny().get();
         createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("500.1"));
         createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("499.98"));
         createBooking(transaction, account, TrackingDateTime.now(), new BigDecimal("0.01"));
         return transaction;
     }
 
-    private TransferEntity createBooking(BookingEntity transaction, AccountCurrencyEntity account, TrackingDateTime ts, BigDecimal amount) {
-        var booking = new TransferEntity();
+    private Transfer createBooking(Booking transaction, AccountCurrency account, TrackingDateTime ts, BigDecimal amount) {
+        var booking = new Transfer();
         booking.setBooking(transaction);
         booking.setAccountCurrency(account);
         booking.setTransferredAt(ts);

@@ -14,6 +14,7 @@ src/main/frontend/generated/
 pnpmfile.js
 vite.generated.ts
 src/main/frontend/index.html
+src/test/resources/application-initme.yaml
 
 # Browser drivers for local integration tests
 drivers/

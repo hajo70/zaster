@@ -1,15 +1,14 @@
 package de.spricom.zaster.importing.importers;
 
+import de.spricom.zaster.data.AccountCurrency;
+import de.spricom.zaster.data.Currency;
+import de.spricom.zaster.data.Import;
 import de.spricom.zaster.entities.common.TrackingDateTime;
-import de.spricom.zaster.entities.settings.CurrencyEntity;
-import de.spricom.zaster.entities.settings.TenantEntity;
-import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
-import de.spricom.zaster.entities.tracking.ImportEntity;
 import de.spricom.zaster.importing.CsvImporter;
 import de.spricom.zaster.importing.csv.CsvRow;
-import de.spricom.zaster.repository.AccountService;
-import de.spricom.zaster.repository.BookingService;
-import de.spricom.zaster.repository.CurrencyService;
+import de.spricom.zaster.services.AccountService;
+import de.spricom.zaster.services.BookingService;
+import de.spricom.zaster.services.CurrencyService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -26,6 +25,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Log4j2
 public class PostbankImporter implements CsvImporter {
+
     private static final String[] HEADER_COLUMNS = {
             "Buchungstag", // A
             "Wert", // B
@@ -51,13 +51,11 @@ public class PostbankImporter implements CsvImporter {
     private final AccountService accountService;
     private final BookingService bookingService;
 
-    @Override
     public String getName() {
         return "Postbank CSV";
     }
 
-    @Override
-    public Stats process(ImportEntity imported, List<CsvRow> rows) {
+    public Stats process(Import imported, List<CsvRow> rows) {
         checkHeader(rows.get(1), new String[] {
                 "Konto", // A
                 "Filial-/Kontonummer", // B
@@ -65,7 +63,7 @@ public class PostbankImporter implements CsvImporter {
                 "Währung", // D
         });
 
-        AccountCurrencyEntity account = getAccount(imported.getTenant(), rows.get(2));
+        AccountCurrency accountCurrency = getAccount(rows.get(2));
 
         var header = rows.get(7);
         checkHeader(header, HEADER_COLUMNS);
@@ -74,12 +72,12 @@ public class PostbankImporter implements CsvImporter {
         int importedCount = 0;
         for (CsvRow row : rows.subList(8, rows.size() - 1)) {
             var booking = toRecord(row);
-            if (bookingService.addBooking(imported, account, booking)) {
+            if (bookingService.addBooking(imported, accountCurrency, booking)) {
                 importedCount++;
             }
         }
         if (importedCount > 0) {
-            bookingService.addSnapshot(imported, account, toSnapshot(rows.get(rows.size() - 1)));
+            bookingService.addSnapshot(imported, accountCurrency, toSnapshot(rows.get(rows.size() - 1)));
         }
         return new Stats(totalCount, importedCount);
     }
@@ -132,12 +130,12 @@ public class PostbankImporter implements CsvImporter {
         parseMoney(snapshotRow.column("E")));
     }
 
-    private AccountCurrencyEntity getAccount(TenantEntity tenant, CsvRow accountRow) {
+    private AccountCurrency getAccount(CsvRow accountRow) {
         String accountName = accountRow.column("A");
         String iban = accountRow.column("C");
         String currencyCode = accountRow.column("D");
-        CurrencyEntity currency = currencyService.getOrCreateCurrencyByCode(tenant, currencyCode);
-        return accountService.getOrCreateAccountCurrency(tenant, iban, accountName, currency);
+        Currency currency = currencyService.getOrCreateCurrencyByCode(currencyCode);
+        return accountService.getOrCreateAccountCurrency(iban, accountName, currency);
     }
 
     private void checkHeader(CsvRow header, String[] columns) {

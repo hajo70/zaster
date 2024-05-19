@@ -1,16 +1,14 @@
 package de.spricom.zaster.tools.initdb;
 
-import de.spricom.zaster.entities.common.AbstractEntity;
-import de.spricom.zaster.entities.settings.CurrencyEntity;
-import de.spricom.zaster.entities.settings.TenantEntity;
-import de.spricom.zaster.entities.settings.UserEntity;
-import de.spricom.zaster.entities.tracking.AccountCurrencyEntity;
-import de.spricom.zaster.entities.tracking.AccountEntity;
-import de.spricom.zaster.entities.tracking.BookingEntity;
-import de.spricom.zaster.entities.tracking.FileSourceEntity;
-import de.spricom.zaster.entities.tracking.ImportEntity;
-import de.spricom.zaster.entities.tracking.SnapshotEntity;
-import de.spricom.zaster.entities.tracking.TransferEntity;
+import de.spricom.zaster.data.AbstractEntity;
+import de.spricom.zaster.data.Account;
+import de.spricom.zaster.data.AccountCurrency;
+import de.spricom.zaster.data.Booking;
+import de.spricom.zaster.data.Currency;
+import de.spricom.zaster.data.FileSource;
+import de.spricom.zaster.data.Import;
+import de.spricom.zaster.data.Snapshot;
+import de.spricom.zaster.data.Transfer;
 import jakarta.persistence.*;
 import org.dessertj.partitioning.ClazzPredicates;
 import org.dessertj.slicing.Classpath;
@@ -32,7 +30,7 @@ public class EntitiesToLiquiTool {
     @Test
     void listEntities() {
         Classpath cp = new Classpath();
-        String packageName = TenantEntity.class.getPackageName();
+        String packageName = Currency.class.getPackageName();
         String entitiesPackage = packageName.substring(0, packageName.indexOf("entities")) + "entities";
         Slice entities = cp.packageTreeOf(entitiesPackage)
                 .slice(ClazzPredicates.matchesAnnotation(AnnotationPattern.of(Entity.class)));
@@ -42,16 +40,14 @@ public class EntitiesToLiquiTool {
 
     @Test
     void exportEntities() throws FileNotFoundException {
-        schema.add(asLiquiTable(TenantEntity.class));
-        schema.add(asLiquiTable(UserEntity.class));
-        schema.add(asLiquiTable(ImportEntity.class));
-        schema.add(asLiquiTable(FileSourceEntity.class));
-        schema.add(asLiquiTable(CurrencyEntity.class));
-        schema.add(asLiquiTable(AccountEntity.class));
-        schema.add(asLiquiTable(AccountCurrencyEntity.class));
-        schema.add(asLiquiTable(SnapshotEntity.class));
-        schema.add(asLiquiTable(BookingEntity.class));
-        schema.add(asLiquiTable(TransferEntity.class));
+        schema.add(asLiquiTable(Import.class));
+        schema.add(asLiquiTable(FileSource.class));
+        schema.add(asLiquiTable(Currency.class));
+        schema.add(asLiquiTable(Account.class));
+        schema.add(asLiquiTable(AccountCurrency.class));
+        schema.add(asLiquiTable(Snapshot.class));
+        schema.add(asLiquiTable(Booking.class));
+        schema.add(asLiquiTable(Transfer.class));
         updateForeignKeys();
 
         schema.dump();
@@ -71,22 +67,22 @@ public class EntitiesToLiquiTool {
         }
     }
 
-    private LiquiTable asLiquiTable(Class<? extends AbstractEntity> entity) {
+    private LiquiTable asLiquiTable(Class<? extends AbstractEntity> entityClass) {
         var table = new LiquiTable();
-        table.setEntity(entity);
-        table.setTableName(tableName(entity));
-        addColumns(table, entity.getSuperclass());
-        addColumns(table, entity);
+        table.setEntity(entityClass);
+        table.setTableName(tableName(entityClass));
+        addColumns(table, entityClass.getSuperclass());
+        addColumns(table, entityClass);
         return table;
     }
 
-    private String tableName(Class<? extends AbstractEntity> entity) {
-        Table tab = entity.getAnnotation(Table.class);
-        return tab != null ? tab.name() : camelTo_(entity.getSimpleName());
+    private String tableName(Class<? extends AbstractEntity> entityClass) {
+        Table tab = entityClass.getAnnotation(Table.class);
+        return tab != null ? tab.name() : camelTo_(entityClass.getSimpleName());
     }
 
-    private void addColumns(LiquiTable table, Class<?> entity) {
-        for (Field field : entity.getDeclaredFields()) {
+    private void addColumns(LiquiTable table, Class<?> entityClass) {
+        for (Field field : entityClass.getDeclaredFields()) {
             if (field.isAnnotationPresent(Embedded.class)) {
                 addEmbeddedColumns(table, field);
             } else if (field.isAnnotationPresent(Enumerated.class)
@@ -148,8 +144,8 @@ public class EntitiesToLiquiTool {
         column.setField(field);
         if (isId(field)) {
             handleId(column);
-        } else if (isEntityRelation(field)) {
-            handleEntityRelation(column);
+        } else if (isRelation(field)) {
+            handleRelation(column);
         } else {
             column.setColumnName(columName(field));
             column.setColumnType(columnType(field));
@@ -169,11 +165,11 @@ public class EntitiesToLiquiTool {
         column.setPrimaryKey(true);
     }
 
-    private boolean isEntityRelation(Field field) {
+    private boolean isRelation(Field field) {
         return AbstractEntity.class.isAssignableFrom(field.getType());
     }
 
-    private void handleEntityRelation(LiquiColumn column) {
+    private void handleRelation(LiquiColumn column) {
         column.setColumnName(camelTo_(column.getField().getName()) + "_ID");
         column.setColumnType(LiquiColumn.ID_TYPE);
         JoinColumn joinColumn = column.getField().getAnnotation(JoinColumn.class);
