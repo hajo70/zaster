@@ -8,15 +8,14 @@
       "type": "java",
       "name": "Launch Application",
       "request": "launch",
-      "mainClass": "de.spricom.zaster.ZasterApplication",
-      "cwd": "${workspaceFolder}/zaster-app"
+      "mainClass": "de.spricom.zaster.Application"
     },
     {
       "type": "java",
       "request": "attach",
       "name": "Attach to Application started using Maven",
       "hostName": "localhost",
-      "port": 5059
+      "port": 5009
     }
   ]
 }

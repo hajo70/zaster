@@ -1,0 +1,41 @@
+server:
+  port: ${PORT:8080}
+  servlet.session.tracking-modes: cookie
+
+spring:
+  datasource:
+    url: jdbc:h2:~/h2db/zaster;AUTO_SERVER=TRUE
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+  h2:
+    console:
+      path: /h2-console
+      settings.trace: false
+      settings.web-allow-others: false
+      enabled: true
+  mustache:
+    check-template-location: false
+
+logging:
+  level:
+    org.atmosphere: warn
+    org.hibernate.SQL: info
+    org.hibernate.type.descriptor.sql: debug
+    org.springframework.security: info
+
+vaadin:
+  # Launch the default browser when starting the application in development mode
+  launch-browser: true
+
+  # To improve the performance during development.
+  # For more information https://vaadin.com/docs/latest/integrations/spring/configuration#special-configuration-parameters
+  allowed-packages:
+    - com.vaadin
+    - org.vaadin
+    - dev.hilla
+    - de.spricom.zaster
