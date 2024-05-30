@@ -2,8 +2,8 @@ package de.spricom.zaster.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.AnchorTarget;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Nav;
@@ -11,10 +11,8 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
+import de.spricom.zaster.views.accounts.AccountsView;
 import de.spricom.zaster.views.currencies.CurrenciesView;
-import de.spricom.zaster.views.helloworld.HelloWorldView;
-import de.spricom.zaster.views.masterdetail.MasterDetailView;
-import de.spricom.zaster.views.personform.PersonFormView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -60,14 +58,7 @@ public class MainLayout extends AppLayout {
 
     private Component createHeaderContent() {
         Header header = new Header();
-        header.addClassNames(BoxSizing.BORDER, Display.FLEX, FlexDirection.COLUMN, Width.FULL);
-
-        Div layout = new Div();
-        layout.addClassNames(Display.FLEX, AlignItems.CENTER, Padding.Horizontal.LARGE);
-
-        H1 appName = new H1("Zaster");
-        appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
-        layout.add(appName);
+        header.addClassNames(BoxSizing.BORDER, Display.FLEX, FlexDirection.ROW, Width.FULL);
 
         Nav nav = new Nav();
         nav.addClassNames(Display.FLEX, Overflow.AUTO, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
@@ -80,18 +71,31 @@ public class MainLayout extends AppLayout {
         for (MenuItemInfo menuItem : createMenuItems()) {
             list.add(menuItem);
         }
+        list.add(createH2ConsoleLink());
 
-        header.add(layout, nav);
+        header.add(nav);
         return header;
+    }
+
+    private ListItem createH2ConsoleLink() {
+        ListItem item = new ListItem();
+        // Use Lumo classnames for various styling
+        Span text = new Span("Datenbank-Konsole");
+        // Use Lumo classnames for various styling
+        text.addClassNames(FontWeight.MEDIUM, FontSize.MEDIUM, Whitespace.NOWRAP);
+
+        Anchor link = new Anchor("/h2-console", LineAwesomeIcon.DATABASE_SOLID.create(), text);
+        link.setTarget(AnchorTarget.BLANK);
+        link.addClassNames(Display.FLEX, Gap.XSMALL, Height.MEDIUM, AlignItems.CENTER, Padding.Horizontal.SMALL,
+                TextColor.BODY);
+        link.setRouterIgnore(true);
+        item.add(link);
+        return item;
     }
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", LineAwesomeIcon.GLOBE_SOLID.create(), HelloWorldView.class), //
-
-                new MenuItemInfo("Master-Detail", LineAwesomeIcon.COLUMNS_SOLID.create(), MasterDetailView.class), //
-
-                new MenuItemInfo("Person Form", LineAwesomeIcon.USER.create(), PersonFormView.class), //
+                new MenuItemInfo("Konten", LineAwesomeIcon.FILE_ALT_SOLID.create(), AccountsView.class), //
 
                 new MenuItemInfo("Währungen", LineAwesomeIcon.EURO_SIGN_SOLID.create(), CurrenciesView.class), //
         };

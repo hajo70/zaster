@@ -1,34 +1,34 @@
-.master-detail-view {
+.accounts-view {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.master-detail-view vaadin-split-layout {
+.accounts-view vaadin-split-layout {
   width: 100%;
   height: 100%;
 }
 
-.master-detail-view vaadin-grid {
+.accounts-view vaadin-grid {
   height: 100%;
 }
 
-.master-detail-view .editor-layout {
+.accounts-view .editor-layout {
   display: flex;
   flex-direction: column;
-  width: 400px;
+  width: 500px;
 }
 
-.master-detail-view .editor {
+.accounts-view .editor {
   flex-grow: 1;
   padding: var(--lumo-space-l);
 }
 
-.master-detail-view .editor vaadin-checkbox {
+.accounts-view .editor vaadin-checkbox {
   padding-top: var(--lumo-space-m);
 }
 
-.master-detail-view .button-layout {
+.accounts-view .button-layout {
   width: 100%;
   flex-wrap: wrap;
   background-color: var(--lumo-contrast-5pct);
@@ -39,6 +39,6 @@
   gap: var(--lumo-space-m);
 }
 
-.master-detail-view .grid-wrapper {
+.accounts-view .grid-wrapper {
   width: 100%;
 }

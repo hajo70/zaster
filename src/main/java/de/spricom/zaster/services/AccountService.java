@@ -5,7 +5,6 @@ import de.spricom.zaster.data.AccountCurrency;
 import de.spricom.zaster.data.AccountCurrencyRepository;
 import de.spricom.zaster.data.AccountRepository;
 import de.spricom.zaster.data.Currency;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,11 +59,7 @@ public class AccountService {
     }
 
     public Optional<Account> getAccount(String accountId) {
-        try {
-            return Optional.ofNullable(accountRepository.getReferenceById(accountId));
-        } catch (EntityNotFoundException ex) {
-            return Optional.empty();
-        }
+        return accountRepository.findById(accountId);
     }
 
     public Account saveAccount(Account account) {
@@ -72,9 +67,9 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public void deleteAccount(String accountId) {
-        log.info("deleting account: {}", accountId);
-        accountRepository.deleteById(accountId);
+    public void deleteAccount(Account account) {
+        log.info("deleting account: {}", account);
+        accountRepository.delete(account);
     }
 
     public AccountCurrency saveAccountCurrency(AccountCurrency accountCurrency) {
