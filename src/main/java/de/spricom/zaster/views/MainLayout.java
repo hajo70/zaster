@@ -11,6 +11,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
+import de.spricom.zaster.views.currencies.CurrenciesView;
 import de.spricom.zaster.views.helloworld.HelloWorldView;
 import de.spricom.zaster.views.masterdetail.MasterDetailView;
 import de.spricom.zaster.views.personform.PersonFormView;
@@ -92,6 +93,7 @@ public class MainLayout extends AppLayout {
 
                 new MenuItemInfo("Person Form", LineAwesomeIcon.USER.create(), PersonFormView.class), //
 
+                new MenuItemInfo("Währungen", LineAwesomeIcon.EURO_SIGN_SOLID.create(), CurrenciesView.class), //
         };
     }
 

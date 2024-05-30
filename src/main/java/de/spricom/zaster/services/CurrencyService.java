@@ -4,10 +4,13 @@ import de.spricom.zaster.data.Currency;
 import de.spricom.zaster.data.CurrencyRepository;
 import de.spricom.zaster.data.CurrencyType;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -15,16 +18,24 @@ public class CurrencyService {
 
     private final CurrencyRepository currencyRepository;
 
-    public List<Currency> findAllCurrencies() {
-        return currencyRepository.findAll();
+    public Page<Currency> list(Pageable pageable) {
+        return currencyRepository.findAll(pageable);
+    }
+
+    public Page<Currency> list(Pageable pageable, Specification<Currency> filter) {
+        return currencyRepository.findAll(filter, pageable);
+    }
+
+    public Optional<Currency> getCurrency(String currencyId) {
+        return currencyRepository.findById(currencyId);
     }
 
     public Currency saveCurrency(Currency currency) {
         return currencyRepository.save(currency);
     }
 
-    public void deleteCurrencyById(String currencyId) {
-        currencyRepository.deleteById(currencyId);
+    public void deleteCurrency(Currency currency) {
+        currencyRepository.delete(currency);
     }
 
     public Currency getOrCreateCurrencyByCode(String currencyCode) {
@@ -39,4 +50,5 @@ public class CurrencyService {
         }
         return currency;
     }
+
 }
