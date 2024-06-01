@@ -1,6 +1,5 @@
 package de.spricom.zaster.data;
 
-import de.spricom.zaster.entities.common.TrackingDateTime;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -39,7 +38,7 @@ public class Booking extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Import imported;
 
-    @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "booking", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<Transfer> transfers;
 }

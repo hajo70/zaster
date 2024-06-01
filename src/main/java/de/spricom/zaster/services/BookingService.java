@@ -8,11 +8,14 @@ import de.spricom.zaster.data.BookingRepository;
 import de.spricom.zaster.data.Import;
 import de.spricom.zaster.data.Snapshot;
 import de.spricom.zaster.data.SnapshotRepository;
+import de.spricom.zaster.data.TrackingDateTime;
 import de.spricom.zaster.data.Transfer;
 import de.spricom.zaster.data.TransferRepository;
-import de.spricom.zaster.entities.common.TrackingDateTime;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -45,6 +48,14 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final SnapshotRepository snapshotRepository;
     private final ObjectMapper mapper;
+
+    public Page<Booking> list(Pageable pageable) {
+        return bookingRepository.findAll(pageable);
+    }
+
+    public Page<Booking> list(Pageable pageable, Specification<Booking> filter) {
+        return bookingRepository.findAll(filter, pageable);
+    }
 
     public boolean addBooking(Import imported,
                               AccountCurrency accountCurrency,

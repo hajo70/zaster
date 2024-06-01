@@ -1,4 +1,4 @@
-package de.spricom.zaster.entities.common;
+package de.spricom.zaster.data;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

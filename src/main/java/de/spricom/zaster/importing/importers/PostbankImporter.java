@@ -3,7 +3,7 @@ package de.spricom.zaster.importing.importers;
 import de.spricom.zaster.data.AccountCurrency;
 import de.spricom.zaster.data.Currency;
 import de.spricom.zaster.data.Import;
-import de.spricom.zaster.entities.common.TrackingDateTime;
+import de.spricom.zaster.data.TrackingDateTime;
 import de.spricom.zaster.importing.CsvImporter;
 import de.spricom.zaster.importing.csv.CsvRow;
 import de.spricom.zaster.services.AccountService;

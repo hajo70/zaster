@@ -19,7 +19,6 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import de.spricom.zaster.data.Account;
 import de.spricom.zaster.services.AccountService;
@@ -34,7 +33,6 @@ import java.util.stream.Stream;
 
 @PageTitle("Konten")
 @Route(value = "accounts/:accountId?/:action?(edit)", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
 @Log4j2
 public class AccountsView extends Div implements BeforeEnterObserver {
 

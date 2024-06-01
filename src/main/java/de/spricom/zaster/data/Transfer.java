@@ -1,6 +1,5 @@
 package de.spricom.zaster.data;
 
-import de.spricom.zaster.entities.common.TrackingDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

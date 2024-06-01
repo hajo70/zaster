@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import de.spricom.zaster.views.accounts.AccountsView;
+import de.spricom.zaster.views.bookings.BookingsView;
 import de.spricom.zaster.views.currencies.CurrenciesView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
@@ -95,6 +96,8 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
+                new MenuItemInfo("Buchungen", LineAwesomeIcon.MONEY_BILL_WAVE_SOLID.create(), BookingsView.class), //
+
                 new MenuItemInfo("Konten", LineAwesomeIcon.FILE_ALT_SOLID.create(), AccountsView.class), //
 
                 new MenuItemInfo("Währungen", LineAwesomeIcon.EURO_SIGN_SOLID.create(), CurrenciesView.class), //
