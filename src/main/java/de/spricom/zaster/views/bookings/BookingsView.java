@@ -28,13 +28,16 @@ import de.spricom.zaster.data.Booking;
 import de.spricom.zaster.data.Booking_;
 import de.spricom.zaster.data.TrackingDateTime_;
 import de.spricom.zaster.data.Transfer;
+import de.spricom.zaster.data.Transfer_;
 import de.spricom.zaster.services.BookingService;
 import de.spricom.zaster.views.MainLayout;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -136,6 +139,19 @@ public class BookingsView extends Div {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(criteriaBuilder.literal(endDate.getValue()),
                         bookedAtColumn));
             }
+
+            Subquery<Booking> subquery = query.subquery(Booking.class);
+            Root<Booking> booking = subquery.from(Booking.class);
+            Join<Object, Object> transfer = root.join(Booking_.TRANSFERS);
+
+            subquery.select(booking)
+                            .distinct(true)
+                            .where(criteriaBuilder.greaterThanOrEqualTo(
+                               transfer.get(Transfer_.AMOUNT),
+                               criteriaBuilder.literal(BigDecimal.TEN)
+                            ));
+            predicates.add(criteriaBuilder.in(root).value(subquery));
+
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         }
     }
