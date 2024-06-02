@@ -14,6 +14,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import de.spricom.zaster.views.accounts.AccountsView;
 import de.spricom.zaster.views.bookings.BookingsView;
 import de.spricom.zaster.views.currencies.CurrenciesView;
+import de.spricom.zaster.views.imports.ImportsView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -101,6 +102,8 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Konten", LineAwesomeIcon.FILE_ALT_SOLID.create(), AccountsView.class), //
 
                 new MenuItemInfo("Währungen", LineAwesomeIcon.EURO_SIGN_SOLID.create(), CurrenciesView.class), //
+
+                new MenuItemInfo("Imports", LineAwesomeIcon.INBOX_SOLID.create(), ImportsView.class), //
         };
     }
 
