@@ -1,11 +1,12 @@
-package de.spricom.zaster.importing;
+package de.spricom.zaster.services;
 
 import de.spricom.zaster.data.FileSource;
 import de.spricom.zaster.data.Import;
 import de.spricom.zaster.data.TrackingDateTime;
+import de.spricom.zaster.importing.AlreadyImportedException;
+import de.spricom.zaster.importing.CsvImporter;
 import de.spricom.zaster.importing.csv.CsvReader;
 import de.spricom.zaster.importing.csv.CsvRow;
-import de.spricom.zaster.services.ImportService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Log4j2
-public class ImportHandlingService {
+public class UploadService {
 
     public record Stats(
             int totalCount,

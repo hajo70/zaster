@@ -15,6 +15,7 @@ import de.spricom.zaster.views.accounts.AccountsView;
 import de.spricom.zaster.views.bookings.BookingsView;
 import de.spricom.zaster.views.currencies.CurrenciesView;
 import de.spricom.zaster.views.imports.ImportsView;
+import de.spricom.zaster.views.upload.UploadView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -104,6 +105,8 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Währungen", LineAwesomeIcon.EURO_SIGN_SOLID.create(), CurrenciesView.class), //
 
                 new MenuItemInfo("Imports", LineAwesomeIcon.INBOX_SOLID.create(), ImportsView.class), //
+
+                new MenuItemInfo("Upload", LineAwesomeIcon.UPLOAD_SOLID.create(), UploadView.class), //
         };
     }
 

@@ -3,9 +3,9 @@ package de.spricom.zaster.init;
 import de.spricom.zaster.data.Account;
 import de.spricom.zaster.data.Currency;
 import de.spricom.zaster.data.CurrencyType;
-import de.spricom.zaster.importing.ImportHandlingService;
 import de.spricom.zaster.services.AccountService;
 import de.spricom.zaster.services.CurrencyService;
+import de.spricom.zaster.services.UploadService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class ZasterInitTool {
     @Autowired
     private AccountService accountService;
     @Autowired
-    private ImportHandlingService importHandlingService;
+    private UploadService uploadService;
 
     @Test
     void checkProperties() {
@@ -54,7 +54,7 @@ public class ZasterInitTool {
 
     private void importFiles(ZasterInitProperties.Import importTask) {
         for (File file : importTask.getFiles()) {
-            importHandlingService.importFile(importTask.getImporter(), new FileSystemResource(file));
+            uploadService.importFile(importTask.getImporter(), new FileSystemResource(file));
         }
     }
 
