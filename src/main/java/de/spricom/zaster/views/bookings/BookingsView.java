@@ -159,15 +159,17 @@ public class BookingsView extends Div {
     private Component createGrid() {
         grid = new Grid<>(Booking.class, false);
         grid.addColumn(this::bookingDate).setHeader("Buchungsdatum").setAutoWidth(true).setSortable(true);
-        grid.addColumn(Booking::getDescription).setHeader("Beschreibung").setAutoWidth(true);
-        grid.addColumn(this::receipient).setHeader("Empfänger").setAutoWidth(true);
+        grid.addColumn(Booking::getDescription).setHeader("Beschreibung").setAutoWidth(true).setResizable(true);
+        grid.addColumn(this::receipient).setHeader("Empfänger").setAutoWidth(true).setResizable(true);
         grid.addColumn(amountRenderer(this::amount)).setHeader("Betrag").setAutoWidth(true)
+                .setSortable(true).setTextAlign(ColumnTextAlign.END);
+        grid.addColumn(amountRenderer(this::balance)).setHeader("Kontoststand").setAutoWidth(true)
                 .setSortable(true).setTextAlign(ColumnTextAlign.END);
 
         grid.setItems(query -> bookingService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
                 filters).stream());
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COLUMN_BORDERS);
         grid.addClassNames(LumoUtility.Border.TOP, LumoUtility.BorderColor.CONTRAST_10);
 
         return grid;
@@ -178,7 +180,9 @@ public class BookingsView extends Div {
     }
 
     private String receipient(Booking booking) {
-        return booking.getTransfers().stream().findAny()
+        return booking.getTransfers().stream()
+                .filter(transfer -> transfer.getPosition() == 2)
+                .findAny()
                 .map(Transfer::getAccountCurrency)
                 .map(AccountCurrency::getAccount)
                 .map(Account::getAccountName)
@@ -200,7 +204,17 @@ public class BookingsView extends Div {
     }
 
     private BigDecimal amount(Booking booking) {
-        return booking.getTransfers().stream().findAny().map(Transfer::getAmount).orElse(null);
+        return booking.getTransfers().stream()
+                .filter(transfer -> transfer.getPosition() == 1)
+                .findAny()
+                .map(Transfer::getAmount).orElse(null);
+    }
+
+    private BigDecimal balance(Booking booking) {
+        return booking.getTransfers().stream()
+                .filter(transfer -> transfer.getPosition() == 1)
+                .findAny()
+                .map(Transfer::getBalance).orElse(null);
     }
 
     private void refreshGrid() {

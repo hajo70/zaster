@@ -41,4 +41,9 @@ public class ImportService {
         fileSource.setImported(importRepository.save(fileSource.getImported()));
         return fileSourceRepository.save(fileSource);
     }
+
+    public FileSource update(FileSource fileSource) {
+        fileSource.setImported(importRepository.save(fileSource.getImported()));
+        return fileSourceRepository.save(fileSource);
+    }
 }

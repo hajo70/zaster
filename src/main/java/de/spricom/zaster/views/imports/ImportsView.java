@@ -67,6 +67,7 @@ public class ImportsView extends Div implements BeforeEnterObserver {
         // Configure Grid
         grid.addColumn(this::importedAtDateTime).setHeader("Importdatum").setAutoWidth(true);
         grid.addColumn(Import::getImporterName).setHeader("Importer").setAutoWidth(true);
+        grid.addColumn(Import::getImportedCount).setHeader("Anzahl").setAutoWidth(true);
         grid.setItems(this::loadImportsPage);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 

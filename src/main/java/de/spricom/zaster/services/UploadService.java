@@ -51,6 +51,8 @@ public class UploadService {
         List<CsvRow> rows = scan(resource, importer);
         FileSource fileSource = importService.create(createFileSource(resource, importer, fileMd5));
         CsvImporter.Stats stats = importer.process(fileSource.getImported(), rows);
+        fileSource.setTotalCount(stats.totalCount());
+        fileSource.getImported().setImportedCount(stats.importedCount());
         return new Stats(stats.totalCount(), stats.importedCount(), resource.getFilename());
     }
 

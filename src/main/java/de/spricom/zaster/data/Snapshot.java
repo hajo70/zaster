@@ -27,6 +27,12 @@ public class Snapshot extends AbstractEntity {
     @Embedded
     private TrackingDateTime takenAt;
 
+    /**
+     * References the transfer on that day after which the snapshot was taken.
+     * Zero means the snapshot was take before the first transfer.
+     */
+    private Integer transferSerial;
+
     @Column(precision = 40, scale = 15)
     private BigDecimal balance;
 

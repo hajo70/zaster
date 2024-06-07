@@ -213,7 +213,7 @@ public class EntitiesToLiquiTool {
         return switch (field.getType().getSimpleName()) {
             case "String" -> stringType(field);
             case "Long" -> "java.sql.Types.BIGINT";
-            case "Integer" -> "java.sql.Types.INTEGER";
+            case "Integer", "int" -> "java.sql.Types.INTEGER";
             case "BigDecimal" -> "java.sql.Types.DECIMAL(40, 15)";
             case "LocalDate" -> "java.sql.Types.DATE";
             case "LocalTime" -> "java.sql.Types.TIME";

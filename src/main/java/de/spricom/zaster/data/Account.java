@@ -1,13 +1,6 @@
 package de.spricom.zaster.data;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,6 +25,10 @@ public class Account extends AbstractEntity {
     private String accountName;
 
     private String accountCode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 32)
+    private AccountType accountType;
 
     @Lob
     @Column(length = 65536)

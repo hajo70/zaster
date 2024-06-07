@@ -17,5 +17,7 @@ public class Import extends AbstractEntity {
     @Embedded
     private TrackingDateTime importedAt;
 
+    private Integer importedCount;
+
     private String importerName;
 }

@@ -17,16 +17,19 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: IMPORTED_AT_DATE
                   type: java.sql.Types.DATE
               - column:
                   name: IMPORTED_AT_TIME
                   type: java.sql.Types.TIME
+              - column:
+                  name: IMPORTED_COUNT
+                  type: java.sql.Types.INTEGER
               - column:
                   name: IMPORTER_NAME
                   type: java.sql.Types.NVARCHAR(255)
@@ -44,10 +47,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: IMPORTED_ID
                   type: java.sql.Types.NVARCHAR(63)
@@ -61,9 +64,6 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(255)
               - column:
                   name: TOTAL_COUNT
-                  type: java.sql.Types.INTEGER
-              - column:
-                  name: IMPORTED_COUNT
                   type: java.sql.Types.INTEGER
               - column:
                   name: MD5
@@ -82,10 +82,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: CURRENCY_CODE
                   type: java.sql.Types.NVARCHAR(8)
@@ -112,10 +112,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: PARENT_ID
                   type: java.sql.Types.NVARCHAR(63)
@@ -130,32 +130,35 @@ databaseChangeLog:
                   name: ACCOUNT_CODE
                   type: java.sql.Types.NVARCHAR(255)
               - column:
+                  name: ACCOUNT_TYPE
+                  type: java.sql.Types.NVARCHAR(32)
+              - column:
                   name: METADATA
                   type: java.sql.Types.LONGNVARCHAR(65536)
         - createTable:
-            tableName: ACCOUNT_CURRENY
+            tableName: ACCOUNT_CURRENCY
             columns:
               - column:
                   name: ID
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     primaryKey: true
-                    primaryKeyName: PK_ACCOUNT_CURRENY
+                    primaryKeyName: PK_ACCOUNT_CURRENCY
               - column:
                   name: VERSION
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: ACCOUNT_ID
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
-                    foreignKeyName: FK_ACCOUNT_CURRENY_ACCOUNT_ID_ACCOUNT
+                    foreignKeyName: FK_ACCOUNT_CURRENCY_ACCOUNT_ID_ACCOUNT
                     referencedTableName: ACCOUNT
                     referencedColumnNames: ID
               - column:
@@ -163,50 +166,8 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
-                    foreignKeyName: FK_ACCOUNT_CURRENY_CURRENCY_ID_CURRENCY
+                    foreignKeyName: FK_ACCOUNT_CURRENCY_CURRENCY_ID_CURRENCY
                     referencedTableName: CURRENCY
-                    referencedColumnNames: ID
-        - createTable:
-            tableName: SNAPSHOT
-            columns:
-              - column:
-                  name: ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    primaryKey: true
-                    primaryKeyName: PK_SNAPSHOT
-              - column:
-                  name: VERSION
-                  type: java.sql.Types.BIGINT
-              - column:
-                  name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP
-              - column:
-                  name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP
-              - column:
-                  name: ACCOUNT_CURRENCY_ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    nullable: false
-                    foreignKeyName: FK_SNAPSHOT_ACCOUNT_CURRENCY_ID_ACCOUNT_CURRENY
-                    referencedTableName: ACCOUNT_CURRENY
-                    referencedColumnNames: ID
-              - column:
-                  name: TAKEN_AT_DATE
-                  type: java.sql.Types.DATE
-              - column:
-                  name: TAKEN_AT_TIME
-                  type: java.sql.Types.TIME
-              - column:
-                  name: BALANCE
-                  type: java.sql.Types.DECIMAL(40, 15)
-              - column:
-                  name: IMPORTED_ID
-                  type: java.sql.Types.NVARCHAR(63)
-                  constraints:
-                    foreignKeyName: FK_SNAPSHOT_IMPORTED_ID_IMPORT
-                    referencedTableName: IMPORT
                     referencedColumnNames: ID
         - createTable:
             tableName: BOOKING
@@ -222,10 +183,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: BOOKED_AT_DATE
                   type: java.sql.Types.DATE
@@ -262,10 +223,10 @@ databaseChangeLog:
                   type: java.sql.Types.BIGINT
               - column:
                   name: CREATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: UPDATED_AT
-                  type: java.sql.Types.TIMESTAMP
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
               - column:
                   name: BOOKING_ID
                   type: java.sql.Types.NVARCHAR(63)
@@ -279,9 +240,17 @@ databaseChangeLog:
                   type: java.sql.Types.NVARCHAR(63)
                   constraints:
                     nullable: false
-                    foreignKeyName: FK_TRANSFER_ACCOUNT_CURRENCY_ID_ACCOUNT_CURRENY
-                    referencedTableName: ACCOUNT_CURRENY
+                    foreignKeyName: FK_TRANSFER_ACCOUNT_CURRENCY_ID_ACCOUNT_CURRENCY
+                    referencedTableName: ACCOUNT_CURRENCY
                     referencedColumnNames: ID
+              - column:
+                  name: POSITION
+                  type: java.sql.Types.INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SERIAL
+                  type: java.sql.Types.INTEGER
               - column:
                   name: TRANSFERRED_AT_DATE
                   type: java.sql.Types.DATE
@@ -291,3 +260,60 @@ databaseChangeLog:
               - column:
                   name: AMOUNT
                   type: java.sql.Types.DECIMAL(40, 15)
+              - column:
+                  name: BALANCE
+                  type: java.sql.Types.DECIMAL(40, 15)
+        - createIndex:
+            columns:
+              - column:
+                  name: TRANSFERRED_AT_DATE
+              - column:
+                  name: SERIAL
+            indexName: IDX_TRANSFER_DATE_SERIAL
+            tableName: TRANSFER
+            unique: true
+        - createTable:
+            tableName: SNAPSHOT
+            columns:
+              - column:
+                  name: ID
+                  type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SNAPSHOT
+              - column:
+                  name: VERSION
+                  type: java.sql.Types.BIGINT
+              - column:
+                  name: CREATED_AT
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+              - column:
+                  name: UPDATED_AT
+                  type: java.sql.Types.TIMESTAMP_WITH_TIMEZONE
+              - column:
+                  name: ACCOUNT_CURRENCY_ID
+                  type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_SNAPSHOT_ACCOUNT_CURRENCY_ID_ACCOUNT_CURRENCY
+                    referencedTableName: ACCOUNT_CURRENCY
+                    referencedColumnNames: ID
+              - column:
+                  name: TAKEN_AT_DATE
+                  type: java.sql.Types.DATE
+              - column:
+                  name: TAKEN_AT_TIME
+                  type: java.sql.Types.TIME
+              - column:
+                  name: TRANSFER_SERIAL
+                  type: java.sql.Types.INTEGER
+              - column:
+                  name: BALANCE
+                  type: java.sql.Types.DECIMAL(40, 15)
+              - column:
+                  name: IMPORTED_ID
+                  type: java.sql.Types.NVARCHAR(63)
+                  constraints:
+                    foreignKeyName: FK_SNAPSHOT_IMPORTED_ID_IMPORT
+                    referencedTableName: IMPORT
+                    referencedColumnNames: ID

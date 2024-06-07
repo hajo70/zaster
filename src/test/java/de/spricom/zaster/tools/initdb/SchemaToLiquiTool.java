@@ -35,7 +35,7 @@ public class SchemaToLiquiTool {
         dump(metaData.getSchemas());
         System.out.println("=== Tables:");
         dump(metaData.getTables(null, "PUBLIC%", null, null));
-        String table = "APPLICATION_USER";
+        String table = "TRANSFER";
         System.out.printf("=== %s Columns:%n", table);
         dump(metaData.getColumns(null, "PUBLIC%", table, null));
         System.out.printf("=== %s Indexes:%n", table);

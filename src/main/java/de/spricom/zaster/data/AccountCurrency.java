@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "ACCOUNT_CURRENY")
+@Table(name = "ACCOUNT_CURRENCY")
 public class AccountCurrency extends AbstractEntity {
 
     @ManyToOne(optional = false)

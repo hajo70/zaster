@@ -25,8 +25,6 @@ public class FileSource extends AbstractEntity {
 
     private Integer totalCount;
 
-    private Integer importedCount;
-
     @Column(length = 63)
     private String md5;
 }

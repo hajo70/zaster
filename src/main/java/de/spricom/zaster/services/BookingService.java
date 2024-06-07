@@ -76,10 +76,10 @@ public class BookingService {
             }
         }
         booking = bookingRepository.save(booking);
-        addTransfer(booking, accountCurrency, bookingRecord.bookedAt(), bookingRecord.amount());
+        addTransfer(booking, 1, accountCurrency, bookingRecord);
         AccountCurrency partnerAccount = accountService.getOrCreateAccountCurrency(
                 bookingRecord.partnerCode(), bookingRecord.partnerName(), accountCurrency.getCurrency());
-        addTransfer(booking, partnerAccount, bookingRecord.bookedAt(), bookingRecord.amount().negate());
+        addTransfer(booking, 2, partnerAccount, bookingRecord);
         return true;
     }
 
@@ -96,14 +96,19 @@ public class BookingService {
     }
 
     private void addTransfer(Booking booking,
+                             int position,
                              AccountCurrency accountCurrency,
-                             TrackingDateTime bookedAt,
-                             BigDecimal amount) {
+                             BookingRecord bookingRecord) {
         var transfer = new Transfer();
         transfer.setBooking(booking);
+        transfer.setPosition(position);
         transfer.setAccountCurrency(accountCurrency);
-        transfer.setTransferredAt(bookedAt);
-        transfer.setAmount(amount);
+        transfer.setTransferredAt(bookingRecord.bookedAt);
+        if (position == 1) {
+            transfer.setAmount(bookingRecord.amount);
+        } else {
+            transfer.setAmount(bookingRecord.amount.negate());
+        }
         transferRepository.save(transfer);
     }
 
