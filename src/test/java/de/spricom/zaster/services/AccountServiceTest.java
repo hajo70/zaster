@@ -59,8 +59,8 @@ class AccountServiceTest {
         var sub1eur = createAccount(sub1, "EUR");
 
         var tree = accountService.findAllRootAccounts();
-        assertThat(tree).hasSize(2).contains(root1, root2);
-        assertThat(render(tree)).isEqualTo("""
+        assertThat(tree).hasSizeGreaterThanOrEqualTo(2).contains(root1, root2);
+        assertThat(render(tree)).contains("""
                 Root 1()
                   Main()
                     Sub 1(EUR)

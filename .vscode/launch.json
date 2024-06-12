@@ -6,9 +6,10 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Launch Application",
+      "name": "ZasterApplication",
       "request": "launch",
-      "mainClass": "de.spricom.zaster.Application"
+      "mainClass": "de.spricom.zaster.ZasterApplication",
+      "projectName": "zaster"
     },
     {
       "type": "java",
