@@ -19,7 +19,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
-import de.spricom.zaster.data.Import;
+import de.spricom.zaster.data.FileSource;
 import de.spricom.zaster.services.ImportService;
 import de.spricom.zaster.views.MainLayout;
 import lombok.extern.log4j.Log4j2;
@@ -39,7 +39,7 @@ public class ImportsView extends Div implements BeforeEnterObserver {
 
     private final ImportService importService;
 
-    private final Grid<Import> grid = new Grid<>(Import.class, false);
+    private final Grid<FileSource> grid = new Grid<>(FileSource.class, false);
 
     private DateTimePicker importedAt;
     private TextField importerName;
@@ -48,9 +48,9 @@ public class ImportsView extends Div implements BeforeEnterObserver {
     private final Button bookings = new Button("Buchungen");
     private final Button delete = new Button("Löschen");
 
-    private final Binder<Import> binder = new Binder<>(Import.class);
+    private final Binder<FileSource> binder = new Binder<>(FileSource.class);
 
-    private Import currentImport;
+    private FileSource currentFileSource;
 
     public ImportsView(ImportService importService) {
         this.importService = importService;
@@ -66,8 +66,9 @@ public class ImportsView extends Div implements BeforeEnterObserver {
 
         // Configure Grid
         grid.addColumn(this::importedAtDateTime).setHeader("Importdatum").setAutoWidth(true);
-        grid.addColumn(Import::getImporterName).setHeader("Importer").setAutoWidth(true);
-        grid.addColumn(Import::getImportedCount).setHeader("Anzahl").setAutoWidth(true);
+        grid.addColumn(this::importerName).setHeader("Importer").setAutoWidth(true);
+        grid.addColumn(this::counts).setHeader("Anzahl").setAutoWidth(true);
+        grid.addColumn(this::filename).setHeader("Datei").setAutoWidth(true);
         grid.setItems(this::loadImportsPage);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 
@@ -83,7 +84,7 @@ public class ImportsView extends Div implements BeforeEnterObserver {
 
         // Configure Details
         binder.bindReadOnly(importedAt, this::importedAtDateTime);
-        binder.bindReadOnly(importerName, Import::getImporterName);
+        binder.bindReadOnly(importerName, this::importerName);
 
         cancel.addClickListener(event -> {
             clearDetails();
@@ -93,11 +94,23 @@ public class ImportsView extends Div implements BeforeEnterObserver {
         delete.setVisible(false);
     }
 
-    private LocalDateTime importedAtDateTime(Import imported) {
-        return imported.getImportedAt().toLocalDateTime();
+    private LocalDateTime importedAtDateTime(FileSource fileSource) {
+        return fileSource.getImported().getImportedAt().toLocalDateTime();
     }
 
-    private Stream<Import> loadImportsPage(Query<Import, Void> query) {
+    private String importerName(FileSource fileSource) {
+        return fileSource.getImported().getImporterName();
+    }
+
+    private String counts(FileSource fileSource) {
+        return fileSource.getImported().getImportedCount() + " / " + fileSource.getTotalCount();
+    }
+
+    private String filename(FileSource fileSource) {
+        return fileSource.getFilename();
+    }
+
+    private Stream<FileSource> loadImportsPage(Query<FileSource, Void> query) {
         PageRequest pageable = PageRequest.of(query.getPage(), query.getPageSize(),
                 VaadinSpringDataHelpers.toSpringDataSort(query));
         return importService.list(pageable).stream();
@@ -105,13 +118,13 @@ public class ImportsView extends Div implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Optional<String> importId = event.getRouteParameters().get(IMPORT_ID);
-        if (importId.isPresent()) {
-            Optional<Import> imported = importService.getImport(importId.get());
+        Optional<String> fileSourceId = event.getRouteParameters().get(IMPORT_ID);
+        if (fileSourceId.isPresent()) {
+            Optional<FileSource> imported = importService.getFileSource(fileSourceId.get());
             if (imported.isPresent()) {
                 populateDetails(imported.get());
             } else {
-                Notification.show(String.format("Import nicht gefunden, ID = %s", importId.get()),
+                Notification.show(String.format("Import nicht gefunden, ID = %s", fileSourceId.get()),
                         3000, Notification.Position.BOTTOM_START);
                 // when a row is selected but the data is no longer available,
                 // refresh grid
@@ -167,9 +180,9 @@ public class ImportsView extends Div implements BeforeEnterObserver {
         populateDetails(null);
     }
 
-    private void populateDetails(Import imported) {
-        currentImport = imported;
-        binder.readBean(currentImport);
-        delete.setVisible(imported != null && imported.getId() != null);
+    private void populateDetails(FileSource fileSource) {
+        currentFileSource = fileSource;
+        binder.readBean(currentFileSource);
+        delete.setVisible(fileSource != null && fileSource.getId() != null);
     }
 }

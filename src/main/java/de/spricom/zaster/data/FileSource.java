@@ -17,7 +17,7 @@ import lombok.ToString;
 @Table(name = "FILE_SOURCE")
 public class FileSource extends AbstractEntity {
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Import imported;
 
