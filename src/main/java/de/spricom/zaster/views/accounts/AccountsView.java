@@ -47,6 +47,7 @@ public class AccountsView extends Div implements BeforeEnterObserver {
 
     private final String ACCOUNT_ID = "accountId";
     private final String ACCOUNT_EDIT_ROUTE_TEMPLATE = "accounts/%s/edit";
+    private final String BOOKINGS_ROUTE_TEMPLATE = "bookings/%s";
 
     private final Grid<Account> grid = new Grid<>(Account.class, false);
     private final Filters filters = new Filters(this::refreshGrid);;
@@ -57,6 +58,7 @@ public class AccountsView extends Div implements BeforeEnterObserver {
     private final Button cancel = new Button("Abbrechen");
     private final Button save = new Button("Speichern");
     private final Button delete = new Button("Löschen");
+    private final Button bookings = new Button("Buchungen");
 
     private final BeanValidationBinder<Account> binder;
 
@@ -107,6 +109,10 @@ public class AccountsView extends Div implements BeforeEnterObserver {
         save.addClickListener(event -> saveAccount());
         delete.addClickListener(event -> deleteAccount());
         delete.setVisible(false);
+        bookings.addClickListener(event -> {
+            UI.getCurrent().navigate(String.format(BOOKINGS_ROUTE_TEMPLATE, currentAccount.getId()));
+        });
+        bookings.setVisible(false);
     }
 
     static class Filters extends Div implements Specification<Account> {
@@ -229,7 +235,7 @@ public class AccountsView extends Div implements BeforeEnterObserver {
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        buttonLayout.add(save, cancel, delete);
+        buttonLayout.add(save, cancel, delete, bookings);
         editorLayoutDiv.add(buttonLayout);
     }
 
@@ -257,6 +263,7 @@ public class AccountsView extends Div implements BeforeEnterObserver {
         currentAccount = account;
         binder.readBean(currentAccount);
         delete.setVisible(account != null && account.getId() != null);
+        bookings.setVisible(account != null && account.getId() != null);
     }
 
 }

@@ -17,6 +17,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -24,6 +26,8 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import de.spricom.zaster.data.Account;
 import de.spricom.zaster.data.AccountCurrency;
+import de.spricom.zaster.data.AccountCurrency_;
+import de.spricom.zaster.data.Account_;
 import de.spricom.zaster.data.Booking;
 import de.spricom.zaster.data.Booking_;
 import de.spricom.zaster.data.TrackingDateTime_;
@@ -46,12 +50,15 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @PageTitle("Buchungen")
-@Route(value = "bookings", layout = MainLayout.class)
+@Route(value = "bookings/:accountId?", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 @Uses(Icon.class)
-public class BookingsView extends Div {
+public class BookingsView extends Div implements BeforeEnterObserver {
+
+    private final String ACCOUNT_ID = "accountId";
 
     private final BookingService bookingService;
 
@@ -76,6 +83,7 @@ public class BookingsView extends Div {
         private final TextField text = new TextField("Text");
         private final DatePicker startDate = new DatePicker("Buchungsdatum");
         private final DatePicker endDate = new DatePicker();
+        private String accountId;
 
         public Filters(Runnable onSearch) {
             setWidthFull();
@@ -94,6 +102,7 @@ public class BookingsView extends Div {
                 text.clear();
                 startDate.clear();
                 endDate.clear();
+                accountId = null;
                 onSearch.run();
             });
             Button searchBtn = new Button("Suchen");
@@ -144,17 +153,33 @@ public class BookingsView extends Div {
                         bookedAtColumn));
             }
 
-            Subquery<Booking> subquery = query.subquery(Booking.class);
-            Root<Booking> booking = subquery.from(Booking.class);
-            Join<Object, Object> transfer = root.join(Booking_.TRANSFERS);
+            if (accountId != null) {
+                Subquery<Booking> subquery = query.subquery(Booking.class);
+                Root<Booking> booking = subquery.from(Booking.class);
+                Join<Object, Object> transfer = root.join(Booking_.TRANSFERS);
+                Join<Object, Object> accountCurrency = transfer.join(Transfer_.ACCOUNT_CURRENCY);
 
-            subquery.select(booking)
-                            .distinct(true)
-                            .where(criteriaBuilder.greaterThanOrEqualTo(
-                               transfer.get(Transfer_.AMOUNT),
-                               criteriaBuilder.literal(BigDecimal.TEN)
-                            ));
-            predicates.add(criteriaBuilder.in(root).value(subquery));
+                Path<Object> accountIdPath = accountCurrency.get(AccountCurrency_.ACCOUNT).get(Account_.ID);
+                subquery.select(booking)
+                        .distinct(true)
+                        .where(criteriaBuilder.equal(accountIdPath, accountId));
+                predicates.add(criteriaBuilder.in(root).value(subquery));
+            }
+
+            if (false) {
+                // sample for filtering by amount
+                Subquery<Booking> subquery = query.subquery(Booking.class);
+                Root<Booking> booking = subquery.from(Booking.class);
+                Join<Object, Object> transfer = root.join(Booking_.TRANSFERS);
+
+                subquery.select(booking)
+                        .distinct(true)
+                        .where(criteriaBuilder.greaterThanOrEqualTo(
+                                transfer.get(Transfer_.AMOUNT),
+                                criteriaBuilder.literal(BigDecimal.valueOf(1000))
+                        ));
+                predicates.add(criteriaBuilder.in(root).value(subquery));
+            }
 
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         }
@@ -225,5 +250,13 @@ public class BookingsView extends Div {
 
     private void refreshGrid() {
         grid.getDataProvider().refreshAll();
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        Optional<String> accountId = event.getRouteParameters().get(ACCOUNT_ID);
+        if (accountId.isPresent()) {
+            filters.accountId = accountId.get();
+        }
     }
 }
