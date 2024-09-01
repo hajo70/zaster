@@ -42,3 +42,10 @@
 .accounts-view .grid-wrapper {
   width: 100%;
 }
+
+.accounts-view .filter-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  align-items: end;
+  gap: 0 var(--lumo-space-l);
+}

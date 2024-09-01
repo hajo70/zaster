@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -20,14 +21,22 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import de.spricom.zaster.data.Account;
 import de.spricom.zaster.services.AccountService;
 import de.spricom.zaster.views.MainLayout;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -40,6 +49,7 @@ public class AccountsView extends Div implements BeforeEnterObserver {
     private final String ACCOUNT_EDIT_ROUTE_TEMPLATE = "accounts/%s/edit";
 
     private final Grid<Account> grid = new Grid<>(Account.class, false);
+    private final Filters filters = new Filters(this::refreshGrid);;
 
     private final TextField accountName = new TextField("Name");
     private final TextField accountCode = new TextField("Nummer");
@@ -67,7 +77,8 @@ public class AccountsView extends Div implements BeforeEnterObserver {
         add(splitLayout);
 
         // Configure Grid
-        grid.addColumn(Account::getAccountName).setHeader("Name").setAutoWidth(true);
+        grid.addColumn(Account::getAccountName).setHeader("Name").setAutoWidth(true)
+                .setSortProperty("accountName");
         grid.addColumn(Account::getAccountCode).setHeader("Nummer").setAutoWidth(true);
         grid.setItems(this::loadAccountPage);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -96,6 +107,37 @@ public class AccountsView extends Div implements BeforeEnterObserver {
         save.addClickListener(event -> saveAccount());
         delete.addClickListener(event -> deleteAccount());
         delete.setVisible(false);
+    }
+
+    static class Filters extends Div implements Specification<Account> {
+
+        private final TextField accountName = new TextField("Kontoname");
+
+        public Filters(Runnable onSearch) {
+            setWidthFull();
+            addClassName("filter-layout");
+            addClassNames(LumoUtility.Padding.Horizontal.LARGE, LumoUtility.Padding.Vertical.MEDIUM,
+                    LumoUtility.BoxSizing.BORDER);
+
+            accountName.setClearButtonVisible(true);
+
+            // Action buttons
+            accountName.addValueChangeListener(ev -> onSearch.run());
+            add(accountName);
+        }
+
+        @Override
+        public Predicate toPredicate(Root<Account> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (!accountName.isEmpty()) {
+                String lowerCaseFilter = accountName.getValue().toLowerCase();
+                Predicate accountNameMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("accountName")),
+                        "%" + lowerCaseFilter + "%");
+                predicates.add(criteriaBuilder.or(accountNameMatch));
+            }
+            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
+        }
     }
 
     private void saveAccount() {
@@ -143,7 +185,7 @@ public class AccountsView extends Div implements BeforeEnterObserver {
     private Stream<Account> loadAccountPage(Query<Account, Void> query) {
         PageRequest pageable = PageRequest.of(query.getPage(), query.getPageSize(),
                 VaadinSpringDataHelpers.toSpringDataSort(query));
-        return accountService.list(pageable).stream();
+        return accountService.list(pageable, filters).stream();
     }
 
     @Override
@@ -195,7 +237,11 @@ public class AccountsView extends Div implements BeforeEnterObserver {
         Div wrapper = new Div();
         wrapper.setClassName("grid-wrapper");
         splitLayout.addToPrimary(wrapper);
-        wrapper.add(grid);
+        VerticalLayout layout = new VerticalLayout(filters, grid);
+        layout.setSizeFull();
+        layout.setPadding(false);
+        layout.setSpacing(false);
+        wrapper.add(layout);
     }
 
     private void refreshGrid() {
