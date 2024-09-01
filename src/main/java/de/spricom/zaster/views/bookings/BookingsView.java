@@ -92,9 +92,9 @@ public class BookingsView extends Div implements BeforeEnterObserver {
                     LumoUtility.BoxSizing.BORDER);
 
             // Action buttons
-            text.addBlurListener(ev -> onSearch.run());
-            startDate.addBlurListener(ev -> onSearch.run());
-            endDate.addBlurListener(ev -> onSearch.run());
+            text.addValueChangeListener(ev -> onSearch.run());
+            startDate.addValueChangeListener(ev -> onSearch.run());
+            endDate.addValueChangeListener(ev -> onSearch.run());
 
             Button resetBtn = new Button("Leeren");
             resetBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
