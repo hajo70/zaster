@@ -84,6 +84,10 @@ public class BookingsView extends Div {
                     LumoUtility.BoxSizing.BORDER);
 
             // Action buttons
+            text.addBlurListener(ev -> onSearch.run());
+            startDate.addBlurListener(ev -> onSearch.run());
+            endDate.addBlurListener(ev -> onSearch.run());
+
             Button resetBtn = new Button("Leeren");
             resetBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             resetBtn.addClickListener(event -> {
@@ -158,13 +162,15 @@ public class BookingsView extends Div {
 
     private Component createGrid() {
         grid = new Grid<>(Booking.class, false);
-        grid.addColumn(this::bookingDate).setHeader("Buchungsdatum").setAutoWidth(true).setSortable(true);
-        grid.addColumn(Booking::getDescription).setHeader("Beschreibung").setAutoWidth(true).setResizable(true);
+        grid.addColumn(this::bookingDate).setHeader("Buchungsdatum").setAutoWidth(true)
+                .setSortProperty("bookedAt.date", "bookedAt.time");
+        grid.addColumn(Booking::getDescription).setHeader("Beschreibung").setAutoWidth(true)
+                .setResizable(true).setSortProperty("description");
         grid.addColumn(this::receipient).setHeader("Empfänger").setAutoWidth(true).setResizable(true);
         grid.addColumn(amountRenderer(this::amount)).setHeader("Betrag").setAutoWidth(true)
-                .setSortable(true).setTextAlign(ColumnTextAlign.END);
+                .setTextAlign(ColumnTextAlign.END);
         grid.addColumn(amountRenderer(this::balance)).setHeader("Kontoststand").setAutoWidth(true)
-                .setSortable(true).setTextAlign(ColumnTextAlign.END);
+                .setTextAlign(ColumnTextAlign.END);
 
         grid.setItems(query -> bookingService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),
