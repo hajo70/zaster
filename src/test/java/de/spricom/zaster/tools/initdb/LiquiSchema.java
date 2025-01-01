@@ -22,9 +22,7 @@ public final class LiquiSchema {
     }
 
     public LiquiTable getTable(String tableName) {
-        return tables.stream()
-                .filter(t -> tableName.equals(t.getTableName()))
-                .findAny()
+        return tables.stream().filter(t -> tableName.equals(t.getTableName())).findAny()
                 .orElseThrow(() -> new IllegalArgumentException("There is no " + tableName + " table."));
     }
 

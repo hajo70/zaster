@@ -32,8 +32,7 @@ class AccountServiceTest {
 
     @BeforeEach
     void init() {
-        currencies = Stream.of("EUR", "USD")
-                .map(this::createCurrency)
+        currencies = Stream.of("EUR", "USD").map(this::createCurrency)
                 .collect(Collectors.toMap(Currency::getCurrencyCode, c -> c));
     }
 
@@ -72,9 +71,7 @@ class AccountServiceTest {
 
     private String render(Collection<Account> tree) {
         StringBuilder sb = new StringBuilder(2048);
-        List<Account> sorted = tree.stream()
-                .sorted(Comparator.comparing(Account::getAccountName))
-                .toList();
+        List<Account> sorted = tree.stream().sorted(Comparator.comparing(Account::getAccountName)).toList();
         render(sb, 0, sorted);
         return sb.toString();
     }
@@ -83,11 +80,8 @@ class AccountServiceTest {
         for (Account group : tree) {
             sb.append("  ".repeat(indent));
             sb.append(group.getAccountName());
-            sb.append(group.getCurrencies().stream()
-                    .map(AccountCurrency::getCurrency)
-                    .map(Currency::getCurrencyCode)
-                    .sorted()
-                    .collect(Collectors.joining(", ", "(", ")")));
+            sb.append(group.getCurrencies().stream().map(AccountCurrency::getCurrency).map(Currency::getCurrencyCode)
+                    .sorted().collect(Collectors.joining(", ", "(", ")")));
             sb.append("\n");
             if (group.getChildren() != null && !group.getChildren().isEmpty()) {
                 render(sb, indent + 1, group.getChildren());

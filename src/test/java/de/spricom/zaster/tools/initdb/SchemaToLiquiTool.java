@@ -96,8 +96,7 @@ public class SchemaToLiquiTool {
 
     private void exportColumns(DatabaseMetaData metaData) throws SQLException {
         for (LiquiTable table : schema.getTables()) {
-            try (ResultSet rs = metaData.getColumns(null, "PUBLIC",
-                    table.getTableName(), null)) {
+            try (ResultSet rs = metaData.getColumns(null, "PUBLIC", table.getTableName(), null)) {
                 while (rs.next()) {
                     table.add(asColumn(rs));
                 }
@@ -108,19 +107,18 @@ public class SchemaToLiquiTool {
     private LiquiColumn asColumn(ResultSet rs) throws SQLException {
         LiquiColumn column = new LiquiColumn();
         column.setColumnName(rs.getString("COLUMN_NAME"));
-        column.setColumnType(
-                switch (rs.getString("TYPE_NAME")) {
-                    case "NUMERIC" ->
-                            String.format("java.sql.Types.DECIMAL(%d, %d)", rs.getInt("COLUMN_SIZE"), rs.getInt("DECIMAL_DIGITS"));
-                    case "CHARACTER VARYING" -> String.format("java.sql.Types.NVARCHAR(%d)", rs.getInt("COLUMN_SIZE"));
-                    case "TIMESTAMP WITH TIME ZONE" -> "java.sql.Types.TIMESTAMP_WITH_TIMEZONE";
-                    case "BIGINT" -> "java.sql.Types.BIGINT";
-                    case "DATE" -> "java.sql.Types.DATE";
-                    case "INTEGER" -> "java.sql.Types.INTEGER";
-                    case "CHARACTER LARGE OBJECT" -> String.format("java.sql.Types.CLOB(%d)", rs.getInt("COLUMN_SIZE"));
-                    default ->
-                            throw new IllegalArgumentException("Not supported: " + rs.getString("TYPE_NAME") + " for " + column.getColumnName());
-                });
+        column.setColumnType(switch (rs.getString("TYPE_NAME")) {
+        case "NUMERIC" ->
+            String.format("java.sql.Types.DECIMAL(%d, %d)", rs.getInt("COLUMN_SIZE"), rs.getInt("DECIMAL_DIGITS"));
+        case "CHARACTER VARYING" -> String.format("java.sql.Types.NVARCHAR(%d)", rs.getInt("COLUMN_SIZE"));
+        case "TIMESTAMP WITH TIME ZONE" -> "java.sql.Types.TIMESTAMP_WITH_TIMEZONE";
+        case "BIGINT" -> "java.sql.Types.BIGINT";
+        case "DATE" -> "java.sql.Types.DATE";
+        case "INTEGER" -> "java.sql.Types.INTEGER";
+        case "CHARACTER LARGE OBJECT" -> String.format("java.sql.Types.CLOB(%d)", rs.getInt("COLUMN_SIZE"));
+        default -> throw new IllegalArgumentException(
+                "Not supported: " + rs.getString("TYPE_NAME") + " for " + column.getColumnName());
+        });
         column.setPrimaryKey("ID".equals(column.getColumnName()));
         column.setNullable(rs.getBoolean("IS_NULLABLE"));
         return column;

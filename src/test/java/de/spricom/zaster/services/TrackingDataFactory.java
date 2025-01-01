@@ -38,10 +38,9 @@ public class TrackingDataFactory {
         return accountService.saveAccount(account);
     }
 
-    public Booking createBooking(Account debitor, Account creditor,
-                                 BigDecimal amount, Currency currency, String description) {
-        return createBooking(description,
-                createTransfer(debitor, currency, amount),
+    public Booking createBooking(Account debitor, Account creditor, BigDecimal amount, Currency currency,
+            String description) {
+        return createBooking(description, createTransfer(debitor, currency, amount),
                 createTransfer(creditor, currency, amount.negate()));
     }
 

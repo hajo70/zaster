@@ -1,6 +1,5 @@
 package de.spricom.zaster.importing.csv;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -25,10 +24,7 @@ public class CsvReader {
     }
 
     private CsvRow toRow(String row) {
-        return new CsvRow(
-            row.split(delimiter),
-            md5Hash(row)
-        );
+        return new CsvRow(row.split(delimiter), md5Hash(row));
     }
 
     private String md5Hash(String row) {

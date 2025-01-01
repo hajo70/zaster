@@ -12,7 +12,6 @@ public class RemoteInMemConfig {
     // see https://www.baeldung.com/spring-boot-access-h2-database-multiple-apps
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server inMemoryH2DatabaseaServer() throws SQLException {
-        return Server.createTcpServer(
-                "-tcp", "-tcpAllowOthers", "-tcpPort", "9090");
+        return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9090");
     }
 }

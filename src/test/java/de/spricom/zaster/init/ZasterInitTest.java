@@ -11,7 +11,7 @@ import java.util.Locale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@ActiveProfiles({"init", "test"})
+@ActiveProfiles({ "init", "test" })
 public class ZasterInitTest {
 
     @Autowired
@@ -25,8 +25,7 @@ public class ZasterInitTest {
         assertThat(me.getName()).isEqualTo("My personal Zaster");
         assertThat(me.getLocale()).isEqualTo(Locale.US);
         assertThat(me.getTimezone()).isEqualTo(ZoneId.of("GMT"));
-        assertThat(me.getUsers()).hasSize(2)
-                .containsKey("admin");
+        assertThat(me.getUsers()).hasSize(2).containsKey("admin");
         assertThat(me.getUsers().get("admin").getName()).isEqualTo("Emma Powerful");
         assertThat(me.getUsers().get("admin").getRole()).isEqualTo(ZasterInitProperties.User.Role.ADMIN);
 

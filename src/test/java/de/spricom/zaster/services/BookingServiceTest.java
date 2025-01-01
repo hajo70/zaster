@@ -60,18 +60,14 @@ public class BookingServiceTest {
         var fees = trackingDataFactory.createAccount(parent, null, "Fees");
         var eur = currencyService.getOrCreateCurrencyByCode("EUR");
         var usd = currencyService.getOrCreateCurrencyByCode("USD");
-        var booking = trackingDataFactory.createBooking(
-                "Transfer with different currencies and fee",
+        var booking = trackingDataFactory.createBooking("Transfer with different currencies and fee",
                 trackingDataFactory.createTransfer(banks.get(0), eur, BigDecimal.valueOf(50.0)),
                 trackingDataFactory.createTransfer(banks.get(1), usd, BigDecimal.valueOf(55.10)),
-                trackingDataFactory.createTransfer(fees, usd, BigDecimal.valueOf(0.97))
-        );
+                trackingDataFactory.createTransfer(fees, usd, BigDecimal.valueOf(0.97)));
         assertThat(bookingService.loadBooking(booking.getId()).getTransfers()).hasSize(3);
 
-        Transfer fee = booking.getTransfers().stream()
-                .filter(t -> t.getAmount().compareTo(BigDecimal.ONE) < 0)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("fee not found"));
+        Transfer fee = booking.getTransfers().stream().filter(t -> t.getAmount().compareTo(BigDecimal.ONE) < 0)
+                .findFirst().orElseThrow(() -> new IllegalStateException("fee not found"));
         bookingService.deleteTransfer(fee);
 
         booking = bookingService.loadBooking(booking.getId());

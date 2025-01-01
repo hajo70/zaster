@@ -124,8 +124,8 @@ public class ImportsView extends Div implements BeforeEnterObserver {
             if (imported.isPresent()) {
                 populateDetails(imported.get());
             } else {
-                Notification.show(String.format("Import nicht gefunden, ID = %s", fileSourceId.get()),
-                        3000, Notification.Position.BOTTOM_START);
+                Notification.show(String.format("Import nicht gefunden, ID = %s", fileSourceId.get()), 3000,
+                        Notification.Position.BOTTOM_START);
                 // when a row is selected but the data is no longer available,
                 // refresh grid
                 refreshGrid();

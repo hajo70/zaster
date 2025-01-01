@@ -79,8 +79,7 @@ public class AccountsView extends Div implements BeforeEnterObserver {
         add(splitLayout);
 
         // Configure Grid
-        grid.addColumn(Account::getAccountName).setHeader("Name").setAutoWidth(true)
-                .setSortProperty("accountName");
+        grid.addColumn(Account::getAccountName).setHeader("Name").setAutoWidth(true).setSortProperty("accountName");
         grid.addColumn(Account::getAccountCode).setHeader("Nummer").setAutoWidth(true);
         grid.setItems(this::loadAccountPage);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -158,8 +157,7 @@ public class AccountsView extends Div implements BeforeEnterObserver {
             Notification.show("Konto gespeichert");
             UI.getCurrent().navigate(AccountsView.class);
         } catch (ObjectOptimisticLockingFailureException exception) {
-            Notification n = Notification.show(
-                    "Fehler beim Speichern. Daten wurden inzwischen geändert.");
+            Notification n = Notification.show("Fehler beim Speichern. Daten wurden inzwischen geändert.");
             n.setPosition(Notification.Position.MIDDLE);
             n.addThemeVariants(NotificationVariant.LUMO_ERROR);
         } catch (ValidationException validationException) {
@@ -175,14 +173,12 @@ public class AccountsView extends Div implements BeforeEnterObserver {
             Notification.show("Konto gelöscht");
             UI.getCurrent().navigate(AccountsView.class);
         } catch (DataIntegrityViolationException ex) {
-            Notification n = Notification.show(
-                    "Kann Konto nicht löschen, da sie noch verwendet wird.");
+            Notification n = Notification.show("Kann Konto nicht löschen, da sie noch verwendet wird.");
             n.setPosition(Notification.Position.MIDDLE);
             n.addThemeVariants(NotificationVariant.LUMO_ERROR);
         } catch (RuntimeException ex) {
             log.error("Unable to delete {}", this.currentAccount, ex);
-            Notification n = Notification.show(
-                    "Fehler beim Löschen: " + ex.getLocalizedMessage());
+            Notification n = Notification.show("Fehler beim Löschen: " + ex.getLocalizedMessage());
             n.setPosition(Notification.Position.MIDDLE);
             n.addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
@@ -202,8 +198,8 @@ public class AccountsView extends Div implements BeforeEnterObserver {
             if (account.isPresent()) {
                 populateForm(account.get());
             } else {
-                Notification.show(String.format("Konto nicht gefunden, ID = %s", accountId.get()),
-                        3000, Notification.Position.BOTTOM_START);
+                Notification.show(String.format("Konto nicht gefunden, ID = %s", accountId.get()), 3000,
+                        Notification.Position.BOTTOM_START);
                 // when a row is selected but the data is no longer available,
                 // refresh grid
                 refreshGrid();

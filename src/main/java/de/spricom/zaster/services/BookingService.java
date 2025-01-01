@@ -27,21 +27,12 @@ import java.util.Map;
 @Log4j2
 public class BookingService {
 
-    public record BookingRecord(
-            TrackingDateTime submittedAt,
-            TrackingDateTime bookedAt,
-            String partnerCode,
-            String partnerName,
-            String description,
-            BigDecimal amount,
-            Map<String, String> details,
-            String md5
-    ) {}
+    public record BookingRecord(TrackingDateTime submittedAt, TrackingDateTime bookedAt, String partnerCode,
+            String partnerName, String description, BigDecimal amount, Map<String, String> details, String md5) {
+    }
 
-    public record SnapshotRecord(
-            TrackingDateTime takenAt,
-            BigDecimal balance
-    ) {}
+    public record SnapshotRecord(TrackingDateTime takenAt, BigDecimal balance) {
+    }
 
     private final AccountService accountService;
     private final TransferRepository transferRepository;
@@ -57,9 +48,7 @@ public class BookingService {
         return bookingRepository.findAll(filter, pageable);
     }
 
-    public boolean addBooking(Import imported,
-                              AccountCurrency accountCurrency,
-                              BookingRecord bookingRecord) {
+    public boolean addBooking(Import imported, AccountCurrency accountCurrency, BookingRecord bookingRecord) {
         if (bookingRepository.existsByMd5(accountCurrency.getId(), bookingRecord.md5())) {
             return false;
         }
@@ -77,15 +66,13 @@ public class BookingService {
         }
         booking = bookingRepository.save(booking);
         addTransfer(booking, 1, accountCurrency, bookingRecord);
-        AccountCurrency partnerAccount = accountService.getOrCreateAccountCurrency(
-                bookingRecord.partnerCode(), bookingRecord.partnerName(), accountCurrency.getCurrency());
+        AccountCurrency partnerAccount = accountService.getOrCreateAccountCurrency(bookingRecord.partnerCode(),
+                bookingRecord.partnerName(), accountCurrency.getCurrency());
         addTransfer(booking, 2, partnerAccount, bookingRecord);
         return true;
     }
 
-    public boolean addSnapshot(Import imported,
-                               AccountCurrency accountCurrency,
-                               SnapshotRecord snapshotRecord) {
+    public boolean addSnapshot(Import imported, AccountCurrency accountCurrency, SnapshotRecord snapshotRecord) {
         var snapshot = new Snapshot();
         snapshot.setImported(imported);
         snapshot.setAccountCurrency(accountCurrency);
@@ -95,10 +82,8 @@ public class BookingService {
         return true;
     }
 
-    private void addTransfer(Booking booking,
-                             int position,
-                             AccountCurrency accountCurrency,
-                             BookingRecord bookingRecord) {
+    private void addTransfer(Booking booking, int position, AccountCurrency accountCurrency,
+            BookingRecord bookingRecord) {
         var transfer = new Transfer();
         transfer.setBooking(booking);
         transfer.setPosition(position);

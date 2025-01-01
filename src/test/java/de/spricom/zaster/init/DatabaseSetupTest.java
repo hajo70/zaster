@@ -56,8 +56,8 @@ public class DatabaseSetupTest {
         createSnapshot(account, TrackingDateTime.now(), MAX_AMOUNT);
         createSnapshot(account, TrackingDateTime.now(), SMALLEST_AMOUNT);
         createSnapshot(account, TrackingDateTime.now(), MAX_AMOUNT.negate());
-        Assertions.assertThatCode(() ->
-                        createSnapshot(account, TrackingDateTime.now(), MAX_AMOUNT.add(SMALLEST_AMOUNT)))
+        Assertions
+                .assertThatCode(() -> createSnapshot(account, TrackingDateTime.now(), MAX_AMOUNT.add(SMALLEST_AMOUNT)))
                 .isInstanceOf(DataIntegrityViolationException.class);
         createTransaction();
     }
@@ -106,7 +106,8 @@ public class DatabaseSetupTest {
         return transaction;
     }
 
-    private Transfer createBooking(Booking transaction, AccountCurrency account, TrackingDateTime ts, BigDecimal amount) {
+    private Transfer createBooking(Booking transaction, AccountCurrency account, TrackingDateTime ts,
+            BigDecimal amount) {
         var booking = new Transfer();
         booking.setBooking(transaction);
         booking.setAccountCurrency(account);

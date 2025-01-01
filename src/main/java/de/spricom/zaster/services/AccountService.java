@@ -42,15 +42,12 @@ public class AccountService {
         for (Account account : accounts) {
             if (account.getParent() != null) {
                 if (account.getParent().getChildren() == null) {
-                    account.getParent().setChildren(
-                            new TreeSet<>(ACCOUNT__COMPARATOR));
+                    account.getParent().setChildren(new TreeSet<>(ACCOUNT__COMPARATOR));
                 }
                 account.getParent().getChildren().add(account);
             }
         }
-        return accounts.stream()
-                .filter(account -> account.getParent() == null)
-                .sorted(ACCOUNT__COMPARATOR)
+        return accounts.stream().filter(account -> account.getParent() == null).sorted(ACCOUNT__COMPARATOR)
                 .collect(Collectors.toList());
     }
 

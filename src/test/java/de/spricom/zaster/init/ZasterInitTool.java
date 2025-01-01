@@ -36,8 +36,7 @@ public class ZasterInitTool {
     void checkProperties() {
         assertThat(props).isNotNull();
         assertThat(props.getTenants()).isNotEmpty();
-        props.getTenants().forEach((tenant) ->
-                assertThat(tenant.getUsers()).isNotEmpty());
+        props.getTenants().forEach((tenant) -> assertThat(tenant.getUsers()).isNotEmpty());
     }
 
     @Test

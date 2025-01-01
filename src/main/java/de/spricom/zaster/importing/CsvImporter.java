@@ -21,9 +21,6 @@ public interface CsvImporter {
         return ";";
     }
 
-    record Stats(
-            int totalCount,
-            int importedCount
-    ) {
+    record Stats(int totalCount, int importedCount) {
     }
 }

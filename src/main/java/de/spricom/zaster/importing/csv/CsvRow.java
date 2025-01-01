@@ -1,9 +1,6 @@
 package de.spricom.zaster.importing.csv;
 
-public record CsvRow(
-        String[] columns,
-        String md5
-) {
+public record CsvRow(String[] columns, String md5) {
     public String column(int index) {
         if (index > columns.length) {
             return null;
@@ -16,6 +13,6 @@ public record CsvRow(
     }
 
     public static String index(int i) {
-        return "" + (char)('A' + i);
+        return "" + (char) ('A' + i);
     }
 }

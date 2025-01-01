@@ -27,8 +27,7 @@ public class TrackingDateTime {
     private LocalTime time;
 
     public TrackingDateTime(ZonedDateTime ts) {
-        this(ts.toLocalDate(),
-                ts.toLocalTime());
+        this(ts.toLocalDate(), ts.toLocalTime());
     }
 
     public static TrackingDateTime now() {

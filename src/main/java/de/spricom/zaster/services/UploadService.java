@@ -25,11 +25,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class UploadService {
 
-    public record Stats(
-            int totalCount,
-            int importedCount,
-            String filename
-    ) {
+    public record Stats(int totalCount, int importedCount, String filename) {
     }
 
     private final ImportService importService;
@@ -68,15 +64,12 @@ public class UploadService {
     }
 
     private List<CsvRow> scan(Resource resource, CsvImporter importer) {
-        CsvReader reader = new CsvReader(
-                importer.getDelimiter(),
-                importer.getCharset()
-        );
+        CsvReader reader = new CsvReader(importer.getDelimiter(), importer.getCharset());
         try {
             return reader.scan(resource.getInputStream());
         } catch (IOException ex) {
-            throw new IllegalArgumentException("Cannot scan '" + resource.getFilename()
-                    + "' using " + importer.getDelimiter() + ".");
+            throw new IllegalArgumentException(
+                    "Cannot scan '" + resource.getFilename() + "' using " + importer.getDelimiter() + ".");
         }
     }
 

@@ -21,10 +21,8 @@ public class LiquiForeignKey {
     }
 
     public String getForeignKeyName() {
-        return foreignKeyName != null
-                ? foreignKeyName
-                : "FK_" + column.getTable().getTableName()
-                + "_" + column.getColumnName()
-                + "_" + references.getTableName();
+        return foreignKeyName != null ? foreignKeyName
+                : "FK_" + column.getTable().getTableName() + "_" + column.getColumnName() + "_"
+                        + references.getTableName();
     }
 }

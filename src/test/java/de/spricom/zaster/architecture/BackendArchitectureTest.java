@@ -68,11 +68,10 @@ public class BackendArchitectureTest {
 
     @Test
     void entities() {
-        Slice jpa = cp.rootOf(Entity.class)
-                .slice(Predicates.or(ClazzPredicates.ANNOTATION, ClazzPredicates.ENUM));
+        Slice jpa = cp.rootOf(Entity.class).slice(Predicates.or(ClazzPredicates.ANNOTATION, ClazzPredicates.ENUM));
         Slice hibernate = cp.sliceOf(CreationTimestamp.class, UpdateTimestamp.class);
-        assertThatSlice(entities.minus(ClazzPredicates.matchesSimpleName(".*_")))
-                .usesOnly(java.base, jpa, hibernate, enums);
+        assertThatSlice(entities.minus(ClazzPredicates.matchesSimpleName(".*_"))).usesOnly(java.base, jpa, hibernate,
+                enums);
     }
 
     @Test
@@ -88,9 +87,7 @@ public class BackendArchitectureTest {
     @Test
     @Disabled
     void security() {
-        assertThatSlices(security).useOnly(java.base,
-                cp.slice("org.springframework..*"),
-                cp.slice("com.vaadin..security..*"),
-                enums, entities.slice("..settings.*"), repositoryInferfaces);
+        assertThatSlices(security).useOnly(java.base, cp.slice("org.springframework..*"),
+                cp.slice("com.vaadin..security..*"), enums, entities.slice("..settings.*"), repositoryInferfaces);
     }
 }

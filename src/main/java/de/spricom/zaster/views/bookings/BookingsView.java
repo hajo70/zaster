@@ -134,7 +134,6 @@ public class BookingsView extends Div implements BeforeEnterObserver {
             return dateRangeComponent;
         }
 
-
         @Override
         public Predicate toPredicate(Root<Booking> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
             List<Predicate> predicates = new ArrayList<>();
@@ -162,9 +161,7 @@ public class BookingsView extends Div implements BeforeEnterObserver {
                 Join<Object, Object> accountCurrency = transfer.join(Transfer_.ACCOUNT_CURRENCY);
 
                 Path<Object> accountIdPath = accountCurrency.get(AccountCurrency_.ACCOUNT).get(Account_.ID);
-                subquery.select(booking)
-                        .distinct(true)
-                        .where(criteriaBuilder.equal(accountIdPath, accountId));
+                subquery.select(booking).distinct(true).where(criteriaBuilder.equal(accountIdPath, accountId));
                 predicates.add(criteriaBuilder.in(root).value(subquery));
             }
 
@@ -174,12 +171,8 @@ public class BookingsView extends Div implements BeforeEnterObserver {
                 Root<Booking> booking = subquery.from(Booking.class);
                 Join<Object, Object> transfer = root.join(Booking_.TRANSFERS);
 
-                subquery.select(booking)
-                        .distinct(true)
-                        .where(criteriaBuilder.greaterThanOrEqualTo(
-                                transfer.get(Transfer_.AMOUNT),
-                                criteriaBuilder.literal(BigDecimal.valueOf(1000))
-                        ));
+                subquery.select(booking).distinct(true).where(criteriaBuilder.greaterThanOrEqualTo(
+                        transfer.get(Transfer_.AMOUNT), criteriaBuilder.literal(BigDecimal.valueOf(1000))));
                 predicates.add(criteriaBuilder.in(root).value(subquery));
             }
 
@@ -189,13 +182,13 @@ public class BookingsView extends Div implements BeforeEnterObserver {
 
     private Component createGrid() {
         grid = new Grid<>(Booking.class, false);
-        grid.addColumn(this::bookingDate).setHeader("Buchungsdatum").setAutoWidth(true)
-                .setSortProperty("bookedAt.date", "bookedAt.time");
-        grid.addColumn(Booking::getDescription).setHeader("Beschreibung").setAutoWidth(true)
-                .setResizable(true).setSortProperty("description");
+        grid.addColumn(this::bookingDate).setHeader("Buchungsdatum").setAutoWidth(true).setSortProperty("bookedAt.date",
+                "bookedAt.time");
+        grid.addColumn(Booking::getDescription).setHeader("Beschreibung").setAutoWidth(true).setResizable(true)
+                .setSortProperty("description");
         grid.addColumn(this::receipient).setHeader("Empfänger").setAutoWidth(true).setResizable(true);
-        grid.addColumn(amountRenderer(this::amount)).setHeader("Betrag").setAutoWidth(true)
-                .setFooter(sum).setTextAlign(ColumnTextAlign.END);
+        grid.addColumn(amountRenderer(this::amount)).setHeader("Betrag").setAutoWidth(true).setFooter(sum)
+                .setTextAlign(ColumnTextAlign.END);
         grid.addColumn(amountRenderer(this::balance)).setHeader("Kontoststand").setAutoWidth(true)
                 .setTextAlign(ColumnTextAlign.END);
 
@@ -213,12 +206,8 @@ public class BookingsView extends Div implements BeforeEnterObserver {
     }
 
     private String receipient(Booking booking) {
-        return booking.getTransfers().stream()
-                .filter(transfer -> transfer.getPosition() == 2)
-                .findAny()
-                .map(Transfer::getAccountCurrency)
-                .map(AccountCurrency::getAccount)
-                .map(Account::getAccountName)
+        return booking.getTransfers().stream().filter(transfer -> transfer.getPosition() == 2).findAny()
+                .map(Transfer::getAccountCurrency).map(AccountCurrency::getAccount).map(Account::getAccountName)
                 .orElse(null);
     }
 
@@ -237,16 +226,12 @@ public class BookingsView extends Div implements BeforeEnterObserver {
     }
 
     private BigDecimal amount(Booking booking) {
-        return booking.getTransfers().stream()
-                .filter(transfer -> transfer.getPosition() == 1)
-                .findAny()
+        return booking.getTransfers().stream().filter(transfer -> transfer.getPosition() == 1).findAny()
                 .map(Transfer::getAmount).orElse(null);
     }
 
     private BigDecimal balance(Booking booking) {
-        return booking.getTransfers().stream()
-                .filter(transfer -> transfer.getPosition() == 1)
-                .findAny()
+        return booking.getTransfers().stream().filter(transfer -> transfer.getPosition() == 1).findAny()
                 .map(Transfer::getBalance).orElse(null);
     }
 

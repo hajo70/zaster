@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Setter
 @ToString
 @Entity
-@Table(name = "TRANSFER", uniqueConstraints = @UniqueConstraint(columnNames = {"TRANSFERRED_AT_DATE", "SERIAL"}))
+@Table(name = "TRANSFER", uniqueConstraints = @UniqueConstraint(columnNames = { "TRANSFERRED_AT_DATE", "SERIAL" }))
 public class Transfer extends AbstractEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

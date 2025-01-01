@@ -7,8 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BookingRepository
-        extends JpaRepository<Booking, String>, JpaSpecificationExecutor<Booking> {
+public interface BookingRepository extends JpaRepository<Booking, String>, JpaSpecificationExecutor<Booking> {
 
     @Query("""
             select case when count(*) > 0 then true else false end

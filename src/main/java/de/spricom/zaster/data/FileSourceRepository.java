@@ -11,9 +11,7 @@ import java.util.Optional;
 
 public interface FileSourceRepository extends JpaRepository<FileSource, String>, JpaSpecificationExecutor<FileSource> {
 
-    @Query("SELECT f FROM FileSource f " +
-            "LEFT JOIN FETCH f.imported i " +
-            "WHERE f.md5 = :md5")
+    @Query("SELECT f FROM FileSource f " + "LEFT JOIN FETCH f.imported i " + "WHERE f.md5 = :md5")
     Optional<FileSource> findByMd5(@Param("md5") String md5);
 
     Page<FileSource> findAll(Pageable pageable);

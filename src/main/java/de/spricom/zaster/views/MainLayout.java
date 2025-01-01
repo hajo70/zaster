@@ -97,7 +97,7 @@ public class MainLayout extends AppLayout {
     }
 
     private MenuItemInfo[] createMenuItems() {
-        return new MenuItemInfo[]{ //
+        return new MenuItemInfo[] { //
                 new MenuItemInfo("Buchungen", LineAwesomeIcon.MONEY_BILL_WAVE_SOLID.create(), BookingsView.class), //
 
                 new MenuItemInfo("Konten", LineAwesomeIcon.FILE_ALT_SOLID.create(), AccountsView.class), //

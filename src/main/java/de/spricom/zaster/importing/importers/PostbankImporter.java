@@ -26,8 +26,7 @@ import java.util.Map;
 @Log4j2
 public class PostbankImporter implements CsvImporter {
 
-    private static final String[] HEADER_COLUMNS = {
-            "Buchungstag", // A
+    private static final String[] HEADER_COLUMNS = { "Buchungstag", // A
             "Wert", // B
             "Umsatzart", // C
             "Begünstigter / Auftraggeber", // D
@@ -56,8 +55,7 @@ public class PostbankImporter implements CsvImporter {
     }
 
     public Stats process(Import imported, List<CsvRow> rows) {
-        checkHeader(rows.get(1), new String[] {
-                "Konto", // A
+        checkHeader(rows.get(1), new String[] { "Konto", // A
                 "Filial-/Kontonummer", // B
                 "IBAN", // C
                 "Währung", // D
@@ -83,16 +81,9 @@ public class PostbankImporter implements CsvImporter {
     }
 
     private BookingService.BookingRecord toRecord(CsvRow row) {
-        return new BookingService.BookingRecord(
-                parseDate(row.column("A")),
-                parseDate(row.column("B")),
-                row.column("F"),
-                row.column("D"),
-                concat(row.column("C"), row.column("E"), ": "),
-                parseMoney(row.column("L")),
-                details(row),
-                row.md5()
-        );
+        return new BookingService.BookingRecord(parseDate(row.column("A")), parseDate(row.column("B")), row.column("F"),
+                row.column("D"), concat(row.column("C"), row.column("E"), ": "), parseMoney(row.column("L")),
+                details(row), row.md5());
     }
 
     private TrackingDateTime parseDate(String date) {
@@ -125,9 +116,8 @@ public class PostbankImporter implements CsvImporter {
 
     private BookingService.SnapshotRecord toSnapshot(CsvRow snapshotRow) {
         check(snapshotRow, "A", "Kontostand");
-        return new BookingService.SnapshotRecord(
-        parseDate(snapshotRow.column("B")),
-        parseMoney(snapshotRow.column("E")));
+        return new BookingService.SnapshotRecord(parseDate(snapshotRow.column("B")),
+                parseMoney(snapshotRow.column("E")));
     }
 
     private AccountCurrency getAccount(CsvRow accountRow) {
@@ -147,9 +137,8 @@ public class PostbankImporter implements CsvImporter {
     private void check(CsvRow row, String index, String expectedHeader) {
         String actualHeader = row.column(index);
         if (!expectedHeader.equals(actualHeader)) {
-            throw new IllegalArgumentException("Unexpected header column " +
-                    index + ": " + actualHeader +
-                    ", expected: " + expectedHeader);
+            throw new IllegalArgumentException(
+                    "Unexpected header column " + index + ": " + actualHeader + ", expected: " + expectedHeader);
         }
     }
 

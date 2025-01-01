@@ -29,10 +29,11 @@ public class ZasterInitProperties {
         private List<Import> imports;
     }
 
-
     @Data
     static class User {
-        enum Role {USER, ADMIN}
+        enum Role {
+            USER, ADMIN
+        }
 
         private String name;
         private Role role;
@@ -40,7 +41,9 @@ public class ZasterInitProperties {
 
     @Data
     static class Currency {
-        enum Type {CRYPTO, FIAT, METAL}
+        enum Type {
+            CRYPTO, FIAT, METAL
+        }
 
         private String name;
         private Type type;

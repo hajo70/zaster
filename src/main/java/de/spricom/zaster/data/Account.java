@@ -19,7 +19,7 @@ public class Account extends AbstractEntity {
     @ToString.Exclude
     private Account parent;
 
-    @OneToMany(mappedBy="account", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private Set<AccountCurrency> currencies;
 
     private String accountName;

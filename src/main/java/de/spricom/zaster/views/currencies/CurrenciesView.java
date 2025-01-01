@@ -117,8 +117,7 @@ public class CurrenciesView extends Div implements BeforeEnterObserver {
             Notification.show("Währung gespeichert");
             UI.getCurrent().navigate(CurrenciesView.class);
         } catch (ObjectOptimisticLockingFailureException exception) {
-            Notification n = Notification.show(
-                    "Fehler beim Speichern. Daten wurden inzwischen geändert.");
+            Notification n = Notification.show("Fehler beim Speichern. Daten wurden inzwischen geändert.");
             n.setPosition(Notification.Position.MIDDLE);
             n.addThemeVariants(NotificationVariant.LUMO_ERROR);
         } catch (ValidationException validationException) {
@@ -134,14 +133,12 @@ public class CurrenciesView extends Div implements BeforeEnterObserver {
             Notification.show("Währung gelöscht");
             UI.getCurrent().navigate(CurrenciesView.class);
         } catch (DataIntegrityViolationException ex) {
-            Notification n = Notification.show(
-                    "Kann Währung nicht löschen, da sie noch verwendet wird.");
+            Notification n = Notification.show("Kann Währung nicht löschen, da sie noch verwendet wird.");
             n.setPosition(Notification.Position.MIDDLE);
             n.addThemeVariants(NotificationVariant.LUMO_ERROR);
         } catch (RuntimeException ex) {
             log.error("Unable to delete {}", this.currentCurrency, ex);
-            Notification n = Notification.show(
-                    "Fehler beim Löschen: " + ex.getLocalizedMessage());
+            Notification n = Notification.show("Fehler beim Löschen: " + ex.getLocalizedMessage());
             n.setPosition(Notification.Position.MIDDLE);
             n.addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
@@ -161,8 +158,8 @@ public class CurrenciesView extends Div implements BeforeEnterObserver {
             if (currency.isPresent()) {
                 populateForm(currency.get());
             } else {
-                Notification.show(String.format("Währung nicht gefunden, ID = %s", currencyId.get()),
-                        3000, Notification.Position.BOTTOM_START);
+                Notification.show(String.format("Währung nicht gefunden, ID = %s", currencyId.get()), 3000,
+                        Notification.Position.BOTTOM_START);
                 // when a row is selected but the data is no longer available,
                 // refresh grid
                 refreshGrid();

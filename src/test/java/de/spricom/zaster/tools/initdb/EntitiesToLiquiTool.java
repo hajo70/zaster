@@ -34,8 +34,8 @@ public class EntitiesToLiquiTool {
         String entitiesPackage = packageName.substring(0, packageName.indexOf("entities")) + "entities";
         Slice entities = cp.packageTreeOf(entitiesPackage)
                 .slice(ClazzPredicates.matchesAnnotation(AnnotationPattern.of(Entity.class)));
-        entities.getClazzes().forEach(clazz ->
-                System.out.printf("schema.add(asLiquiTable(%s.class));%n", clazz.getShortName()));
+        entities.getClazzes()
+                .forEach(clazz -> System.out.printf("schema.add(asLiquiTable(%s.class));%n", clazz.getShortName()));
     }
 
     @Test
@@ -55,9 +55,8 @@ public class EntitiesToLiquiTool {
     }
 
     private void updateForeignKeys() {
-        Map<Class<?>, LiquiTable> tables =
-                schema.getTables().stream()
-                        .collect(Collectors.toMap(LiquiTable::getEntity, Function.identity()));
+        Map<Class<?>, LiquiTable> tables = schema.getTables().stream()
+                .collect(Collectors.toMap(LiquiTable::getEntity, Function.identity()));
         for (LiquiTable table : schema.getTables()) {
             for (LiquiColumn column : table.getColumns()) {
                 if (column.getForeignKey() != null && column.getForeignKey().getReferences() == null) {
@@ -88,8 +87,7 @@ public class EntitiesToLiquiTool {
             } else if (field.isAnnotationPresent(Enumerated.class)
                     && field.isAnnotationPresent(ElementCollection.class)) {
                 addCollectionTable(table, field);
-            } else if (!field.isAnnotationPresent(Transient.class)
-                    && !field.isAnnotationPresent(OneToMany.class)) {
+            } else if (!field.isAnnotationPresent(Transient.class) && !field.isAnnotationPresent(OneToMany.class)) {
                 table.add(asLiquiColumn(field));
             }
         }
@@ -98,9 +96,8 @@ public class EntitiesToLiquiTool {
     private void addEmbeddedColumns(LiquiTable table, Field field) {
         LiquiTable embeddedTable = new LiquiTable();
         addColumns(embeddedTable, field.getType());
-        Map<String, Column> overrides =
-                Arrays.stream(field.getAnnotationsByType(AttributeOverride.class))
-                        .collect(Collectors.toMap(AttributeOverride::name, AttributeOverride::column));
+        Map<String, Column> overrides = Arrays.stream(field.getAnnotationsByType(AttributeOverride.class))
+                .collect(Collectors.toMap(AttributeOverride::name, AttributeOverride::column));
         for (LiquiColumn column : embeddedTable.getColumns()) {
             Column override = overrides.get(column.getField().getName());
             if (override != null && !override.name().isEmpty()) {
@@ -115,8 +112,7 @@ public class EntitiesToLiquiTool {
     private void addCollectionTable(LiquiTable table, Field field) {
         CollectionTable col = field.getAnnotation(CollectionTable.class);
         var collectionTable = new LiquiTable();
-        collectionTable.setTableName(col != null && !col.name().isEmpty()
-                ? col.name()
+        collectionTable.setTableName(col != null && !col.name().isEmpty() ? col.name()
                 : table.getTableName() + "_" + field.getName().toUpperCase());
         for (JoinColumn joinColumn : col.joinColumns()) {
             var column = new LiquiColumn();
@@ -196,9 +192,7 @@ public class EntitiesToLiquiTool {
         StringBuilder sb = new StringBuilder(name.length() + 5);
         for (int i = 0; i < name.length(); i++) {
             char ch = name.charAt(i);
-            if (Character.isUpperCase(ch)
-                    && i > 0
-                    && !Character.isUpperCase(name.charAt(i - 1))) {
+            if (Character.isUpperCase(ch) && i > 0 && !Character.isUpperCase(name.charAt(i - 1))) {
                 sb.append("_");
             }
             sb.append(Character.toUpperCase(ch));
@@ -211,16 +205,16 @@ public class EntitiesToLiquiTool {
             return enumType(field);
         }
         return switch (field.getType().getSimpleName()) {
-            case "String" -> stringType(field);
-            case "Long" -> "java.sql.Types.BIGINT";
-            case "Integer", "int" -> "java.sql.Types.INTEGER";
-            case "BigDecimal" -> "java.sql.Types.DECIMAL(40, 15)";
-            case "LocalDate" -> "java.sql.Types.DATE";
-            case "LocalTime" -> "java.sql.Types.TIME";
-            case "Instant" -> "java.sql.Types.TIMESTAMP_WITH_TIMEZONE";
-            case "ZoneOffset" -> "java.sql.Types.NVARCHAR(6)";
-            case "Locale", "ZoneId" -> "java.sql.Types.NVARCHAR(63)";
-            default -> throw new IllegalArgumentException("Not supported: " + field.getType());
+        case "String" -> stringType(field);
+        case "Long" -> "java.sql.Types.BIGINT";
+        case "Integer", "int" -> "java.sql.Types.INTEGER";
+        case "BigDecimal" -> "java.sql.Types.DECIMAL(40, 15)";
+        case "LocalDate" -> "java.sql.Types.DATE";
+        case "LocalTime" -> "java.sql.Types.TIME";
+        case "Instant" -> "java.sql.Types.TIMESTAMP_WITH_TIMEZONE";
+        case "ZoneOffset" -> "java.sql.Types.NVARCHAR(6)";
+        case "Locale", "ZoneId" -> "java.sql.Types.NVARCHAR(63)";
+        default -> throw new IllegalArgumentException("Not supported: " + field.getType());
         };
     }
 
@@ -232,8 +226,8 @@ public class EntitiesToLiquiTool {
 
     private String enumType(Field field) {
         return switch (field.getAnnotation(Enumerated.class).value()) {
-            case STRING -> String.format("java.sql.Types.NVARCHAR(%d)", fieldLength(field, 63));
-            case ORDINAL -> "int";
+        case STRING -> String.format("java.sql.Types.NVARCHAR(%d)", fieldLength(field, 63));
+        case ORDINAL -> "int";
         };
     }
 
@@ -247,12 +241,10 @@ public class EntitiesToLiquiTool {
     }
 
     private boolean isNullable(Field field) {
-        return !field.isAnnotationPresent(Column.class)
-                || field.getAnnotation(Column.class).nullable();
+        return !field.isAnnotationPresent(Column.class) || field.getAnnotation(Column.class).nullable();
     }
 
     private boolean isUnique(Field field) {
-        return field.isAnnotationPresent(Column.class)
-                && field.getAnnotation(Column.class).unique();
+        return field.isAnnotationPresent(Column.class) && field.getAnnotation(Column.class).unique();
     }
 }

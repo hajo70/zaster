@@ -25,11 +25,9 @@ public class LiquiTable {
     }
 
     public LiquiColumn getColumn(String columnName) {
-        return columns.stream()
-                .filter(c -> columnName.equals(c.getColumnName()))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("There is no " + columnName
-                        + " column in table " + getTableName() + "."));
+        return columns.stream().filter(c -> columnName.equals(c.getColumnName())).findAny()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "There is no " + columnName + " column in table " + getTableName() + "."));
     }
 
     void export(PrintStream out) {
