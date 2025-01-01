@@ -10,6 +10,7 @@ import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
@@ -64,6 +65,7 @@ public class BookingsView extends Div implements BeforeEnterObserver {
 
     private Grid<Booking> grid;
     private final Filters filters;
+    private final Span sum = new Span();
 
     public BookingsView(BookingService bookingService) {
         this.bookingService = bookingService;
@@ -193,7 +195,7 @@ public class BookingsView extends Div implements BeforeEnterObserver {
                 .setResizable(true).setSortProperty("description");
         grid.addColumn(this::receipient).setHeader("Empfänger").setAutoWidth(true).setResizable(true);
         grid.addColumn(amountRenderer(this::amount)).setHeader("Betrag").setAutoWidth(true)
-                .setTextAlign(ColumnTextAlign.END);
+                .setFooter(sum).setTextAlign(ColumnTextAlign.END);
         grid.addColumn(amountRenderer(this::balance)).setHeader("Kontoststand").setAutoWidth(true)
                 .setTextAlign(ColumnTextAlign.END);
 
